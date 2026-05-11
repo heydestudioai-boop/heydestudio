@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #000; color: #fff; padding: 40px 20px; text-align: center; border-radius: 8px 8px 0 0; }
+        .header h1 { margin: 0; font-size: 24px; font-weight: bold; }
+        .content { background-color: #f9f9f9; padding: 40px 20px; }
+        .section { margin-bottom: 25px; }
+        .section h2 { color: #d033f0; font-size: 18px; font-weight: bold; margin-top: 0; }
+        .section p { margin: 10px 0; }
+        .case-study { background-color: #fff; padding: 20px; border-radius: 4px; border-left: 4px solid #d033f0; }
+        .case-study-title { font-weight: bold; }
+        .case-study-result { color: #d033f0; font-weight: bold; margin-top: 8px; }
+        .cta { display: inline-block; background-color: #d033f0; color: white; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; margin: 15px 0; }
+        .cta:hover { background-color: #b8289e; }
+        .secondary-cta { display: inline-block; background-color: transparent; color: #d033f0; padding: 12px 30px; border: 2px solid #d033f0; text-decoration: none; border-radius: 4px; font-weight: bold; margin: 15px 0; }
+        .footer { background-color: #f0f0f0; padding: 20px; text-align: center; font-size: 12px; color: #666; }
+        .divider { height: 1px; background-color: #ddd; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>One More Thing...</h1>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <p>Hi {{firstName}},</p>
+                <p>Just checking in. We shared some findings about {{brandName}}'s visual system opportunity, but haven't heard back.</p>
+            </div>
+
+            <div class="section">
+                <h2>Quick Recap</h2>
+                <p>Our audit showed {{brandName}} could save significant time with a custom visual system. The opportunity wasn't just theoretical—it was specific to your production workflow.</p>
+                <p>But we get it. Visual systems aren't always top priority.</p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section">
+                <h2>See It In Action</h2>
+                <p>Similar company to {{brandName}}: They were producing {{similarCompanyAssets}} visuals monthly, like you. Here's what changed:</p>
+                <div class="case-study">
+                    <div class="case-study-title">{{caseStudyCompany}}</div>
+                    <p>Before: {{beforeState}}</p>
+                    <p>After: {{afterState}}</p>
+                    <div class="case-study-result">{{caseStudyResult}}</div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section">
+                <h2>Two Options</h2>
+                <p><strong>Option 1:</strong> Let's talk. 20 minutes to discuss implementation. No obligation.</p>
+                <a href="{{scheduleCallLink}}" class="cta">Schedule Call →</a>
+
+                <p style="margin-top: 20px;"><strong>Option 2:</strong> Not interested right now? No problem. We'll assume {{brandName}} isn't a fit at this stage.</p>
+                <a href="{{passLink}}" class="secondary-cta">Pass for Now</a>
+            </p>
+            </div>
+
+            <div class="section">
+                <p>Either way, we're here if plans change. Reply to this email anytime.</p>
+                <p>—The HEYDE Team</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 HEYDE Studio. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

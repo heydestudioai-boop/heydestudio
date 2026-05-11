@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fafafa;
+  --foreground: #121212;
+  --brand-ink: #121212;
+  --brand-ink-soft: #1c1c1c;
+  --brand-ink-muted: #212121;
+  --brand-paper: #fafafa;
+  --brand-paper-soft: #f5f5f5;
+  --brand-paper-cool: #f9fafb;
+  --brand-line: #e5e5e5;
+  --magenta: #880808;
+  --magenta-dark: #660606;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-magenta: var(--magenta);
+  --color-magenta-dark: var(--magenta-dark);
+  --font-sans: 'Neue Haas Grotesk Display Pro', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Neue Haas Grotesk Display Pro', 'Helvetica Neue', Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Neue Haas Grotesk Display Pro', 'Neue Haas Grotesk Display',
+    'Helvetica Neue', Arial, sans-serif;
+  font-feature-settings: 'kern';
+  text-rendering: geometricPrecision;
+  overflow-x: hidden;
+}
+
+main,
+section,
+article,
+div {
+  min-width: 0;
+}
+
+@font-face {
+  font-family: 'Neue Haas Grotesk Display Pro';
+  src:
+    local('Neue Haas Grotesk Display Pro'),
+    local('NeueHaasGroteskDisplayPro'),
+    url('/fonts/neue-haas-grotesk-display-pro-cufonfonts/NeueHaasDisplayRoman.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Haas Grotesk Display Pro';
+  src:
+    url('/fonts/neue-haas-grotesk-display-pro-cufonfonts/NeueHaasDisplayRomanItalic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Haas Grotesk Display Pro';
+  src:
+    url('/fonts/neue-haas-grotesk-display-pro-cufonfonts/NeueHaasDisplayLight.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Haas Grotesk Display Pro';
+  src:
+    url('/fonts/neue-haas-grotesk-display-pro-cufonfonts/NeueHaasDisplayMediu.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Haas Grotesk Display Pro';
+  src:
+    url('/fonts/neue-haas-grotesk-display-pro-cufonfonts/NeueHaasDisplayBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Haas Grotesk Display Pro';
+  src:
+    url('/fonts/neue-haas-grotesk-display-pro-cufonfonts/NeueHaasDisplayBlack.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+h1,
+h2 {
+  overflow-wrap: normal;
+  word-break: normal;
+  max-width: 100%;
+}
+
+.text-balance {
+  text-wrap: balance;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+}
+
+.editorial-measure {
+  max-width: 68rem;
+}
+
+.editorial-rule {
+  border-top: 1px solid color-mix(in srgb, var(--brand-ink) 14%, transparent);
+}
+
+@media (max-width: 640px) {
+  h1 {
+    font-size: 2.4rem !important;
+    line-height: 0.98 !important;
+    max-width: calc(100vw - 3rem) !important;
+  }
+
+  h2 {
+    font-size: 2.15rem !important;
+    line-height: 1.05 !important;
+    max-width: calc(100vw - 3rem) !important;
+  }
+
+  p,
+  .text-balance,
+  .text-pretty {
+    max-width: calc(100vw - 3rem) !important;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  .text-pretty {
+    max-width: calc(100vw - 6rem) !important;
+    width: calc(100vw - 6rem) !important;
+  }
+
+  .text-xl {
+    font-size: 1rem !important;
+    line-height: 1.55 !important;
+  }
+}
+
+/* Smooth scrolling */
+@supports (scroll-behavior: smooth) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.bg-black {
+  background-color: var(--brand-ink) !important;
+}
+
+.bg-white {
+  background-color: var(--brand-paper) !important;
+}
+
+.bg-gray-50 {
+  background-color: var(--brand-paper-soft) !important;
+}
+
+.bg-gray-100 {
+  background-color: var(--brand-paper-cool) !important;
+}
+
+.border-gray-200,
+.border-gray-300 {
+  border-color: var(--brand-line) !important;
+}
+
+.text-black,
+.text-gray-900,
+.text-gray-950 {
+  color: var(--brand-ink) !important;
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #000; color: #fff; padding: 40px 20px; text-align: center; border-radius: 8px 8px 0 0; }
+        .header h1 { margin: 0; font-size: 28px; font-weight: bold; }
+        .header p { margin: 10px 0 0 0; font-size: 14px; opacity: 0.9; }
+        .content { background-color: #f9f9f9; padding: 40px 20px; }
+        .section { margin-bottom: 25px; }
+        .section h2 { color: #d033f0; font-size: 18px; font-weight: bold; margin-top: 0; }
+        .section p { margin: 10px 0; }
+        .proposal-box { background-color: #fff; padding: 25px; border-radius: 4px; border: 2px solid #d033f0; margin: 20px 0; }
+        .proposal-section { margin: 15px 0; }
+        .proposal-section-title { font-weight: bold; color: #d033f0; }
+        .timeline-item { background-color: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 4px; border-left: 3px solid #d033f0; }
+        .timeline-item-title { font-weight: bold; }
+        .timeline-item-desc { color: #666; font-size: 14px; margin-top: 5px; }
+        .cta { display: inline-block; background-color: #d033f0; color: white; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; margin: 15px 0; }
+        .cta:hover { background-color: #b8289e; }
+        .footer { background-color: #f0f0f0; padding: 20px; text-align: center; font-size: 12px; color: #666; }
+        .divider { height: 1px; background-color: #ddd; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Your Custom Proposal</h1>
+            <p>Visual System for {{brandName}}</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <p>Hi {{firstName}},</p>
+                <p>Your custom proposal is ready. It's tailored to {{brandName}}'s specific needs, team size, and production goals.</p>
+                <p><strong>Download it here:</strong></p>
+                <a href="{{proposalDocumentLink}}" class="cta">View Proposal PDF →</a>
+            </div>
+
+            <div class="proposal-box">
+                <div class="proposal-section">
+                    <div class="proposal-section-title">System Scope</div>
+                    <p>{{systemDescription}}</p>
+                </div>
+                <div class="proposal-section">
+                    <div class="proposal-section-title">Investment</div>
+                    <p><strong>{{investmentAmount}}</strong></p>
+                </div>
+                <div class="proposal-section">
+                    <div class="proposal-section-title">Timeline</div>
+                    <p>{{timelineMonths}} months from kickoff to handoff</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Implementation Timeline</h2>
+                <div class="timeline-item">
+                    <div class="timeline-item-title">Phase 1: Discovery & Strategy (Week 1-2)</div>
+                    <div class="timeline-item-desc">Deep dive into brand assets, team workflow, production bottlenecks</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-item-title">Phase 2: System Build (Week 3-6)</div>
+                    <div class="timeline-item-desc">Design, document, and test all system components</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-item-title">Phase 3: Team Training (Week 7-8)</div>
+                    <div class="timeline-item-desc">Train your team, set up tools, launch system</div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section">
+                <h2>What Happens Next</h2>
+                <p>Review the proposal at your pace. When you're ready to discuss:</p>
+                <a href="{{kickoffCallLink}}" class="cta">Schedule Implementation Kickoff →</a>
+
+                <p style="margin-top: 20px;"><strong>Questions about the proposal?</strong> We're here to clarify anything. Reply to this email or <a href="{{callLink}}">schedule a quick call</a>.</p>
+            </div>
+
+            <div class="section">
+                <p>We're excited about what we'll build for {{brandName}}.</p>
+                <p>—The HEYDE Team</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 HEYDE Studio. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

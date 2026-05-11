@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #000; color: #fff; padding: 40px 20px; text-align: center; border-radius: 8px 8px 0 0; }
+        .header h1 { margin: 0; font-size: 28px; font-weight: bold; }
+        .content { background-color: #f9f9f9; padding: 40px 20px; }
+        .section { margin-bottom: 30px; }
+        .section h2 { color: #d033f0; font-size: 18px; font-weight: bold; margin-top: 0; }
+        .section p { margin: 10px 0; }
+        .cta { display: inline-block; background-color: #d033f0; color: white; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; margin: 15px 0; }
+        .cta:hover { background-color: #b8289e; }
+        .footer { background-color: #f0f0f0; padding: 20px; text-align: center; font-size: 12px; color: #666; }
+        .divider { height: 1px; background-color: #ddd; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to HEYDE Studio</h1>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <p>Hi {{firstName}},</p>
+                <p>Thanks for reaching out to HEYDE Studio. We're excited to help you scale your brand with a visual system that actually works.</p>
+            </div>
+
+            <div class="section">
+                <h2>What We Do</h2>
+                <p>We build AI-powered visual systems for modern brands. Not generic tools. Locked identities, documented rules, and scalable infrastructure that lets your team create on-brand visuals in minutes.</p>
+            </div>
+
+            <div class="section">
+                <h2>Your Next Step</h2>
+                <p>Ready to see if a visual system is right for your brand? Schedule a free 20-minute audit. No credit card needed. Custom recommendations based on your goals.</p>
+                <a href="{{auditBookingLink}}" class="cta">Schedule Your Free Audit →</a>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section">
+                <h2>See It In Action</h2>
+                <p>Check out recent projects to see how visual systems transform brands:</p>
+                <a href="{{portfolioLink}}" class="cta">View Case Studies →</a>
+            </div>
+
+            <div class="section">
+                <p><strong>Questions?</strong> Reply to this email or <a href="mailto:contact@heydestudio.com">reach out directly</a>.</p>
+                <p>—The HEYDE Team</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 HEYDE Studio. All rights reserved.</p>
+            <p>{{unsubscribeLink}}</p>
+        </div>
+    </div>
+</body>
+</html>
