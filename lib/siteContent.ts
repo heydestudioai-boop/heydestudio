@@ -27,8 +27,9 @@ export const siteContent = {
       contactPhone: '+34671141135',
       contactPhoneLabel: '+34 671 141 135',
       contactSocial: '@heyde.studio',
-      newsletterTitle: 'Get visual system insights',
-      newsletterDescription: 'New patterns, case studies, and system breakdowns.',
+      newsletterTitle: "Don't fall behind",
+      newsletterDescription:
+        'Visual systems, AI imagery, brand consistency and production notes in our newsletter.',
       newsletterPlaceholder: 'your@email.com',
       newsletterSubmit: 'Subscribe',
       newsletterSuccess: 'Subscribed. Welcome in.',
@@ -1295,8 +1296,9 @@ export const siteContent = {
       contactPhone: '+34671141135',
       contactPhoneLabel: '+34 671 141 135',
       contactSocial: '@heyde.studio',
-      newsletterTitle: 'Recibe insights sobre sistemas visuales',
-      newsletterDescription: 'Patrones, casos de estudio y análisis de sistemas.',
+      newsletterTitle: 'No te quedes atrás',
+      newsletterDescription:
+        'Sistemas visuales, imagen con IA, consistencia de marca y notas de producción en nuestra newsletter.',
       newsletterPlaceholder: 'tu@email.com',
       newsletterSubmit: 'Suscribirse',
       newsletterSuccess: 'Suscripción confirmada.',
