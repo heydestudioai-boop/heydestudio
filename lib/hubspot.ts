@@ -18,6 +18,7 @@ interface HubSpotDealInput {
   closeDate?: Date;
   amount?: number;
   description?: string;
+  calendlyEventUri?: string;
 }
 
 interface HubSpotResult {
@@ -201,6 +202,7 @@ export async function createHubSpotDeal(input: HubSpotDealInput): Promise<HubSpo
         closedate: input.closeDate?.getTime(),
         amount: input.amount,
         description: input.description,
+        calendly_event_uri: input.calendlyEventUri,
       }),
       associations: [
         {
@@ -222,6 +224,34 @@ export async function createHubSpotDeal(input: HubSpotDealInput): Promise<HubSpo
 
   const data = await response.json();
   return { ok: true, id: data.id };
+}
+
+export async function findHubSpotDealByCalendlyEvent(
+  calendlyEventUri: string
+): Promise<HubSpotResult> {
+  if (!isHubSpotConfigured()) {
+    return { ok: true, skipped: true };
+  }
+
+  const response = await hubSpotFetch('/crm/v3/objects/deals/search', {
+    method: 'POST',
+    body: JSON.stringify({
+      query: calendlyEventUri.split('/').pop() || calendlyEventUri,
+      limit: 1,
+      properties: ['dealname', 'description'],
+    }),
+  }, false);
+
+  if (!response.ok) {
+    return { ok: false, error: await response.text() };
+  }
+
+  const data = await response.json();
+  const match = data.results?.find((deal: { properties?: { description?: string } }) =>
+    deal.properties?.description?.includes(calendlyEventUri)
+  );
+
+  return match ? { ok: true, id: match.id } : { ok: true };
 }
 
 export async function updateHubSpotDealStage(
