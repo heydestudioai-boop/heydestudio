@@ -119,10 +119,18 @@ async function syncCalendlyBookings() {
   };
 }
 
-export async function POST(request: NextRequest) {
-  const unauthorized = validateInternalRequest(request);
-  if (unauthorized) return unauthorized;
+function validateCronRequest(request: NextRequest): NextResponse | null {
+  const cronSecret = process.env.CRON_SECRET;
+  const authHeader = request.headers.get('authorization');
 
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  return null;
+}
+
+async function runSync() {
   try {
     return NextResponse.json(await syncCalendlyBookings());
   } catch (error) {
@@ -131,6 +139,16 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export async function POST(request: NextRequest) {
+  const unauthorized = validateInternalRequest(request);
+  if (unauthorized) return unauthorized;
+
+  return runSync();
+}
+
 export async function GET(request: NextRequest) {
-  return POST(request);
+  const unauthorized = validateCronRequest(request);
+  if (unauthorized) return unauthorized;
+
+  return runSync();
 }
