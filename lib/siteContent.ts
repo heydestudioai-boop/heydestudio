@@ -31,6 +31,8 @@ export const siteContent = {
       newsletterDescription: 'New patterns, case studies, and system breakdowns.',
       newsletterPlaceholder: 'your@email.com',
       newsletterSubmit: 'Subscribe',
+      newsletterSuccess: 'Subscribed. Welcome in.',
+      newsletterError: 'Could not subscribe right now.',
       copyright: '© 2026 HEYDE Studio. All rights reserved.',
       services: [
         { label: 'Services', href: '/services' },
@@ -1297,6 +1299,8 @@ export const siteContent = {
       newsletterDescription: 'Patrones, casos de estudio y análisis de sistemas.',
       newsletterPlaceholder: 'tu@email.com',
       newsletterSubmit: 'Suscribirse',
+      newsletterSuccess: 'Suscripción confirmada.',
+      newsletterError: 'No se pudo suscribir ahora.',
       copyright: '© 2026 HEYDE Studio. Todos los derechos reservados.',
       services: [
         { label: 'Servicios', href: '/services' },

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from 'react-icons/fa6';
 import { SiThreads } from 'react-icons/si';
 import { useLanguage } from '@/lib/language';
+import { NewsletterSubscribeForm } from '@/components/forms/NewsletterSubscribeForm';
 
 const socialIcons = {
   instagram: FaInstagram,
@@ -109,19 +110,13 @@ export function Footer() {
                 {footer.newsletterTitle}
               </h4>
               <p className="mb-4 text-xs text-white/70">{footer.newsletterDescription}</p>
-              <form className="flex flex-col gap-2">
-                <input
-                  type="email"
-                  placeholder={footer.newsletterPlaceholder}
-                  className="rounded border border-white/20 bg-white/10 px-4 py-2 text-sm text-white placeholder-white/50 focus:border-white/50 focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  className="rounded bg-white px-4 py-2 text-sm font-bold text-black transition hover:opacity-80"
-                >
-                  {footer.newsletterSubmit}
-                </button>
-              </form>
+              <NewsletterSubscribeForm
+                placeholder={footer.newsletterPlaceholder}
+                submitLabel={footer.newsletterSubmit}
+                successMessage={footer.newsletterSuccess}
+                errorMessage={footer.newsletterError}
+                source="footer_newsletter"
+              />
             </div>
           </div>
         </div>

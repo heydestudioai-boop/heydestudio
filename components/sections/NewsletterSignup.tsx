@@ -1,35 +1,10 @@
 'use client';
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail } from 'lucide-react';
+import { NewsletterSubscribeForm } from '@/components/forms/NewsletterSubscribeForm';
 
 export function NewsletterSignup() {
-  const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError('Invalid email address');
-      return;
-    }
-
-    // Simulate subscription
-    setSubmitted(true);
-    setEmail('');
-
-    // Reset success message after 5 seconds
-    setTimeout(() => {
-      setSubmitted(false);
-    }, 5000);
-  };
-
   return (
     <motion.aside
       initial={{ opacity: 0, y: 20 }}
@@ -45,39 +20,13 @@ export function NewsletterSignup() {
         Get insights on visual systems, AI strategy, and brand infrastructure delivered to your inbox.
       </p>
 
-      {submitted ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-green-500/10 border border-green-500/30 rounded px-4 py-3"
-        >
-          <p className="text-green-400 text-sm font-medium">
-            ✓ Check your email for confirmation
-          </p>
-        </motion.div>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <input
-            type="email"
-            placeholder="your@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded text-white placeholder-white/40 focus:outline-none focus:border-magenta focus:bg-white/10 transition-all"
-            required
-          />
-
-          {error && (
-            <p className="text-red-400 text-sm">{error}</p>
-          )}
-
-          <button
-            type="submit"
-            className="w-full px-4 py-2 bg-magenta text-white font-bold rounded hover:bg-magenta-dark transition-colors"
-          >
-            Subscribe
-          </button>
-        </form>
-      )}
+      <NewsletterSubscribeForm
+        placeholder="your@email.com"
+        submitLabel="Subscribe"
+        successMessage="Subscribed. Welcome in."
+        source="article_newsletter"
+        tone="panel"
+      />
 
       <p className="text-white/30 text-xs mt-4">
         No spam. Unsubscribe anytime.
