@@ -18,7 +18,6 @@ interface HubSpotDealInput {
   closeDate?: Date;
   amount?: number;
   description?: string;
-  calendlyEventUri?: string;
 }
 
 interface HubSpotResult {
@@ -202,7 +201,6 @@ export async function createHubSpotDeal(input: HubSpotDealInput): Promise<HubSpo
         closedate: input.closeDate?.getTime(),
         amount: input.amount,
         description: input.description,
-        calendly_event_uri: input.calendlyEventUri,
       }),
       associations: [
         {

@@ -101,7 +101,6 @@ async function syncCalendlyBookings() {
       closeDate: startTime,
       amount: 0,
       description: `Free audit booked via Calendly.\nCalendly event: ${event.uri}`,
-      calendlyEventUri: event.uri,
     });
 
     if (deal.ok && deal.id) {
