@@ -60,6 +60,30 @@ const legalCopy = {
         },
       ],
     },
+    cookies: {
+      title: 'Cookie Policy',
+      updated: 'Last updated: May 14, 2026',
+      intro:
+        'HEYDE Studio uses necessary storage for core website preferences and optional analytics only if you consent.',
+      sections: [
+        {
+          title: 'Necessary Storage',
+          body: 'We use local storage to remember your language preference and cookie consent choice. This is required for the website to work consistently and cannot be disabled from the banner.',
+        },
+        {
+          title: 'Analytics',
+          body: 'If you accept analytics, Google Analytics may measure page views and interactions such as Calendly link clicks. Analytics is not loaded until you accept it.',
+        },
+        {
+          title: 'Third-Party Services',
+          body: 'Some pages may include third-party services such as Calendly for booking calls. These providers may process technical data according to their own policies when you interact with them.',
+        },
+        {
+          title: 'Changing Your Choice',
+          body: 'You can reopen Cookie settings from the footer at any time and accept, reject, or change analytics consent.',
+        },
+      ],
+    },
   },
   ES: {
     privacy: {
@@ -118,10 +142,34 @@ const legalCopy = {
         },
       ],
     },
+    cookies: {
+      title: 'Política De Cookies',
+      updated: 'Última actualización: 14 de mayo de 2026',
+      intro:
+        'HEYDE Studio usa almacenamiento necesario para preferencias básicas de la web y analítica opcional solo si das tu consentimiento.',
+      sections: [
+        {
+          title: 'Almacenamiento Necesario',
+          body: 'Usamos local storage para recordar tu idioma y tu elección de consentimiento de cookies. Es necesario para que la web funcione de forma consistente y no se puede desactivar desde el banner.',
+        },
+        {
+          title: 'Analítica',
+          body: 'Si aceptas analítica, Google Analytics puede medir visitas e interacciones como clics en enlaces de Calendly. La analítica no se carga hasta que la aceptas.',
+        },
+        {
+          title: 'Servicios De Terceros',
+          body: 'Algunas páginas pueden incluir servicios de terceros como Calendly para reservar llamadas. Estos proveedores pueden procesar datos técnicos según sus propias políticas cuando interactúas con ellos.',
+        },
+        {
+          title: 'Cambiar Tu Elección',
+          body: 'Puedes reabrir Configurar cookies desde el footer en cualquier momento y aceptar, rechazar o cambiar el consentimiento de analítica.',
+        },
+      ],
+    },
   },
 } as const;
 
-export function LegalPageContent({ type }: { type: 'privacy' | 'terms' }) {
+export function LegalPageContent({ type }: { type: 'privacy' | 'terms' | 'cookies' }) {
   const { language } = useLanguage();
   const page = legalCopy[language][type];
 

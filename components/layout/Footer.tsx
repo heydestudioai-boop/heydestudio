@@ -6,6 +6,7 @@ import { FaFacebookF, FaInstagram, FaLinkedinIn } from 'react-icons/fa6';
 import { SiThreads } from 'react-icons/si';
 import { useLanguage } from '@/lib/language';
 import { NewsletterSubscribeForm } from '@/components/forms/NewsletterSubscribeForm';
+import { openCookieSettings } from '@/components/CookieConsentManager';
 
 const socialIcons = {
   instagram: FaInstagram,
@@ -155,6 +156,13 @@ export function Footer() {
                   {link.label}
                 </Link>
               ))}
+              <button
+                type="button"
+                onClick={openCookieSettings}
+                className="text-xs text-white/60 transition hover:text-white"
+              >
+                {footer.cookieSettings}
+              </button>
             </div>
           </div>
         </div>

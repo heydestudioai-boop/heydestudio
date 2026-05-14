@@ -62,6 +62,7 @@ export const siteContent = {
         { label: 'Privacy', href: '/privacy' },
         { label: 'Terms', href: '/terms' },
       ],
+      cookieSettings: 'Cookie settings',
     },
     home: {
       heroTitle: 'Visual identity. Campaign systems. Scalable production.',
@@ -1331,6 +1332,7 @@ export const siteContent = {
         { label: 'Privacidad', href: '/privacy' },
         { label: 'Términos', href: '/terms' },
       ],
+      cookieSettings: 'Configurar cookies',
     },
     home: {
       heroTitle: 'Identidad visual. Sistemas de campaña. Producción escalable.',

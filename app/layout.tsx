@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ScrollToTopButton } from '@/components/ScrollToTopButton';
+import { CookieConsentManager } from '@/components/CookieConsentManager';
 import { LanguageProvider } from '@/lib/language';
 import { pageSeo, siteName, siteUrl } from '@/lib/seo';
 import './globals.css';
@@ -40,39 +40,6 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <head>
-        {gaId && (
-          <>
-            <Script
-              strategy="afterInteractive"
-              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-            />
-            <Script
-              id="google-analytics"
-              strategy="afterInteractive"
-              dangerouslySetInnerHTML={{
-                __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${gaId}');
-
-              // Track Calendly link clicks
-              document.addEventListener('click', function(e) {
-                var target = e.target && e.target.closest ? e.target.closest('a') : null;
-                if (target && target.href && target.href.includes('calendly.com')) {
-                  gtag('event', 'calendly_link_clicked', {
-                    'event_category': 'engagement',
-                    'event_label': 'calendly_booking',
-                    'value': 1
-                  });
-                }
-              }, true);
-            `,
-              }}
-            />
-          </>
-        )}
-
         {/* Schema.org */}
         <script
           type="application/ld+json"
@@ -155,6 +122,7 @@ export default function RootLayout({
           </main>
           <Footer />
           <ScrollToTopButton />
+          <CookieConsentManager gaId={gaId} />
         </LanguageProvider>
       </body>
     </html>
