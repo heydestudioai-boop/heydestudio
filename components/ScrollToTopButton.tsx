@@ -26,7 +26,7 @@ export function ScrollToTopButton() {
       type="button"
       aria-label="Volver arriba"
       onClick={scrollToTop}
-      className={`fixed bottom-5 right-5 z-40 flex h-11 w-11 items-center justify-center rounded-sm border border-[#121212]/12 bg-[#121212] text-white shadow-[0_12px_28px_rgba(0,0,0,0.18)] transition-all duration-300 hover:bg-magenta focus:outline-none focus:ring-2 focus:ring-magenta focus:ring-offset-2 focus:ring-offset-[#FAFAFA] md:bottom-7 md:right-7 ${
+      className={`fixed bottom-5 right-5 z-40 flex h-11 w-11 items-center justify-center rounded-sm border border-magenta bg-[#121212] text-white shadow-[0_12px_28px_rgba(0,0,0,0.18)] transition-all duration-300 hover:bg-magenta focus:outline-none focus:ring-2 focus:ring-magenta focus:ring-offset-2 focus:ring-offset-[#FAFAFA] md:bottom-7 md:right-7 ${
         isVisible
           ? 'translate-y-0 opacity-100'
           : 'pointer-events-none translate-y-3 opacity-0'
