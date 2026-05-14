@@ -16,12 +16,12 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/images/logo-monograma-blanco-transparente.png',
+        url: '/images/logo-monograma-blanco-transparente-favicon.png',
         type: 'image/png',
       },
     ],
-    shortcut: '/images/logo-monograma-blanco-transparente.png',
-    apple: '/images/logo-monograma-blanco-transparente.png',
+    shortcut: '/images/logo-monograma-blanco-transparente-favicon.png',
+    apple: '/images/logo-monograma-blanco-transparente-favicon.png',
   },
   formatDetection: {
     email: false,
