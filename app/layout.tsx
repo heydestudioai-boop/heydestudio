@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { ScrollToTopButton } from '@/components/ScrollToTopButton';
 import { LanguageProvider } from '@/lib/language';
 import { pageSeo, siteName, siteUrl } from '@/lib/seo';
 import './globals.css';
@@ -12,6 +13,16 @@ export const metadata: Metadata = {
   authors: [{ name: 'HEYDE Studio' }],
   creator: 'HEYDE Studio',
   publisher: 'HEYDE Studio',
+  icons: {
+    icon: [
+      {
+        url: '/images/logo-monograma-blanco-transparente.png',
+        type: 'image/png',
+      },
+    ],
+    shortcut: '/images/logo-monograma-blanco-transparente.png',
+    apple: '/images/logo-monograma-blanco-transparente.png',
+  },
   formatDetection: {
     email: false,
     address: false,
@@ -143,6 +154,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <ScrollToTopButton />
         </LanguageProvider>
       </body>
     </html>
