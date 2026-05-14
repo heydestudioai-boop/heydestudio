@@ -5,6 +5,7 @@ import {
   generateConfirmationEmail,
   generateConfirmationEmailText,
 } from '@/lib/emailTemplates';
+import { createHubSpotDeal, isHubSpotConfigured, upsertHubSpotContact } from '@/lib/hubspot';
 
 interface SendEmailRequest {
   to: string;
@@ -168,70 +169,37 @@ export async function POST(request: NextRequest) {
     }
 
     let contactId: string | null = null;
-    if (process.env.HUBSPOT_API_KEY) {
-      // Create contact in HubSpot
-      const hubspotContactRes = await fetch(
-        'https://api.hubapi.com/crm/v3/objects/contacts',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            properties: {
-              firstname: clientName,
-              email: clientEmail,
-              lead_source: 'audit',
-              lifecyclestage: 'lead',
-            },
-          }),
-        }
-      );
+    if (isHubSpotConfigured()) {
+      const hubspotContact = await upsertHubSpotContact({
+        name: clientName,
+        email: clientEmail,
+        source: 'audit',
+        lifecycleStage: 'lead',
+      });
 
-      if (hubspotContactRes.ok) {
-        const contactData = await hubspotContactRes.json();
-        contactId = contactData.id;
-        console.log(`✓ HubSpot contact created: ${contactId}`);
-      } else {
-        console.error('Failed to create HubSpot contact:', await hubspotContactRes.text());
+      if (hubspotContact.ok && hubspotContact.id) {
+        contactId = hubspotContact.id;
+        console.log(`✓ HubSpot contact synced: ${contactId}`);
+      } else if (!hubspotContact.ok) {
+        console.error('Failed to sync HubSpot contact:', hubspotContact.error);
       }
     }
 
     // Create deal in HubSpot if contact was created
-    if (contactId && process.env.HUBSPOT_API_KEY) {
-      const dealName = `Visual System Audit - ${clientName}`;
-      const hubspotDealRes = await fetch(
-        'https://api.hubapi.com/crm/v3/objects/deals',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            properties: {
-              dealname: dealName,
-              dealstage: 'qualifiedtobuy',
-              closedate: startTime.getTime(),
-              amount: 0,
-              description: `Free audit booked for ${auditDate} at ${auditTime}`,
-            },
-            associations: [
-              {
-                type: 'contact_to_deal',
-                id: contactId,
-              },
-            ],
-          }),
-        }
-      );
+    if (contactId) {
+      const hubspotDeal = await createHubSpotDeal({
+        contactId,
+        dealName: `Visual System Audit - ${clientName}`,
+        dealStage: 'appointmentscheduled',
+        closeDate: startTime,
+        amount: 0,
+        description: `Free audit booked for ${auditDate} at ${auditTime}`,
+      });
 
-      if (hubspotDealRes.ok) {
-        const dealData = await hubspotDealRes.json();
-        console.log(`✓ HubSpot deal created: ${dealData.id}`);
-      } else {
-        console.error('Failed to create HubSpot deal:', await hubspotDealRes.text());
+      if (hubspotDeal.ok && hubspotDeal.id) {
+        console.log(`✓ HubSpot deal created: ${hubspotDeal.id}`);
+      } else if (!hubspotDeal.ok) {
+        console.error('Failed to create HubSpot deal:', hubspotDeal.error);
       }
     }
 

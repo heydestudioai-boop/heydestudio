@@ -21,7 +21,7 @@ Add or verify these environment variables in the production host:
 - `CALENDLY_WEBHOOK_TOKEN`
 - `BREVO_API_KEY`
 - `BREVO_SENDER_EMAIL=contact@heydestudio.com`
-- `HUBSPOT_API_KEY`
+- `HUBSPOT_ACCESS_TOKEN` or the backwards-compatible `HUBSPOT_API_KEY`
 - `NEXT_PUBLIC_GA_ID`
 
 Then configure Calendly webhook:

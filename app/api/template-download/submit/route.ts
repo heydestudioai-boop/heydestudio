@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { parseJson, rateLimit } from '@/lib/apiSecurity';
-
-const HUBSPOT_API_KEY = process.env.HUBSPOT_API_KEY;
+import { isHubSpotConfigured, upsertHubSpotContact } from '@/lib/hubspot';
 
 const templateDownloadSchema = z.object({
   name: z.string().trim().min(1).max(120),
@@ -17,7 +16,7 @@ export async function POST(req: NextRequest) {
     const limited = rateLimit(req, 'template-download', 5, 60_000);
     if (limited) return limited;
 
-    if (!HUBSPOT_API_KEY) {
+    if (!isHubSpotConfigured()) {
       return NextResponse.json(
         { error: 'CRM service not configured' },
         { status: 500 }
@@ -32,29 +31,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true });
     }
 
-    // Create contact in HubSpot
-    const hubspotRes = await fetch(
-      'https://api.hubapi.com/crm/v3/objects/contacts',
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${HUBSPOT_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          properties: {
-            firstname: name,
-            email: email,
-            company: company || '',
-            industry: industry || 'other',
-            lead_source: 'template_download',
-          },
-        }),
-      }
-    );
+    const hubspotResult = await upsertHubSpotContact({
+      name,
+      email,
+      company,
+      industry,
+      source: 'template_download',
+      lifecycleStage: 'lead',
+    });
 
-    if (!hubspotRes.ok) {
-      console.error('HubSpot API error:', await hubspotRes.text());
+    if (!hubspotResult.ok) {
+      console.error('HubSpot API error:', hubspotResult.error);
       return NextResponse.json(
         { error: 'Failed to create contact' },
         { status: 500 }

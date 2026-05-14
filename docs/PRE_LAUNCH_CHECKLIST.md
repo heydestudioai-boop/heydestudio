@@ -11,7 +11,8 @@ Use this checklist once the production domain and hosting environment are ready.
 - [ ] `CALENDLY_WEBHOOK_TOKEN` is a long random secret and is set in production.
 - [ ] `BREVO_API_KEY` is set.
 - [ ] `BREVO_SENDER_EMAIL` is verified in Brevo.
-- [ ] `HUBSPOT_API_KEY` is set using a private app token with the minimum required scopes.
+- [ ] `HUBSPOT_ACCESS_TOKEN` is set using a private app token with the minimum required scopes. `HUBSPOT_API_KEY` still works as a backwards-compatible fallback.
+- [ ] `HUBSPOT_DEAL_PIPELINE` is set to `default` unless a custom HubSpot deal pipeline is created.
 - [ ] `NEXT_PUBLIC_GA_ID` matches the final Google Analytics property if analytics is kept active.
 - [ ] Run `npm run prelaunch` locally or in CI before publishing.
 
@@ -33,6 +34,7 @@ Use this checklist once the production domain and hosting environment are ready.
 ## 4. HubSpot
 
 - [ ] Confirm private app scopes for contacts and deals.
+- [ ] Test `/api/hubspot/health` using `x-internal-token`.
 - [ ] Submit contact and template forms in production.
 - [ ] Verify contacts are created with expected properties.
 - [ ] Book an audit and verify the contact/deal workflow.

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { escapeHtml, parseJson, rateLimit } from '@/lib/apiSecurity';
+import { upsertHubSpotContact } from '@/lib/hubspot';
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const BREVO_SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL || 'contact@heydestudio.com';
@@ -124,6 +125,20 @@ contact@heydestudio.com`;
       );
     }
 
+    const hubspotResult = await upsertHubSpotContact({
+      name,
+      email,
+      company,
+      service,
+      message,
+      source: service === 'System Documentation' ? 'template_download' : 'website',
+      lifecycleStage: 'lead',
+    });
+
+    if (!hubspotResult.ok) {
+      console.error('HubSpot sync failed:', hubspotResult.error);
+    }
+
     // Log lead capture
     console.log(`Lead captured: ${name} (${email}) - Service: ${service || 'Not specified'}`);
 
@@ -131,6 +146,7 @@ contact@heydestudio.com`;
       {
         success: true,
         message: 'Email sent successfully. Check your inbox!',
+        crmSynced: hubspotResult.ok && !hubspotResult.skipped,
       },
       { status: 200 }
     );

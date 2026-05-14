@@ -15,15 +15,17 @@ Full HubSpot integration for lead capture, deal tracking, and automated workflow
 - `lead_source` (enumeration)
 
 ### Contact Sources (Automated)
-1. **Website Contact Form** (`/contact`) → Creates contact + sends confirmation
-2. **Template Download** (`/system-documentation-template`) → Creates contact with industry
+1. **Website Contact Form** (`/contact`) → Sends confirmation email + syncs contact to HubSpot
+2. **Template Download** (`/system-documentation-template`) → Sends template email + syncs contact to HubSpot
 3. **Audit Booking** (Calendly webhook) → Creates contact + deal
 
 ### API Routes
-- `POST /api/contact/submit` - Contact form submission to HubSpot
-- `POST /api/template-download/submit` - Template form to HubSpot
+- `POST /api/lead-capture` - Live website forms: sends Brevo email and syncs HubSpot contact
+- `POST /api/contact/submit` - Legacy/direct contact submission to HubSpot
+- `POST /api/template-download/submit` - Legacy/direct template form to HubSpot
 - `POST /api/audit/webhooks/calendly` - Calendly booking → HubSpot contact + deal
 - `PATCH /api/hubspot/deals/update-stage/{dealId}` - Update deal pipeline stage
+- `GET /api/hubspot/health` - Internal connection/scope health check
 
 ---
 
@@ -35,10 +37,11 @@ Full HubSpot integration for lead capture, deal tracking, and automated workflow
 |-------|------|---------|-------------|
 | 1 | **Appointment Scheduled** | Calendly booking confirmed | Initial audit booked |
 | 2 | **Qualified to Buy** | Questionnaire submitted | Opportunity analysis complete |
-| 3 | **Proposal Sent** | Follow-up email sent | System proposal delivered |
-| 4 | **Negotiation** | Manual update | Discussing implementation details |
-| 5 | **Closed Won** | Manual update | Contract signed, project active |
-| 6 | **Closed Lost** | Manual update | Declined or not a fit |
+| 3 | **Presentation Scheduled** | Follow-up scheduled | Proposal or system presentation booked |
+| 4 | **Decision Maker Bought-In** | Manual update | Decision maker aligned |
+| 5 | **Contract Sent** | Proposal/contract sent | System proposal delivered |
+| 6 | **Closed Won** | Manual update | Contract signed, project active |
+| 7 | **Closed Lost** | Manual update | Declined or not a fit |
 
 ### How to Set Up in HubSpot
 
@@ -48,8 +51,9 @@ Full HubSpot integration for lead capture, deal tracking, and automated workflow
 4. Add stages in order (HubSpot may use different internal names):
    - `appointmentscheduled`
    - `qualifiedtobuy`
-   - `proposalsenttocontact`
-   - `negotiation`
+   - `presentationscheduled`
+   - `decisionmakerboughtin`
+   - `contractsent`
    - `closedwon`
    - `closedlost`
 
@@ -129,7 +133,7 @@ Body:
 ### Workflow 5: Proposal Sent Confirmation
 **Trigger:** Manual trigger when proposal sent (or automated via CRM action)
 **Delay:** Send immediately
-**Action:** Send email + update deal to "proposalsenttocontact"
+**Action:** Send email + update deal to "contractsent"
 
 **Email Content:**
 ```
@@ -157,11 +161,11 @@ POST /api/hubspot/deals/update-stage
   "stage": "qualifiedtobuy"
 }
 
-// When proposal sent → Move deal to "proposalsenttocontact"
+// When proposal sent → Move deal to "contractsent"
 PATCH /api/hubspot/deals/update-stage
 {
   "dealId": "12345",
-  "stage": "proposalsenttocontact"
+  "stage": "contractsent"
 }
 
 // When contract signed → Move deal to "closedwon"
@@ -266,14 +270,14 @@ Content-Type: application/json
 }
 ```
 
-Valid stages: `appointmentscheduled`, `qualifiedtobuy`, `proposalsenttocontact`, `negotiation`, `closedwon`, `closedlost`
+Valid stages: `appointmentscheduled`, `qualifiedtobuy`, `presentationscheduled`, `decisionmakerboughtin`, `contractsent`, `closedwon`, `closedlost`
 
 ---
 
 ## Troubleshooting
 
 ### Contact Not Created
-- Check `.env.local` has valid `HUBSPOT_API_KEY`
+- Check `.env.local` has valid `HUBSPOT_ACCESS_TOKEN` or `HUBSPOT_API_KEY`
 - Verify email format is valid
 - Check HubSpot API response in server logs
 
