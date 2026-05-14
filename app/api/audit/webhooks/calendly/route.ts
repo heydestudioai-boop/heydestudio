@@ -17,11 +17,15 @@ interface SendEmailRequest {
 const calendlyWebhookSchema = z.object({
   event: z.string(),
   payload: z.object({
-    scheduled_event: z.object({
-      start_time: z.string().datetime(),
-      uri: z.string().optional(),
-      calendar_event_id: z.string().optional(),
-    }).passthrough(),
+    scheduled_event: z.union([
+      z.object({
+        start_time: z.string().datetime().optional(),
+        uri: z.string().optional(),
+        calendar_event_id: z.string().optional(),
+      }).passthrough(),
+      z.string(),
+    ]).optional(),
+    event: z.string().optional(),
     first_name: z.string().optional().default(''),
     name: z.string().optional().default(''),
     email: z.string().email(),
@@ -83,12 +87,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const scheduledEvent = payload.payload.scheduled_event;
+    const scheduledEvent =
+      typeof payload.payload.scheduled_event === 'object'
+        ? payload.payload.scheduled_event
+        : undefined;
 
     // Extract booking details
     const clientName = payload.payload.name || payload.payload.first_name || 'Calendly invitee';
     const clientEmail = payload.payload.email;
-    const startTime = new Date(scheduledEvent.start_time);
+    const startTime = scheduledEvent?.start_time
+      ? new Date(scheduledEvent.start_time)
+      : new Date();
 
     // Format date and time for email
     const dateFormatter = new Intl.DateTimeFormat('en-US', {
@@ -111,54 +120,8 @@ export async function POST(request: NextRequest) {
     // Encodes the booking data so questionnaire can reference it
     const questionnaireLinkUrl = `${process.env.NEXT_PUBLIC_APP_URL}/audit-questionnaire?email=${encodeURIComponent(clientEmail)}&name=${encodeURIComponent(clientName)}&date=${encodeURIComponent(auditDate)}`;
 
-    // Generate confirmation email
-    const htmlContent = generateConfirmationEmail({
-      clientName,
-      auditDate,
-      auditTime,
-      questionnaireLinkUrl,
-      calendlyEventId: scheduledEvent.calendar_event_id,
-    });
-
-    const textContent = generateConfirmationEmailText({
-      clientName,
-      auditDate,
-      auditTime,
-      questionnaireLinkUrl,
-    });
-
-    // Send confirmation email via Brevo API
-    const emailPayload: SendEmailRequest = {
-      to: clientEmail,
-      subject: 'Your Free Visual System Audit is Confirmed ✓',
-      htmlContent,
-      textContent,
-    };
-
-    const emailResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/emails/send`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-internal-token':
-            process.env.INTERNAL_API_TOKEN || process.env.BREVO_API_KEY || '',
-        },
-        body: JSON.stringify(emailPayload),
-      }
-    );
-
-    const emailResult = await emailResponse.json();
-
-    if (!emailResponse.ok) {
-      console.error('Email sending failed:', emailResult);
-      return NextResponse.json(
-        { error: 'Failed to send confirmation email' },
-        { status: 500 }
-      );
-    }
-
     let contactId: string | null = null;
+    let dealId: string | null = null;
     if (isHubSpotConfigured()) {
       const hubspotContact = await upsertHubSpotContact({
         name: clientName,
@@ -187,22 +150,67 @@ export async function POST(request: NextRequest) {
       });
 
       if (hubspotDeal.ok && hubspotDeal.id) {
+        dealId = hubspotDeal.id;
         console.log(`✓ HubSpot deal created: ${hubspotDeal.id}`);
       } else if (!hubspotDeal.ok) {
         console.error('Failed to create HubSpot deal:', hubspotDeal.error);
       }
     }
 
-    console.log(`✓ Confirmation email sent to ${clientEmail}`);
+    // Generate confirmation email after CRM sync so email failures do not block HubSpot.
+    const htmlContent = generateConfirmationEmail({
+      clientName,
+      auditDate,
+      auditTime,
+      questionnaireLinkUrl,
+      calendlyEventId: scheduledEvent?.calendar_event_id,
+    });
+
+    const textContent = generateConfirmationEmailText({
+      clientName,
+      auditDate,
+      auditTime,
+      questionnaireLinkUrl,
+    });
+
+    const emailPayload: SendEmailRequest = {
+      to: clientEmail,
+      subject: 'Your Free Visual System Audit is Confirmed',
+      htmlContent,
+      textContent,
+    };
+
+    let emailSent = false;
+    const emailResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/emails/send`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-internal-token':
+            process.env.INTERNAL_API_TOKEN || process.env.BREVO_API_KEY || '',
+        },
+        body: JSON.stringify(emailPayload),
+      }
+    );
+
+    if (emailResponse.ok) {
+      emailSent = true;
+      console.log(`✓ Confirmation email sent to ${clientEmail}`);
+    } else {
+      console.error('Email sending failed:', await emailResponse.text());
+    }
 
     return NextResponse.json(
       {
         success: true,
-        message: 'Confirmation email sent and contact created',
+        message: 'Webhook processed',
         inviteeEmail: clientEmail,
         auditDate,
         auditTime,
         hubspotContactId: contactId,
+        hubspotDealId: dealId,
+        emailSent,
       },
       { status: 200 }
     );
