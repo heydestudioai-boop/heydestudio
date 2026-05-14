@@ -112,7 +112,7 @@ export function AuditPageContent() {
           <h2 className="mb-8 text-3xl font-bold md:text-5xl">{page.calendlyTitle}</h2>
           <div className="overflow-hidden rounded-sm border border-gray-200 bg-white">
             <iframe
-              src="https://calendly.com/heyde-studio/audit?primary_color=d033f0&text_color=000000&background_color=ffffff"
+              src="https://calendly.com/heyde-studio/20min?primary_color=880808&text_color=000000&background_color=ffffff"
               width="100%"
               height={700}
               frameBorder={0}
