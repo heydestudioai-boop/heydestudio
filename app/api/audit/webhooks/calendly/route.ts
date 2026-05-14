@@ -19,16 +19,14 @@ const calendlyWebhookSchema = z.object({
   payload: z.object({
     scheduled_event: z.object({
       start_time: z.string().datetime(),
+      uri: z.string().optional(),
       calendar_event_id: z.string().optional(),
-      invitees: z.array(
-        z.object({
-          first_name: z.string().optional().default(''),
-          name: z.string().optional().default(''),
-          email: z.string().email(),
-        })
-      ).min(1),
-    }),
-  }),
+    }).passthrough(),
+    first_name: z.string().optional().default(''),
+    name: z.string().optional().default(''),
+    email: z.string().email(),
+    uri: z.string().optional(),
+  }).passthrough(),
 });
 
 function validateCalendlyWebhook(request: NextRequest): NextResponse | null {
@@ -86,18 +84,10 @@ export async function POST(request: NextRequest) {
     }
 
     const scheduledEvent = payload.payload.scheduled_event;
-    const firstInvitee = scheduledEvent.invitees[0];
-
-    if (!firstInvitee) {
-      return NextResponse.json(
-        { error: 'No invitee found in booking' },
-        { status: 400 }
-      );
-    }
 
     // Extract booking details
-    const clientName = firstInvitee.name || firstInvitee.first_name;
-    const clientEmail = firstInvitee.email;
+    const clientName = payload.payload.name || payload.payload.first_name || 'Calendly invitee';
+    const clientEmail = payload.payload.email;
     const startTime = new Date(scheduledEvent.start_time);
 
     // Format date and time for email
