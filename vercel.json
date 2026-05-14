@@ -4,6 +4,10 @@
     {
       "path": "/api/calendly/sync",
       "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/followups/run",
+      "schedule": "30 8 * * *"
     }
   ]
 }

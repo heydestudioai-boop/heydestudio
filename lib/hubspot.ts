@@ -27,6 +27,27 @@ interface HubSpotResult {
   error?: string;
 }
 
+export interface HubSpotDealRecord {
+  id: string;
+  properties: {
+    dealname?: string;
+    dealstage?: string;
+    closedate?: string;
+    description?: string;
+  };
+  contactIds: string[];
+}
+
+export interface HubSpotContactRecord {
+  id: string;
+  properties: {
+    email?: string;
+    firstname?: string;
+    lastname?: string;
+    company?: string;
+  };
+}
+
 const HUBSPOT_API_BASE = 'https://api.hubapi.com';
 
 function getHubSpotToken() {
@@ -279,6 +300,100 @@ export async function updateHubSpotDealStage(
     id: data.id,
     stage: data.properties.dealstage,
   };
+}
+
+export async function listHubSpotDealsForFollowups(): Promise<
+  | { ok: true; deals: HubSpotDealRecord[] }
+  | { ok: false; error: string }
+> {
+  if (!isHubSpotConfigured()) {
+    return { ok: true, deals: [] };
+  }
+
+  const response = await hubSpotFetch(
+    '/crm/v3/objects/deals?limit=100&properties=dealname,dealstage,closedate,description&associations=contacts',
+    { method: 'GET' },
+    false
+  );
+
+  if (!response.ok) {
+    return { ok: false, error: await response.text() };
+  }
+
+  const data = await response.json();
+  const deals: HubSpotDealRecord[] = (data.results || []).map(
+    (deal: {
+      id: string;
+      properties?: HubSpotDealRecord['properties'];
+      associations?: {
+        contacts?: {
+          results?: Array<{ id: string }>;
+        };
+      };
+    }) => ({
+      id: deal.id,
+      properties: deal.properties || {},
+      contactIds:
+        deal.associations?.contacts?.results?.map((contact) => contact.id).filter(Boolean) || [],
+    })
+  );
+
+  return { ok: true, deals };
+}
+
+export async function getHubSpotContactById(
+  contactId: string
+): Promise<
+  | { ok: true; contact: HubSpotContactRecord }
+  | { ok: false; error: string }
+> {
+  if (!isHubSpotConfigured()) {
+    return { ok: false, error: 'HubSpot not configured' };
+  }
+
+  const response = await hubSpotFetch(
+    `/crm/v3/objects/contacts/${encodeURIComponent(contactId)}?properties=email,firstname,lastname,company`,
+    { method: 'GET' },
+    false
+  );
+
+  if (!response.ok) {
+    return { ok: false, error: await response.text() };
+  }
+
+  const data = await response.json();
+  return {
+    ok: true,
+    contact: {
+      id: data.id,
+      properties: data.properties || {},
+    },
+  };
+}
+
+export async function updateHubSpotDealDescription(
+  dealId: string,
+  description: string
+): Promise<HubSpotResult> {
+  if (!isHubSpotConfigured()) {
+    return { ok: true, skipped: true };
+  }
+
+  const response = await hubSpotFetch(`/crm/v3/objects/deals/${dealId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({
+      properties: {
+        description,
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    return { ok: false, error: await response.text() };
+  }
+
+  const data = await response.json();
+  return { ok: true, id: data.id };
 }
 
 export async function checkHubSpotConnection() {
