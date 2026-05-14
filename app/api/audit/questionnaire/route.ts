@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { parseJson, rateLimit } from '@/lib/apiSecurity';
+import { sendBrevoEmail } from '@/lib/brevo';
 import {
   generateFollowUpEmail,
   generateFollowUpEmailText,
@@ -13,13 +14,6 @@ interface QuestionnaireSubmission {
   biggestPain: string;
   productionTimeline: string;
   email: string;
-}
-
-interface SendEmailRequest {
-  to: string;
-  subject: string;
-  htmlContent: string;
-  textContent: string;
 }
 
 const questionnaireSchema = z.object({
@@ -173,41 +167,19 @@ export async function POST(request: NextRequest) {
       nextStepsRecommended: findings.nextStepsRecommended,
     });
 
-    if (!process.env.NEXT_PUBLIC_APP_URL) {
-      return NextResponse.json(
-        { error: 'App URL not configured' },
-        { status: 500 }
-      );
-    }
-
     // Send follow-up email via Brevo API
-    const emailPayload: SendEmailRequest = {
-      to: body.email,
+    const emailResult = await sendBrevoEmail({
+      to: [{ email: body.email }],
       subject: `${body.brandName}: Your Preliminary Visual System Audit Findings`,
       htmlContent,
       textContent,
-    };
+    });
 
-    const emailResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/emails/send`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-internal-token':
-            process.env.INTERNAL_API_TOKEN || process.env.BREVO_API_KEY || '',
-        },
-        body: JSON.stringify(emailPayload),
-      }
-    );
-
-    const emailResult = await emailResponse.json();
-
-    if (!emailResponse.ok) {
+    if (!emailResult.ok) {
       console.error('Follow-up email sending failed:', emailResult);
       return NextResponse.json(
         { error: 'Failed to send follow-up email' },
-        { status: 500 }
+        { status: emailResult.status }
       );
     }
 

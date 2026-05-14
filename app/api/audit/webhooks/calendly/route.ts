@@ -1,18 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { parseJson, rateLimit } from '@/lib/apiSecurity';
+import { sendBrevoEmail } from '@/lib/brevo';
 import {
   generateConfirmationEmail,
   generateConfirmationEmailText,
 } from '@/lib/emailTemplates';
 import { createHubSpotDeal, isHubSpotConfigured, upsertHubSpotContact } from '@/lib/hubspot';
-
-interface SendEmailRequest {
-  to: string;
-  subject: string;
-  htmlContent: string;
-  textContent: string;
-}
 
 const calendlyWebhookSchema = z.object({
   event: z.string(),
@@ -173,32 +167,19 @@ export async function POST(request: NextRequest) {
       questionnaireLinkUrl,
     });
 
-    const emailPayload: SendEmailRequest = {
-      to: clientEmail,
+    const emailResult = await sendBrevoEmail({
+      to: [{ email: clientEmail, name: clientName }],
       subject: 'Your Free Visual System Audit is Confirmed',
       htmlContent,
       textContent,
-    };
+    });
 
     let emailSent = false;
-    const emailResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/emails/send`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-internal-token':
-            process.env.INTERNAL_API_TOKEN || process.env.BREVO_API_KEY || '',
-        },
-        body: JSON.stringify(emailPayload),
-      }
-    );
-
-    if (emailResponse.ok) {
+    if (emailResult.ok) {
       emailSent = true;
       console.log(`✓ Confirmation email sent to ${clientEmail}`);
     } else {
-      console.error('Email sending failed:', await emailResponse.text());
+      console.error('Email sending failed:', emailResult);
     }
 
     return NextResponse.json(

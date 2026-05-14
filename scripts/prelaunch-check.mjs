@@ -31,9 +31,10 @@ const requiredEnv = [
   'CALENDLY_WEBHOOK_TOKEN',
   'BREVO_API_KEY',
   'BREVO_SENDER_EMAIL',
-  'HUBSPOT_API_KEY',
   'NEXT_PUBLIC_GA_ID',
 ];
+
+const hasHubSpotToken = Boolean(getValue('HUBSPOT_ACCESS_TOKEN') || getValue('HUBSPOT_API_KEY'));
 
 const requiredAssets = [
   'public/images/hero-fallback-cover.jpg',
@@ -47,6 +48,9 @@ const requiredAssets = [
 ];
 
 const missingEnv = requiredEnv.filter((key) => !getValue(key));
+if (!hasHubSpotToken) {
+  missingEnv.push('HUBSPOT_ACCESS_TOKEN');
+}
 const missingAssets = requiredAssets.filter((asset) => !existsSync(join(root, asset)));
 
 console.log('HEYDE Studio pre-launch check');

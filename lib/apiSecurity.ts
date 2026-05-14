@@ -96,7 +96,7 @@ export function escapeHtml(value: string): string {
 }
 
 export function validateInternalRequest(request: NextRequest): NextResponse | null {
-  const expectedToken = process.env.INTERNAL_API_TOKEN || process.env.BREVO_API_KEY;
+  const expectedToken = process.env.INTERNAL_API_TOKEN;
 
   if (!expectedToken) {
     return NextResponse.json(
