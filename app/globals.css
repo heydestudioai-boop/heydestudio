@@ -33,8 +33,13 @@ body {
   font-family: 'Neue Haas Grotesk Display Pro', 'Neue Haas Grotesk Display',
     'Helvetica Neue', Arial, sans-serif;
   font-feature-settings: 'kern';
-  text-rendering: geometricPrecision;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
+}
+
+p,
+li {
+  word-spacing: 0.08em;
 }
 
 main,

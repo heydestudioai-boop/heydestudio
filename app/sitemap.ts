@@ -5,6 +5,12 @@ import { siteUrl } from '@/lib/seo';
 
 const staticRoutes = [
   '',
+  '/planes',
+  '/casos',
+  '/estudio',
+  '/hosteleria',
+  '/inmobiliaria',
+  '/bodegas',
   '/about',
   '/audit',
   '/blog',
@@ -25,8 +31,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const pages = staticRoutes.map((route) => ({
     url: new URL(route, siteUrl).toString(),
     lastModified: now,
-    changeFrequency: route === '' ? 'weekly' : 'monthly',
-    priority: route === '' ? 1 : 0.7,
+    changeFrequency: route === '' || route === '/planes' || route === '/audit' ? 'weekly' : 'monthly',
+    priority: route === '' ? 1 : ['/planes', '/audit', '/casos', '/estudio'].includes(route) ? 0.85 : 0.7,
   })) satisfies MetadataRoute.Sitemap;
 
   const blogPosts = articles.map((article) => ({

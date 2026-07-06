@@ -10,6 +10,8 @@ interface SeoConfig {
   path?: string;
   keywords?: string[];
   noIndex?: boolean;
+  locale?: string;
+  alternateLocale?: string[];
 }
 
 export function createMetadata({
@@ -18,6 +20,8 @@ export function createMetadata({
   path = '/',
   keywords,
   noIndex = false,
+  locale = 'es_ES',
+  alternateLocale = ['en_US'],
 }: SeoConfig): Metadata {
   const url = new URL(path, siteUrl).toString();
 
@@ -44,8 +48,8 @@ export function createMetadata({
       url,
       siteName,
       type: 'website',
-      locale: 'en_US',
-      alternateLocale: ['es_ES'],
+      locale,
+      alternateLocale,
     },
     twitter: {
       card: 'summary_large_image',
@@ -57,9 +61,31 @@ export function createMetadata({
 
 export const pageSeo = {
   home: createMetadata({
-    title: 'HEYDE Studio | AI Visual Systems for Modern Brands',
+    title: 'HEYDE Studio | Fotografía, vídeo y redes para negocios en Toledo',
     description:
-      'Build scalable AI visual systems for modern brands. Documented, controlled, and ready to deploy.',
+      'Fotografía, vídeo y redes para negocios locales en Toledo. Planes mensuales, packs por sector y auditoría gratuita en 72 horas.',
+    keywords: ['fotografía Toledo', 'vídeo para negocios', 'redes sociales Toledo', 'contenido para hostelería'],
+  }),
+  planes: createMetadata({
+    title: 'Planes y precios para negocios en Toledo | HEYDE Studio',
+    description:
+      'Planes mensuales de fotografía, vídeo y redes para negocios locales. Precios cerrados, auditoría gratuita y packs por sector.',
+    path: '/planes',
+    keywords: ['planes contenido Toledo', 'fotografía comercial Toledo', 'redes sociales negocios Toledo'],
+  }),
+  casos: createMetadata({
+    title: 'Casos y portfolio local | HEYDE Studio',
+    description:
+      'Portfolio de fotografía, vídeo y dirección de contenido para negocios locales, con laboratorio IA separado y etiquetado.',
+    path: '/casos',
+    keywords: ['portfolio fotografía Toledo', 'vídeo comercial Toledo', 'casos HEYDE Studio'],
+  }),
+  estudio: createMetadata({
+    title: 'Estudio local en Toledo | HEYDE Studio',
+    description:
+      'Conoce a Oliver Heyde y el enfoque de HEYDE Studio: fotografía, vídeo, redes y contenido para negocios locales.',
+    path: '/estudio',
+    keywords: ['Oliver Heyde', 'estudio audiovisual Toledo', 'fotógrafo Toledo'],
   }),
   about: createMetadata({
     title: 'About HEYDE Studio | Visual Systems for Modern Brands',
@@ -124,10 +150,11 @@ export const pageSeo = {
     path: '/contact',
   }),
   audit: createMetadata({
-    title: 'Free Visual System Audit | HEYDE Studio',
+    title: 'Auditoría gratuita para negocios locales | HEYDE Studio',
     description:
-      'Schedule a free 20-minute visual system audit and learn where your brand can improve production, consistency, and scale.',
+      'Pide una auditoría gratuita de foto, vídeo, redes, Google Business y web móvil. En 72 horas recibes una lectura clara.',
     path: '/audit',
+    keywords: ['auditoría gratuita Toledo', 'Google Business Toledo', 'redes sociales negocios Toledo'],
   }),
   questionnaire: createMetadata({
     title: 'Audit Questionnaire | HEYDE Studio',

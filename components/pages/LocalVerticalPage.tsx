@@ -24,7 +24,7 @@ export function LocalVerticalPage({
   area,
 }: VerticalPageProps) {
   const quickFacts = [
-    ['Entrega', 'Foto, video y piezas listas'],
+    ['Entrega', 'Foto, vídeo y piezas listas'],
     ['Precio', 'Cerrado antes de empezar'],
     ['Uso', 'Redes, web y Google Business'],
   ];
@@ -48,7 +48,7 @@ export function LocalVerticalPage({
               ))}
             </div>
             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-              <Button href="/audit" label="Pedir auditoria" />
+              <Button href="/audit" label="Pedir auditoría" />
               <Button href="/planes" label="Ver planes" variant="secondary" />
             </div>
           </div>
@@ -78,17 +78,17 @@ export function LocalVerticalPage({
               <div className="rounded-sm border border-gray-200 bg-gray-50 p-6">
                 <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-magenta">Incluye</p>
                 <ul className="space-y-3 text-sm leading-relaxed text-gray-700">
-                  <li>+ Direccion visual antes de producir</li>
-                  <li>+ Seleccion y edicion de piezas finales</li>
+                  <li>+ Dirección visual antes de producir</li>
+                  <li>+ Selección y edición de piezas finales</li>
                   <li>+ Formatos pensados para publicar y vender</li>
                 </ul>
               </div>
             </div>
             <div className="mt-10 grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 md:grid-cols-3">
               {[
-                ['01', 'Auditoria gratuita', 'Revisamos tu presencia actual y la oportunidad visual.'],
+                ['01', 'Auditoría gratuita', 'Revisamos tu presencia actual y la oportunidad visual.'],
                 ['02', 'Propuesta en 48 h', 'Precio, alcance y formato de entrega claros desde el inicio.'],
-                ['03', 'Primera sesion', 'Produccion real y piezas listas para publicar.'],
+                ['03', 'Primera sesión', 'Producción real y piezas listas para publicar.'],
               ].map(([number, step, body]) => (
                 <div key={number} className="bg-white p-6">
                   <p className="mb-6 text-xs font-bold uppercase tracking-[0.18em] text-magenta">{number}</p>
@@ -107,7 +107,7 @@ export function LocalVerticalPage({
             <EditorialKicker>Zona</EditorialKicker>
             <h2 className="mb-6 text-3xl font-bold leading-[1.05] md:text-5xl">{area}</h2>
             <EditorialBody>
-              Si no tienes claro que necesitas, empezamos por la auditoria gratuita y decidimos si conviene un pack, una sesion de entrada o un plan mensual.
+              Si no tienes claro qué necesitas, empezamos por la auditoría gratuita y decidimos si conviene un pack, una sesión de entrada o un plan mensual.
             </EditorialBody>
           </div>
           <div className="md:text-right">

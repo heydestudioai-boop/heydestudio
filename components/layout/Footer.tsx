@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from 'react-icons/fa6';
 import { SiThreads } from 'react-icons/si';
 import { useLanguage } from '@/lib/language';
@@ -15,9 +16,37 @@ const socialIcons = {
   threads: SiThreads,
 } as const;
 
+const localRoutes = new Set([
+  '/',
+  '/planes',
+  '/audit',
+  '/casos',
+  '/estudio',
+  '/hosteleria',
+  '/inmobiliaria',
+  '/bodegas',
+]);
+
+const localFooterLinks = [
+  { label: 'Planes', href: '/planes' },
+  { label: 'Casos', href: '/casos' },
+  { label: 'Auditoría', href: '/audit' },
+  { label: 'Estudio', href: '/estudio' },
+];
+
+const localSectorLinks = [
+  { label: 'Hostelería', href: '/hosteleria' },
+  { label: 'Inmobiliaria', href: '/inmobiliaria' },
+  { label: 'Bodegas', href: '/bodegas' },
+];
+
+const serviceZones = ['Toledo y provincia', 'Castilla-La Mancha', 'Madrid', 'Costa Blanca'];
+
 export function Footer() {
   const { content } = useLanguage();
+  const pathname = usePathname();
   const footer = content.footer;
+  const isLocalRoute = localRoutes.has(pathname);
 
   return (
     <footer className="bg-black px-8 py-12 text-white md:px-12 md:py-16">
@@ -34,11 +63,13 @@ export function Footer() {
               />
             </Link>
             <p className="max-w-sm whitespace-pre-line text-sm leading-relaxed text-white/70">
-              {footer.aboutText}
+              {isLocalRoute
+                ? 'Fotografía, vídeo y redes para negocios locales. Producción real, criterio visual y entrega lista para publicar.'
+                : footer.aboutText}
             </p>
             <div className="mt-8">
               <h4 className="mb-4 text-sm font-bold uppercase tracking-wider">
-                {footer.contactTitle}
+                {isLocalRoute ? 'Contacto directo' : footer.contactTitle}
               </h4>
               <div className="space-y-3 text-sm text-white/70">
                 <a className="block transition hover:text-white" href={`mailto:${footer.contactEmail}`}>
@@ -47,10 +78,60 @@ export function Footer() {
                 <a className="block transition hover:text-white" href={`tel:${footer.contactPhone}`}>
                   {footer.contactPhoneLabel}
                 </a>
+                {isLocalRoute && (
+                  <a
+                    className="block font-bold text-magenta transition hover:text-white"
+                    href="https://wa.me/34671141135?text=Hola%20HEYDE%20Studio%2C%20quiero%20preguntar%20por%20contenido%20para%20mi%20negocio"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Escribir por WhatsApp
+                  </a>
+                )}
               </div>
             </div>
           </div>
 
+          {isLocalRoute ? (
+            <div className="grid gap-10 md:grid-cols-3">
+              <div>
+                <h4 className="mb-4 text-sm font-bold uppercase tracking-wider">Web local</h4>
+                <ul className="space-y-2">
+                  {localFooterLinks.map((link) => (
+                    <li key={link.href}>
+                      <Link href={link.href} className="text-sm text-white/70 transition hover:text-white">
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="mb-4 text-sm font-bold uppercase tracking-wider">Sectores</h4>
+                <ul className="space-y-2">
+                  {localSectorLinks.map((link) => (
+                    <li key={link.href}>
+                      <Link href={link.href} className="text-sm text-white/70 transition hover:text-white">
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="mb-4 text-sm font-bold uppercase tracking-wider">Zona de servicio</h4>
+                <ul className="space-y-2">
+                  {serviceZones.map((zone) => (
+                    <li key={zone} className="text-sm text-white/70">
+                      {zone}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : (
           <div className="grid gap-10 md:grid-cols-4">
             <div>
               <h4 className="mb-4 text-sm font-bold uppercase tracking-wider">
@@ -120,6 +201,7 @@ export function Footer() {
               />
             </div>
           </div>
+          )}
         </div>
 
         <div className="border-t border-white/10 pt-6">

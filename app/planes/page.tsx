@@ -1,12 +1,9 @@
 import type { Metadata } from 'next';
 import { Button } from '@/components/Button';
 import { EditorialBody, EditorialKicker, EditorialTitle } from '@/components/EditorialText';
+import { pageSeo } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Planes y precios para negocios en Toledo | HEYDE Studio',
-  description:
-    'Planes mensuales de fotografia, video y redes para negocios locales. Precios cerrados, auditoria gratuita y packs por sector.',
-};
+export const metadata: Metadata = pageSeo.planes;
 
 const plans = [
   {
@@ -14,9 +11,9 @@ const plans = [
     price: '390 €/mes',
     bestFor: 'Para empezar a publicar con calidad y constancia.',
     features: [
-      '1 sesion de foto/video al mes',
+      '1 sesión de foto/vídeo al mes',
       '10-15 piezas listas para publicar',
-      'Seleccion, edicion y entrega optimizada',
+      'Selección, edición y entrega optimizada',
       'Calendario simple de contenidos',
       'Uso en redes, web y Google Business',
     ],
@@ -24,24 +21,24 @@ const plans = [
   {
     name: 'Crecimiento',
     price: '650 €/mes',
-    bestFor: 'Para negocios que necesitan presencia semanal y mejor primera impresion.',
+    bestFor: 'Para negocios que quieren olvidarse de publicar y mantener presencia semanal.',
     features: [
-      '2 sesiones de produccion al mes',
+      '2 sesiones de producción al mes',
       '25-35 piezas mensuales',
-      'Reels, fotografia y clips cortos',
-      'Copys base para publicaciones',
-      'Revision de Google Business y prioridades',
+      'Reels, fotografía y clips cortos',
+      'Publico yo por ti en redes',
+      'Copys, calendario y revisión de Google Business',
     ],
     highlighted: true,
   },
   {
     name: 'Dominio',
     price: '990 €/mes',
-    bestFor: 'Para negocios que quieren liderar su categoria visualmente.',
+    bestFor: 'Para negocios que quieren liderar su categoría visualmente.',
     features: [
-      'Produccion recurrente y direccion mensual',
+      'Producción recurrente y dirección mensual',
       '45-60 piezas mensuales',
-      'Campanas por temporada o lanzamiento',
+      'Campañas por temporada o lanzamiento',
       'Variaciones potenciadas con IA etiquetada',
       'Plan editorial y seguimiento mensual',
     ],
@@ -50,14 +47,14 @@ const plans = [
 
 const sectorPacks = [
   ['Pack Carta', '490 €', 'Fotos de platos, ambiente y piezas para relanzar carta o temporada.'],
-  ['Pack Vivienda', '220 €', 'Fotografia y video corto para pisos. Villas desde 590 €.'],
-  ['Campana Bodega', 'Desde 1.900 €', 'Producto, territorio, storytelling visual y piezas para venta o visita.'],
-  ['Bodas', 'Bajo peticion', 'Plazas limitadas por temporada. Solo proyectos con encaje claro.'],
+  ['Pack Vivienda', '220 €', 'Fotografía y vídeo corto para pisos. Villas desde 590 €.'],
+  ['Campaña Bodega', 'Desde 1.900 €', 'Producto, territorio, storytelling visual y piezas para venta o visita.'],
+  ['Bodas', 'Bajo petición', 'Plazas limitadas por temporada. Solo proyectos con encaje claro.'],
 ];
 
 const comparison = [
-  ['Base', 'Necesitas publicar mejor, pero aun no tienes ritmo semanal.'],
-  ['Crecimiento', 'Quieres presencia constante y material comercial reutilizable.'],
+  ['Base', 'Necesitas publicar mejor, pero aún no quieres delegar las redes.'],
+  ['Crecimiento', 'Quieres que produzca, organice y publique por ti cada semana.'],
   ['Dominio', 'Tu negocio depende mucho de imagen, temporada, reservas o ticket medio.'],
 ];
 
@@ -71,7 +68,7 @@ export default function PlanesPage() {
             <EditorialTitle text="Contenido mensual con precio cerrado." />
           </h1>
           <EditorialBody dark className="max-w-2xl">
-            Fotografia, video y redes para negocios locales. Sabes que entra, cuanto cuesta y cual es el siguiente paso antes de contratar.
+            Fotografía, vídeo y redes para negocios locales. Sabes qué entra, cuánto cuesta y cuál es el siguiente paso antes de contratar.
           </EditorialBody>
         </div>
       </section>
@@ -79,11 +76,11 @@ export default function PlanesPage() {
       <section className="bg-white px-6 py-14 sm:px-8 md:px-12 md:py-20">
         <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-[0.7fr_1fr] md:items-center">
           <div>
-            <EditorialKicker>Sesion de entrada</EditorialKicker>
+            <EditorialKicker>Sesión de entrada</EditorialKicker>
             <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">390 € descontables si pasas a plan.</h2>
           </div>
           <EditorialBody>
-            Una primera sesion para crear material real y comprobar si el ritmo encaja. Si despues activas un plan mensual, ese importe se descuenta del primer mes.
+            Una primera sesión para crear material real y comprobar si el ritmo encaja. Si después activas un plan mensual, ese importe se descuenta del primer mes.
           </EditorialBody>
         </div>
       </section>
@@ -116,7 +113,7 @@ export default function PlanesPage() {
               <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">Cuando necesitas algo concreto.</h2>
             </div>
             <EditorialBody>
-              Packs cerrados para hosteleria, inmobiliaria, bodegas y trabajos de temporada. Menos reunion, mas claridad.
+              Packs cerrados para hostelería, inmobiliaria, bodegas y trabajos de temporada. Menos reunión, más claridad.
             </EditorialBody>
           </div>
           <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 md:grid-cols-2">
@@ -135,7 +132,7 @@ export default function PlanesPage() {
 
       <section className="bg-gray-50 px-6 py-16 sm:px-8 md:px-12 md:py-24">
         <div className="mx-auto max-w-7xl">
-          <EditorialKicker>Que plan es para mi</EditorialKicker>
+          <EditorialKicker>Qué plan es para mí</EditorialKicker>
           <div className="mt-8 grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200">
             {comparison.map(([plan, fit]) => (
               <div key={plan} className="grid gap-4 bg-white p-6 md:grid-cols-[0.25fr_1fr] md:items-center">
@@ -151,14 +148,14 @@ export default function PlanesPage() {
         <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1fr_0.55fr] md:items-end">
           <div>
             <h2 className="mb-6 text-4xl font-bold md:text-6xl">
-              <EditorialTitle text="Empieza por una auditoria gratuita." />
+              <EditorialTitle text="Empieza por una auditoría gratuita." />
             </h2>
             <EditorialBody dark>
-              En 72 horas tienes un diagnostico claro. Si estas en Toledo, te lo llevo en persona.
+              En 72 horas tienes un diagnóstico claro. Si estás en Toledo, te lo llevo en persona.
             </EditorialBody>
           </div>
           <div className="md:text-right">
-            <Button href="/audit" label="Pedir auditoria" />
+            <Button href="/audit" label="Pedir auditoría" />
           </div>
         </div>
       </section>

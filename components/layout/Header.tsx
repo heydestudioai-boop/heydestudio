@@ -10,7 +10,7 @@ import { LanguageToggle } from './LanguageToggle';
 const navItems = [
   { label: 'Planes', href: '/planes' },
   { label: 'Casos', href: '/casos' },
-  { label: 'Auditoria', href: '/audit' },
+  { label: 'Auditoría', href: '/audit' },
   { label: 'Estudio', href: '/estudio' },
   { label: 'Marcas', href: '/marcas' },
 ] as const;

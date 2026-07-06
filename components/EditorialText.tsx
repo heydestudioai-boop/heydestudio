@@ -16,6 +16,7 @@ export function EditorialTitle({ text, className = '' }: EditorialTitleProps) {
           <span className="block max-w-full whitespace-normal text-balance [overflow-wrap:normal] [word-break:normal]">
             {line}
           </span>
+          {index < lines.length - 1 ? ' ' : null}
         </Fragment>
       ))}
     </span>
