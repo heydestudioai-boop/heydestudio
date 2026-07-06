@@ -23,6 +23,12 @@ export function LocalVerticalPage({
   image,
   area,
 }: VerticalPageProps) {
+  const quickFacts = [
+    ['Entrega', 'Foto, video y piezas listas'],
+    ['Precio', 'Cerrado antes de empezar'],
+    ['Uso', 'Redes, web y Google Business'],
+  ];
+
   return (
     <main className="bg-white">
       <section className="grid min-h-[calc(100vh-4rem)] bg-black text-white md:grid-cols-[0.52fr_0.48fr]">
@@ -32,9 +38,15 @@ export function LocalVerticalPage({
             <h1 className="mb-7 max-w-4xl text-4xl font-bold leading-none md:text-6xl">
               <EditorialTitle text={title} />
             </h1>
-            <EditorialBody dark className="max-w-2xl">
-              {pain}
-            </EditorialBody>
+            <p className="max-w-2xl text-lg leading-[1.65] text-white/74">{pain}</p>
+            <div className="mt-8 grid gap-px overflow-hidden rounded-sm border border-white/14 bg-white/14 sm:grid-cols-3">
+              {quickFacts.map(([label, value]) => (
+                <div key={label} className="bg-black/70 p-4">
+                  <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-white/42">{label}</p>
+                  <p className="text-sm font-bold leading-relaxed text-white">{value}</p>
+                </div>
+              ))}
+            </div>
             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
               <Button href="/audit" label="Pedir auditoria" />
               <Button href="/planes" label="Ver planes" variant="secondary" />
@@ -61,7 +73,17 @@ export function LocalVerticalPage({
             <p className="text-4xl font-bold text-magenta">{price}</p>
           </div>
           <div>
-            <EditorialBody>{description}</EditorialBody>
+            <div className="grid gap-6 lg:grid-cols-[0.75fr_1fr] lg:items-start">
+              <p className="text-lg leading-[1.65] text-gray-700">{description}</p>
+              <div className="rounded-sm border border-gray-200 bg-gray-50 p-6">
+                <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-magenta">Incluye</p>
+                <ul className="space-y-3 text-sm leading-relaxed text-gray-700">
+                  <li>+ Direccion visual antes de producir</li>
+                  <li>+ Seleccion y edicion de piezas finales</li>
+                  <li>+ Formatos pensados para publicar y vender</li>
+                </ul>
+              </div>
+            </div>
             <div className="mt-10 grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 md:grid-cols-3">
               {[
                 ['01', 'Auditoria gratuita', 'Revisamos tu presencia actual y la oportunidad visual.'],

@@ -14,6 +14,11 @@ const audiences = [
   ['Alquiler vacacional', '/inmobiliaria'],
 ];
 
+const audienceNotes = [
+  ['Sectores', 'Hosteleria, inmobiliaria, bodegas, clinicas, comercio y alquiler vacacional.'],
+  ['Objetivo', 'Que la primera impresion en Google, Instagram, web o WhatsApp trabaje a tu favor.'],
+];
+
 const plans = [
   {
     name: 'Base',
@@ -68,6 +73,18 @@ const faqs = [
   ['Trabajais fuera de Toledo?', 'Si. Toledo y provincia, Castilla-La Mancha, Madrid y Costa Blanca, con packs concretos para inmobiliaria y turismo.'],
 ];
 
+const localProof = [
+  ['Una persona', 'Dirección, produccion y entrega sin pasar por tres proveedores.'],
+  ['Precio cerrado', 'Planes y packs visibles antes de pedirte una llamada.'],
+  ['Material usable', 'Foto, video y piezas listas para publicar, no solo archivos bonitos.'],
+];
+
+const aiBenefits = [
+  'Mas variaciones desde una misma sesion',
+  'Escenarios y formatos sin alquilar cada localizacion',
+  'Contenido generado con IA etiquetado con claridad',
+];
+
 export function HomePageContent() {
   return (
     <main className="bg-white">
@@ -111,9 +128,14 @@ export function HomePageContent() {
             <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">
               Contenido comercial para negocios que viven de que les elijan.
             </h2>
-            <EditorialBody>
-              Hosteleria, inmobiliaria, bodegas, clinicas, comercio y alquiler vacacional. Cada sector necesita verse bien, publicar con ritmo y convertir primeras impresiones en visitas, reservas o llamadas.
-            </EditorialBody>
+            <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 sm:grid-cols-2">
+              {audienceNotes.map(([title, body]) => (
+                <div key={title} className="bg-white p-5">
+                  <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-magenta">{title}</p>
+                  <p className="text-sm leading-relaxed text-gray-700">{body}</p>
+                </div>
+              ))}
+            </div>
           </div>
           <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 md:grid-cols-3">
             {audiences.map(([audience, href]) => (
@@ -133,9 +155,14 @@ export function HomePageContent() {
               <EditorialKicker>Como funciona</EditorialKicker>
               <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">Tres pasos y precio cerrado.</h2>
             </div>
-            <EditorialBody>
-              El mismo mensaje en papel, en llamada y en pantalla: primero vemos que falla, despues te doy una propuesta clara y luego producimos contenido sin complicarte la semana.
-            </EditorialBody>
+            <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200">
+              {localProof.map(([title, body]) => (
+                <div key={title} className="bg-white p-5">
+                  <p className="mb-2 text-sm font-bold">{title}</p>
+                  <p className="text-sm leading-relaxed text-gray-700">{body}</p>
+                </div>
+              ))}
+            </div>
           </div>
           <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 md:grid-cols-3">
             {[
@@ -187,9 +214,16 @@ export function HomePageContent() {
               <EditorialKicker>Trabajo reciente</EditorialKicker>
               <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">Trabajo real y laboratorio, bien separados.</h2>
             </div>
-            <EditorialBody dark>
-              Mientras llegan los primeros casos locales, el portfolio muestra piezas reales y conceptos IA etiquetados como laboratorio. Ambicion, si. Fingir clientes, no.
-            </EditorialBody>
+            <div className="grid gap-px overflow-hidden rounded-sm border border-white/12 bg-white/12 sm:grid-cols-2">
+              <div className="bg-black p-5">
+                <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-white/42">Portfolio</p>
+                <p className="text-sm leading-relaxed text-white/70">Piezas reales de fotografia, video y direccion de contenido.</p>
+              </div>
+              <div className="bg-black p-5">
+                <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-white/42">Laboratorio</p>
+                <p className="text-sm leading-relaxed text-white/70">Conceptos IA etiquetados como exploracion, sin fingir clientes.</p>
+              </div>
+            </div>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {work.map((item) => (
@@ -230,9 +264,14 @@ export function HomePageContent() {
             <h2 className="mb-6 text-3xl font-bold leading-[1.05] md:text-5xl">
               Soy Oliver Heyde. La cara tambien es parte del servicio.
             </h2>
-            <EditorialBody>
-              Formado en produccion audiovisual y direccion de fotografia, trabajo como fotografo, videografo y creador de contenido desde Toledo. En negocio local no compras una agencia abstracta: llamas a una persona que entiende tu negocio, aparece, produce y responde.
-            </EditorialBody>
+            <div className="grid gap-5 md:grid-cols-2">
+              <p className="text-lg leading-[1.65] text-gray-700">
+                Formado en produccion audiovisual y direccion de fotografia, trabajo como fotografo, videografo y creador de contenido desde Toledo.
+              </p>
+              <p className="border-l-4 border-magenta pl-5 text-lg leading-[1.65] text-gray-700">
+                En negocio local no compras una agencia abstracta: llamas a una persona que entiende tu negocio, aparece, produce y responde.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -242,9 +281,16 @@ export function HomePageContent() {
           <div>
             <EditorialKicker>El toque IA</EditorialKicker>
             <h2 className="mb-6 text-3xl font-bold leading-[1.05] md:text-5xl">El rodaje es real. La IA lo multiplica.</h2>
-            <EditorialBody>
-              De cada sesion pueden salir mas piezas, variaciones y escenarios de los que permite una produccion tradicional pequeña. Si una pieza usa IA generativa, se etiqueta como tal: claridad para ti, honestidad para tus clientes.
-            </EditorialBody>
+            <p className="mb-7 max-w-2xl text-lg leading-[1.65] text-gray-700">
+              De cada sesion salen mas piezas y formatos que en una produccion pequeña tradicional, manteniendo el rodaje real como base.
+            </p>
+            <ul className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200">
+              {aiBenefits.map((benefit) => (
+                <li key={benefit} className="bg-white p-4 text-sm font-bold text-gray-800">
+                  {benefit}
+                </li>
+              ))}
+            </ul>
           </div>
           <div>
             <EditorialKicker>Zona de servicio</EditorialKicker>
