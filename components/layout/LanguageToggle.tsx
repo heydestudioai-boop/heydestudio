@@ -1,9 +1,11 @@
 'use client';
 
 import { useLanguage } from '@/lib/language';
+import { useRouter } from 'next/navigation';
 
 export function LanguageToggle() {
   const { language, setLanguage } = useLanguage();
+  const router = useRouter();
 
   return (
     <div
@@ -17,7 +19,10 @@ export function LanguageToggle() {
           <button
             key={option}
             type="button"
-            onClick={() => setLanguage(option)}
+            onClick={() => {
+              setLanguage(option);
+              router.push(option === 'EN' ? '/marcas' : '/');
+            }}
             className={`min-w-10 rounded px-3 py-1.5 text-sm font-bold transition-colors ${
               isActive
                 ? 'bg-black text-white'

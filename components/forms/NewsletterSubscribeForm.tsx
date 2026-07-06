@@ -73,6 +73,7 @@ export function NewsletterSubscribeForm({
         onChange={(event) => setEmail(event.target.value)}
         className={inputClass}
         autoComplete="email"
+        suppressHydrationWarning
         required
       />
       <input
@@ -83,6 +84,7 @@ export function NewsletterSubscribeForm({
         onChange={(event) => setWebsite(event.target.value)}
         className="hidden"
         aria-hidden="true"
+        suppressHydrationWarning
       />
       <button type="submit" className={buttonClass} disabled={status === 'loading'}>
         {status === 'loading' ? '...' : submitLabel}

@@ -3,6 +3,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ScrollToTopButton } from '@/components/ScrollToTopButton';
 import { CookieConsentManager } from '@/components/CookieConsentManager';
+import { FloatingWhatsApp } from '@/components/FloatingWhatsApp';
 import { LanguageProvider } from '@/lib/language';
 import { pageSeo, siteName, siteUrl } from '@/lib/seo';
 import './globals.css';
@@ -38,7 +39,7 @@ export default function RootLayout({
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="es" data-scroll-behavior="smooth">
       <head>
         {/* Schema.org */}
         <script
@@ -53,7 +54,7 @@ export default function RootLayout({
                   name: 'HEYDE Studio',
                   url: siteUrl,
                   logo: `${siteUrl}/logos/Heydestudio_Logo_Completo_Negro_Transparente.png`,
-                  description: 'AI Visual Systems for Modern Brands',
+                  description: 'Fotografia, video y redes para negocios locales, con produccion real potenciada por IA.',
                   sameAs: [
                     'https://instagram.com/heyde.studio',
                     'https://www.linkedin.com/company/heyde-studio',
@@ -67,6 +68,28 @@ export default function RootLayout({
                     telephone: '+34671141135',
                     availableLanguage: ['English', 'Spanish'],
                   },
+                },
+                {
+                  '@type': 'LocalBusiness',
+                  '@id': `${siteUrl}/#local-business`,
+                  name: 'HEYDE Studio',
+                  image: `${siteUrl}/images/oliver-heyde.jpeg`,
+                  url: siteUrl,
+                  telephone: '+34671141135',
+                  email: 'contact@heydestudio.com',
+                  priceRange: '€€',
+                  areaServed: ['Toledo', 'Castilla-La Mancha', 'Madrid', 'Costa Blanca'],
+                  address: {
+                    '@type': 'PostalAddress',
+                    addressLocality: 'Toledo',
+                    addressCountry: 'ES',
+                  },
+                  sameAs: [
+                    'https://instagram.com/heyde.studio',
+                    'https://www.linkedin.com/company/heyde-studio',
+                    'https://www.facebook.com/heydestudio',
+                    'https://www.threads.net/@heyde.studio',
+                  ],
                 },
                 {
                   '@type': 'Person',
@@ -84,18 +107,17 @@ export default function RootLayout({
                   name: 'HEYDE Studio',
                   url: siteUrl,
                   publisher: { '@id': `${siteUrl}/#organization` },
-                  inLanguage: ['en', 'es'],
+                  inLanguage: ['es', 'en'],
                 },
                 {
                   '@type': 'ItemList',
                   '@id': `${siteUrl}/services#service-list`,
-                  name: 'HEYDE Studio Services',
+                  name: 'HEYDE Studio Local Services',
                   itemListElement: [
-                    'Avatar',
-                    'Image',
-                    'Video / Reel',
-                    'Campaign',
-                    'System / Infrastructure',
+                    'Fotografia comercial',
+                    'Video para redes',
+                    'Gestion de contenido',
+                    'Auditoria gratuita',
                   ].map((name, index) => ({
                     '@type': 'ListItem',
                     position: index + 1,
@@ -103,9 +125,9 @@ export default function RootLayout({
                       '@type': 'Service',
                       name,
                       provider: { '@id': `${siteUrl}/#organization` },
-                      areaServed: 'Worldwide',
-                      serviceType: 'AI visual systems and campaign production',
-                      url: `${siteUrl}/services`,
+                      areaServed: ['Toledo', 'Castilla-La Mancha', 'Madrid', 'Costa Blanca'],
+                      serviceType: 'Fotografia, video y contenido para negocios locales',
+                      url: `${siteUrl}/planes`,
                     },
                   })),
                 },
@@ -123,6 +145,7 @@ export default function RootLayout({
           <Footer />
           <ScrollToTopButton />
           <CookieConsentManager gaId={gaId} />
+          <FloatingWhatsApp />
         </LanguageProvider>
       </body>
     </html>

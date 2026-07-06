@@ -6,7 +6,85 @@ import { useLanguage } from '@/lib/language';
 
 export function AuditPageContent() {
   const { content, language } = useLanguage();
-  const page = content.auditPage;
+  const page =
+    language === 'ES'
+      ? {
+          ...content.auditPage,
+          heroTitle: 'Auditoria gratuita para negocios locales.',
+          heroBody:
+            'Reviso tu foto, video, redes, ficha de Google y primera impresion movil. En 72 horas tienes tu auditoria en el correo. Si estas en Toledo, te la llevo en persona.',
+          scheduleCta: 'Pedir auditoria',
+          workCta: 'Ver trabajo',
+          introTitle: 'La version digital de una visita comercial bien hecha.',
+          introBody:
+            'No necesitas rellenar veinte campos ni entender tecnologia. Me pasas tu negocio, ciudad, Instagram o web y telefono. Yo miro lo que ve un cliente antes de elegirte y te digo donde estas perdiendo confianza.',
+          summaryCards: [
+            ['Tiempo', '20 minutos de llamada o una revision por correo si prefieres empezar sin agenda.'],
+            ['Coste', 'Gratis. Sin tarjeta, sin compromiso y sin pitch automatico.'],
+            ['Resultado', 'Una lista clara de mejoras en imagen, redes, Google Business y web movil.'],
+            ['Foco', 'Reservas, llamadas, visitas, confianza y primera impresion local.'],
+          ],
+          questionsTitle: 'Las seis comprobaciones que hacemos.',
+          questions: [
+            ['Foto y video actual', 'Si tu contenido muestra bien producto, espacio, personas y confianza.'],
+            ['Frecuencia de publicacion', 'Si el negocio parece vivo o abandonado antes de que alguien te escriba.'],
+            ['Ficha de Google', 'Fotos, reseñas, horarios, servicios y señales que ayudan a elegirte.'],
+            ['Reseñas', 'Como se percibe tu prueba social y que pedir al entregar cada trabajo.'],
+            ['Web movil', 'Que ocurre cuando alguien entra desde el telefono.'],
+            ['Primera impresion', 'Que entiende un cliente en los primeros cinco segundos.'],
+          ],
+          discoverTitle: 'Con que te vas.',
+          discoveries: [
+            ['1. Diagnostico claro', 'Que esta funcionando y que esta frenando llamadas, reservas o visitas.'],
+            ['2. Prioridad principal', 'El cambio visual o comercial que haria primero.'],
+            ['3. Ideas de contenido', 'Piezas concretas que tu negocio podria publicar este mes.'],
+            ['4. Recomendacion de plan', 'Si encaja Base, Crecimiento, Dominio, un pack puntual o nada todavia.'],
+            ['5. Siguiente paso', 'Una accion sencilla para probar mejora sin liarte.'],
+            ['6. Presupuesto orientativo', 'Precio cerrado si tiene sentido avanzar.'],
+          ],
+          fitTitle: 'Cuando tiene sentido.',
+          perfectTitle: 'Buen encaje:',
+          perfect: [
+            'Tienes restaurante, hotel, inmobiliaria, bodega, clinica o comercio',
+            'Tu negocio vende por confianza y primera impresion',
+            'Publicas poco o con material irregular',
+            'Tu ficha de Google podria trabajar mas por ti',
+            'Quieres precio claro antes de contratar',
+          ],
+          notYetTitle: 'Probablemente todavia no:',
+          notYet: [
+            'Solo buscas una foto suelta barata',
+            'No puedes dedicar nada de tiempo a preparar una sesion',
+            'No quieres que el contenido se use de forma constante',
+            'Buscas una agencia grande con muchos departamentos',
+            'No tienes claro que producto o servicio quieres vender mejor',
+          ],
+          unsureLabel: 'No estas seguro?',
+          unsureText:
+            'Pide la auditoria igualmente. Si no tiene sentido contratar, te lo dire directamente.',
+          processTitle: 'Como funciona.',
+          process: [
+            ['Pides la auditoria', 'Dejas nombre, negocio, ciudad, Instagram o web y WhatsApp.'],
+            ['Reviso tu presencia', 'Miro imagen, redes, ficha de Google, reseñas, web movil y primera impresion.'],
+            ['Recibes la lectura', 'En 72 horas tienes un diagnostico claro por correo o en persona si estas en Toledo.'],
+            ['Decides con calma', 'Si hay encaje, pasamos a sesion de entrada, pack o plan mensual.'],
+          ],
+          faqTitle: 'Preguntas frecuentes.',
+          faqs: [
+            ['De verdad es gratis?', 'Si. La auditoria sirve para ver si hay oportunidad real antes de vender nada.'],
+            ['Tengo que contratar despues?', 'No. Te llevas la lectura y decides con calma.'],
+            ['Que datos tengo que enviar?', 'Nombre, negocio, sector, ciudad, Instagram o web y telefono/WhatsApp.'],
+            ['Y si estoy fuera de Toledo?', 'Trabajo tambien en Castilla-La Mancha, Madrid y Costa Blanca segun proyecto.'],
+          ],
+          calendlyTitle: 'Pide tu auditoria gratuita.',
+          calendarFallback: 'Prefieres escribir directamente?',
+          emailInstead: 'Enviar email',
+          finalTitle: 'Empieza por ver lo que ve tu cliente.',
+          finalBody:
+            'La auditoria te dice si necesitas mejores fotos, mas video, una ficha de Google mejor cuidada o simplemente una direccion mas clara.',
+          finalCta: 'Pedir auditoria',
+        }
+      : content.auditPage;
 
   return (
     <main className="bg-white">
@@ -122,7 +200,7 @@ export function AuditPageContent() {
           <div className="mt-8">
             <p className="mb-4 text-gray-600">{page.calendarFallback}</p>
             <a
-              href="mailto:contact@heydestudio.com?subject=Free Visual System Audit"
+              href="mailto:contact@heydestudio.com?subject=Auditoria gratuita HEYDE Studio"
               className="inline-flex rounded-sm border border-magenta px-8 py-3 text-sm font-bold uppercase tracking-[0.08em] text-magenta transition-colors hover:bg-magenta/10"
             >
               {page.emailInstead}

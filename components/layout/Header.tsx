@@ -5,20 +5,19 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { useLanguage } from '@/lib/language';
 import { LanguageToggle } from './LanguageToggle';
 
 const navItems = [
-  { key: 'work', href: '/work' },
-  { key: 'services', href: '/services' },
-  { key: 'about', href: '/about' },
-  { key: 'resources', href: '/resources' },
+  { label: 'Planes', href: '/planes' },
+  { label: 'Casos', href: '/casos' },
+  { label: 'Auditoria', href: '/audit' },
+  { label: 'Estudio', href: '/estudio' },
+  { label: 'Marcas', href: '/marcas' },
 ] as const;
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { content } = useLanguage();
 
   const isActive = (href: string) => pathname === href;
 
@@ -47,7 +46,7 @@ export function Header() {
                   : 'text-[#121212]/68 hover:text-[#121212]'
               }`}
             >
-              {content.nav[item.key]}
+              {item.label}
             </Link>
           ))}
         </div>
@@ -58,13 +57,7 @@ export function Header() {
             href="/contact"
             className="rounded-sm bg-magenta px-4 py-2 text-[13px] font-bold text-white transition-colors hover:bg-magenta-dark"
           >
-            {content.nav.contact}
-          </Link>
-          <Link
-            href="/audit"
-            className="rounded-sm border border-magenta px-4 py-2 text-[13px] font-bold text-magenta transition-colors hover:bg-magenta hover:text-white"
-          >
-            {content.nav.audit}
+            Contacto
           </Link>
         </div>
 
@@ -97,7 +90,7 @@ export function Header() {
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                {content.nav[item.key]}
+                {item.label}
               </Link>
             ))}
 
@@ -106,14 +99,7 @@ export function Header() {
               className="block rounded-sm bg-magenta px-5 py-3 text-center text-sm font-bold text-white transition-colors hover:bg-magenta-dark"
               onClick={() => setMobileMenuOpen(false)}
             >
-              {content.nav.contact}
-            </Link>
-            <Link
-              href="/audit"
-              className="block rounded-sm border border-magenta px-5 py-3 text-center text-sm font-bold text-magenta transition-colors hover:bg-magenta hover:text-white"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {content.nav.audit}
+              Contacto
             </Link>
           </div>
         </div>

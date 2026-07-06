@@ -24,7 +24,7 @@ const STORAGE_KEY = 'heyde-language';
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>(() => {
     if (typeof window === 'undefined') {
-      return 'EN';
+      return 'ES';
     }
 
     const savedLanguage = window.localStorage.getItem(STORAGE_KEY);
@@ -32,7 +32,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       return savedLanguage;
     }
 
-    return 'EN';
+    return 'ES';
   });
 
   useEffect(() => {
