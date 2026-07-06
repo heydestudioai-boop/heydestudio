@@ -15,8 +15,8 @@ const audiences = [
 ];
 
 const audienceNotes = [
-  ['Sectores', 'Hostelería, inmobiliaria, bodegas, clínicas, comercio y alquiler vacacional.'],
-  ['Objetivo', 'Que la primera impresión en Google, Instagram, web o WhatsApp trabaje a tu favor.'],
+  ['Oficio real', 'Formación en dirección de fotografía y años de trabajo con cámara, luz y criterio.'],
+  ['IA honesta', 'La IA multiplica la producción, pero todo lo generado va etiquetado como tal.'],
 ];
 
 const plans = [
@@ -29,8 +29,8 @@ const plans = [
   {
     name: 'Crecimiento',
     price: '650 €/mes',
-    description: 'Para negocios que quieren que produzca, organice y publique por ellos.',
-    features: ['2 sesiones mensuales', 'Reels y fotografía', 'Publico yo por ti', 'Google Business y redes'],
+    description: 'Para el negocio que quiere olvidarse de las redes.',
+    features: ['2 visitas de rodaje al mes', '25-35 piezas mensuales', 'Publico y respondo por ti', 'Informe sencillo mensual'],
     highlighted: true,
   },
   {
@@ -66,23 +66,23 @@ const work = [
 ];
 
 const faqs = [
-  ['¿Qué incluye exactamente cada plan?', 'Producción de foto y vídeo, piezas listas para publicar y una dirección clara para que el contenido no salga improvisado.'],
-  ['¿De quién es el contenido?', 'Del cliente, para siempre. Puedes usarlo en web, redes, Google Business, anuncios y materiales comerciales.'],
-  ['¿Hay permanencia?', 'Los planes funcionan con un compromiso inicial de 3 meses. Después, 30 días de aviso.'],
-  ['¿Qué es eso de la IA y cómo la usáis?', 'El rodaje es real. La IA ayuda a multiplicar piezas, escenarios y variaciones. Todo contenido generado con IA se etiqueta como tal.'],
-  ['¿Trabajáis fuera de Toledo?', 'Sí. Toledo y provincia, Castilla-La Mancha, Madrid y Costa Blanca, con packs concretos para inmobiliaria y turismo.'],
+  ['¿Qué incluye exactamente cada plan?', 'Lo que ves en la página de planes, sin letra pequeña. Sesiones de rodaje reales en tu negocio, piezas editadas listas para publicar y, según el plan, la gestión completa de tus redes.'],
+  ['¿De quién es el contenido?', 'Tuyo. Para siempre. Si algún día dejamos de trabajar juntos, te llevas todo.'],
+  ['¿Hay permanencia?', 'Tres meses al empezar, porque el contenido necesita ese tiempo para dar resultados. Después, cancelas con 30 días de aviso.'],
+  ['¿Qué es eso de la IA y cómo la usáis?', 'El rodaje es real, con cámara y con oficio. La IA multiplica lo grabado: más formatos, variantes y escenarios que serían carísimos de producir. Todo lo generado va etiquetado.'],
+  ['¿Trabajáis fuera de Toledo?', 'Sí: Castilla-La Mancha, Madrid y la Costa Blanca. ¿Otra zona? Escríbeme y lo vemos.'],
 ];
 
 const localProof = [
-  ['Una persona', 'Dirección, producción y entrega sin pasar por tres proveedores.'],
-  ['Precio cerrado', 'Planes y packs visibles antes de pedirte una llamada.'],
-  ['Material usable', 'Foto, vídeo y piezas listas para publicar, no solo archivos bonitos.'],
+  ['Oficio real', 'Formación en dirección de fotografía, años de rodaje y criterio visual antes de tocar la IA.'],
+  ['Precio cerrado', 'Alcance y precio por escrito antes de empezar, sin sustos en la factura.'],
+  ['IA etiquetada', 'Lo real es real, y lo generado se dice. Tus clientes lo agradecen.'],
 ];
 
 const aiBenefits = [
-  'Más variaciones desde una misma sesión',
-  'Escenarios y formatos sin alquilar cada localización',
-  'Contenido generado con IA etiquetado con claridad',
+  'Más formatos desde cada sesión en tu negocio',
+  'Más variantes y semanas de contenido sin otro rodaje',
+  'IA siempre etiquetada, sin hacer pasar lo generado por real',
 ];
 
 export function HomePageContent() {
@@ -105,13 +105,13 @@ export function HomePageContent() {
         <div className="relative mx-auto flex w-full max-w-7xl flex-col items-start">
           <div className="max-w-5xl [text-shadow:0_2px_24px_rgba(18,18,18,0.62)]">
             <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.18em] text-white/62 md:text-xs">
-              Fotografía, vídeo y redes para negocios de Toledo
+              Toledo · Castilla-La Mancha · Madrid · Costa Blanca
             </p>
             <h1 className="mb-7 max-w-5xl text-4xl font-bold leading-none md:text-6xl lg:text-7xl">
               Todo el contenido de tu negocio. Una sola persona. Un precio fijo al mes.
             </h1>
             <p className="mb-9 max-w-2xl text-base leading-relaxed text-white/82 md:text-xl">
-              Fotografía y vídeo profesional potenciados con IA. Sin agencias, sin tres proveedores, sin sorpresas en la factura.
+              Fotografía y vídeo profesionales, potenciados con IA. Para negocios de Toledo, Castilla-La Mancha, Madrid y la Costa Blanca que quieren publicar como los grandes sin pagar una agencia.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row [text-shadow:none]">
               <Button href="/audit" label="Pide tu auditoría gratuita" />
@@ -126,7 +126,7 @@ export function HomePageContent() {
           <EditorialKicker>Para quién</EditorialKicker>
           <div className="mb-10 grid gap-8 md:grid-cols-[0.75fr_1fr] md:items-end">
             <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">
-              Contenido comercial para negocios que viven de que les elijan.
+              Contenido para negocios que se deciden antes de la llamada.
             </h2>
             <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 sm:grid-cols-2">
               {audienceNotes.map(([title, body]) => (
@@ -141,6 +141,19 @@ export function HomePageContent() {
             {audiences.map(([audience, href]) => (
               <Link key={audience} href={href} className="bg-white p-7 transition hover:bg-gray-50">
                 <h3 className="text-xl font-bold">{audience}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-gray-700">
+                  {audience === 'Restaurantes y hoteles'
+                    ? 'Platos, sala y ambiente que dan hambre y traen reservas.'
+                    : audience === 'Inmobiliarias'
+                      ? 'Viviendas que se ven mejor que en persona y se venden antes.'
+                      : audience === 'Bodegas'
+                        ? 'Contenido de marca para vender dentro y fuera de España.'
+                        : audience === 'Clínicas'
+                          ? 'Confianza a primera vista: instalaciones, equipo y resultados.'
+                          : audience === 'Comercio local'
+                            ? 'Tu escaparate, abierto 24 horas en el móvil de tu cliente.'
+                            : 'Fotos y vídeo que suben la ocupación y el precio por noche.'}
+                </p>
                 <p className="mt-5 text-sm font-bold text-magenta">Ver opciones</p>
               </Link>
             ))}
@@ -166,9 +179,9 @@ export function HomePageContent() {
           </div>
           <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 md:grid-cols-3">
             {[
-              ['01', 'Auditoría gratuita', 'Reviso tu presencia visual, redes, ficha de Google y primera impresión móvil.'],
-              ['02', 'Propuesta en 48 h', 'Recibes un plan con alcance, precio cerrado y siguiente movimiento recomendado.'],
-              ['03', 'Primera sesión en 7 días', 'Fotografía, vídeo y piezas listas para publicar con una dirección común.'],
+              ['01', 'Auditoría gratuita', 'Te digo qué está frenando tu presencia digital y qué haría yo.'],
+              ['02', 'Propuesta en 48 h', 'Tienes propuesta con plan y precio cerrado.'],
+              ['03', 'Rodaje en menos de 7 días', 'A partir de ahí, tu negocio no deja de publicar.'],
             ].map(([number, title, body]) => (
               <div key={number} className="bg-white p-8">
                 <p className="mb-8 text-xs font-bold uppercase tracking-[0.18em] text-magenta">{number}</p>
@@ -280,9 +293,9 @@ export function HomePageContent() {
         <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-2">
           <div>
             <EditorialKicker>El toque IA</EditorialKicker>
-            <h2 className="mb-6 text-3xl font-bold leading-[1.05] md:text-5xl">El rodaje es real. La IA lo multiplica.</h2>
+              <h2 className="mb-6 text-3xl font-bold leading-[1.05] md:text-5xl">El rodaje es real. La IA lo multiplica.</h2>
             <p className="mb-7 max-w-2xl text-lg leading-[1.65] text-gray-700">
-              De cada sesión salen más piezas y formatos que en una producción pequeña tradicional, manteniendo el rodaje real como base.
+              Vengo del oficio: cámara, luz y criterio. La IA no sustituye nada de eso, lo multiplica. De cada sesión en tu negocio salen más formatos, más variantes y más semanas de contenido que con una producción tradicional pequeña.
             </p>
             <ul className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200">
               {aiBenefits.map((benefit) => (
@@ -294,6 +307,9 @@ export function HomePageContent() {
           </div>
           <div>
             <EditorialKicker>Zona de servicio</EditorialKicker>
+            <p className="mb-6 text-lg leading-[1.65] text-gray-700">
+              Trabajo donde llega mi cámara. ¿Estás fuera de estas zonas? Escríbeme igualmente: si el proyecto lo merece, la distancia se negocia.
+            </p>
             <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200">
               {['Toledo y provincia', 'Castilla-La Mancha', 'Madrid', 'Costa Blanca: Jávea y alrededores'].map((zone) => (
                 <div key={zone} className="bg-white p-5 text-lg font-bold">{zone}</div>

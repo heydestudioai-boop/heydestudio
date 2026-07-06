@@ -64,7 +64,7 @@ export function Footer() {
             </Link>
             <p className="max-w-sm whitespace-pre-line text-sm leading-relaxed text-white/70">
               {isLocalRoute
-                ? 'Fotografía, vídeo y redes para negocios locales. Producción real, criterio visual y entrega lista para publicar.'
+                ? 'HEYDE Studio — Fotografía, vídeo y contenido para negocios.\nToledo · Castilla-La Mancha · Madrid · Costa Blanca'
                 : footer.aboutText}
             </p>
             <div className="mt-8">
@@ -85,7 +85,7 @@ export function Footer() {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Escribir por WhatsApp
+                    Hablamos por WhatsApp
                   </a>
                 )}
               </div>
@@ -129,6 +129,12 @@ export function Footer() {
                     </li>
                   ))}
                 </ul>
+                <Link
+                  href="/marcas"
+                  className="mt-6 block text-sm font-bold text-magenta transition hover:text-white"
+                >
+                  ¿Eres una marca y buscas sistemas visuales con IA? → HEYDE para marcas
+                </Link>
               </div>
             </div>
           ) : (

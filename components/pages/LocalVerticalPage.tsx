@@ -107,11 +107,11 @@ export function LocalVerticalPage({
             <EditorialKicker>Zona</EditorialKicker>
             <h2 className="mb-6 text-3xl font-bold leading-[1.05] md:text-5xl">{area}</h2>
             <EditorialBody>
-              Si no tienes claro qué necesitas, empezamos por la auditoría gratuita y decidimos si conviene un pack, una sesión de entrada o un plan mensual.
+              Si no tienes claro qué necesitas, empezamos por la auditoría gratuita y decidimos si conviene un pack, una sesión de entrada o un plan mensual. ¿Estás fuera de estas zonas? Escríbeme igualmente: si el proyecto lo merece, la distancia se negocia.
             </EditorialBody>
           </div>
           <div className="md:text-right">
-            <Button href="https://wa.me/34671141135" label="Escribir por WhatsApp" target="_blank" rel="noreferrer" />
+            <Button href="https://wa.me/34671141135" label="Hablamos por WhatsApp" target="_blank" rel="noreferrer" />
           </div>
         </div>
       </section>

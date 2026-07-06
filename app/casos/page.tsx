@@ -9,15 +9,15 @@ export const metadata: Metadata = pageSeo.casos;
 
 const realWork = [
   {
-    title: 'Foto, vídeo y contenido real',
+    title: 'Trabajo reciente',
     sector: 'Portfolio local',
-    body: 'Trabajo de fotografía, vídeo y dirección de contenido para negocios que necesitan verse mejor en web, redes, Google Business y WhatsApp.',
+    body: 'Fotografía, vídeo y contenido que se nota en las reservas, en las visitas y en las ventas.',
     image: '/images/HEYDE_Story_Portfolio.jpg',
   },
   {
     title: 'Producto, espacio y persona',
     sector: 'Negocio local',
-    body: 'La prioridad no es parecer una campaña de lujo: es que el cliente entienda qué vendes, cómo se vive y por qué puede confiar.',
+    body: 'Selección de material real y cercano: producto, espacio, luz, persona y piezas listas para publicar.',
     image: '/images/work-solea-03.jpg',
   },
 ];
@@ -25,13 +25,13 @@ const realWork = [
 const labWork = [
   {
     title: 'Soleá',
-    body: 'Laboratorio de campaña con IA para probar luz, identidad, dirección visual y lenguaje editorial.',
+    body: 'Proyecto autoiniciado donde llevamos al límite la producción con IA: campañas conceptuales, escenarios y dirección visual.',
     image: '/images/work-solea-cover.jpg',
     href: '/case-studies/solea',
   },
   {
     title: 'Eden',
-    body: 'Proyecto autoiniciado sobre mundos visuales escalables, producto y narrativa de marca.',
+    body: 'Campo de pruebas para explorar mundos visuales, producto y narrativa de marca. Todo lo aprendido acaba trabajando para el cliente real.',
     image: '/images/work-eden-cover.jpg',
     href: '/case-studies/eden',
   },
@@ -44,10 +44,10 @@ export default function CasosPage() {
         <div className="mx-auto max-w-7xl">
           <EditorialKicker muted>Casos y portfolio</EditorialKicker>
           <h1 className="mb-7 max-w-5xl text-4xl font-bold leading-none md:text-6xl lg:text-7xl">
-            <EditorialTitle text="Trabajo real primero. Laboratorio IA bien separado." />
+            <EditorialTitle text="Trabajo real para negocios reales." />
           </h1>
           <EditorialBody dark className="max-w-2xl">
-            Aquí no mezclo un restaurante de Toledo con una campaña inventada. Primero ves el tipo de trabajo real que sirve a un negocio local; debajo, los experimentos IA marcados como laboratorio.
+            Esto es lo que hago: fotografía, vídeo y contenido que se nota en las reservas, en las visitas y en las ventas. Selección de trabajo reciente y, debajo, nuestro laboratorio.
           </EditorialBody>
         </div>
       </section>
@@ -58,11 +58,11 @@ export default function CasosPage() {
             <div>
               <EditorialKicker>Portfolio local</EditorialKicker>
               <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">
-                Foto y vídeo para que el negocio se entienda antes.
+                Fotografía, vídeo y contenido para vender mejor.
               </h2>
             </div>
             <EditorialBody>
-              La web irá incorporando casos reales con nombre, métricas y contexto cuando estén autorizados. Mientras tanto, esta sección prioriza el trabajo de oficio: producto, espacio, luz, persona y piezas listas para publicar.
+              Mientras llegan casos de cliente con nombre, esta sección prioriza trabajo real: material producido con oficio, útil para web, redes, Google Business y WhatsApp.
             </EditorialBody>
           </div>
 
@@ -91,13 +91,13 @@ export default function CasosPage() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 grid gap-8 md:grid-cols-[0.65fr_1fr] md:items-end">
             <div>
-              <EditorialKicker>Laboratorio</EditorialKicker>
+              <EditorialKicker>HEYDE Lab</EditorialKicker>
               <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">
-                Exploraciones IA, sin fingir que son clientes.
+                Proyectos de exploración.
               </h2>
             </div>
             <EditorialBody>
-              Estos proyectos sirven para enseñar criterio visual, dirección de campaña y posibilidades de IA. Son útiles para entender hasta dónde puede crecer una producción real, pero no sustituyen al portfolio local.
+              Proyectos autoiniciados donde llevamos al límite la producción con IA: campañas conceptuales, avatares y escenarios imposibles. No son encargos de cliente y lo decimos con orgullo: es nuestro campo de pruebas, y todo lo que aprendemos aquí acaba trabajando para ti.
             </EditorialBody>
           </div>
 

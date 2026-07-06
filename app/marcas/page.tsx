@@ -3,12 +3,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/Button';
 import { EditorialBody, EditorialKicker, EditorialTitle } from '@/components/EditorialText';
+import { createMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createMetadata({
   title: 'HEYDE Studio for Brands | AI visual systems',
   description:
     'Premium AI visual systems, campaign imagery, avatars and production infrastructure for brands.',
-};
+  path: '/marcas',
+  locale: 'en_US',
+  alternateLocale: ['es_ES'],
+});
 
 const services = [
   ['Avatar System', 'Reusable digital assets with identity logic, expressions, angles and usage rules.'],
@@ -32,7 +36,7 @@ export default function MarcasPage() {
           <div className="mb-6 flex flex-wrap items-center gap-4">
             <EditorialKicker>HEYDE for brands</EditorialKicker>
             <Link href="/" className="text-sm font-bold text-white/58 transition hover:text-white">
-              Local business? Go to Para negocios
+              ¿Negocio local en España? → Para negocios
             </Link>
           </div>
           <h1 className="mb-7 max-w-5xl text-4xl font-bold leading-none md:text-6xl lg:text-7xl">
@@ -41,6 +45,9 @@ export default function MarcasPage() {
           <EditorialBody dark className="max-w-2xl">
             We turn AI production into a controlled brand asset: direction, identity lock, campaign derivation and documentation your team can reuse.
           </EditorialBody>
+          <p className="mt-6 max-w-2xl text-sm font-bold uppercase tracking-[0.14em] text-white/48">
+            Remote-first. Proyectos para marcas de España y Europa.
+          </p>
           <div className="mt-9 flex flex-col gap-4 sm:flex-row">
             <Button href="/contact" label="Start a project" />
             <Button href="/work" label="See work" variant="secondary" />

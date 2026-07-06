@@ -8,8 +8,8 @@ export const metadata: Metadata = pageSeo.estudio;
 
 const facts = [
   ['Base', 'Toledo'],
-  ['Oficio', 'Fotografía, vídeo, social media y dirección de contenido'],
-  ['Trabajo', 'Producción real potenciada con IA cuando aporta valor'],
+  ['Base también', 'Costa Blanca'],
+  ['Zona', 'Castilla-La Mancha y Madrid'],
 ];
 
 const principles = [
@@ -27,10 +27,10 @@ export default function EstudioPage() {
           <div>
             <EditorialKicker muted>Estudio</EditorialKicker>
             <h1 className="mb-7 max-w-5xl text-4xl font-bold leading-none md:text-6xl lg:text-7xl">
-              <EditorialTitle text="Soy Oliver Heyde. El estudio empieza por una persona que aparece." />
+              <EditorialTitle text="Detrás de HEYDE hay una persona, no una agencia." />
             </h1>
             <EditorialBody dark className="max-w-2xl">
-              HEYDE Studio es mi forma de unir fotografía, vídeo, redes y criterio visual para negocios locales que necesitan vender mejor sin montar un departamento de marketing.
+              Soy fotógrafo y videógrafo, formado en producción audiovisual y dirección de fotografía, y llevo años creando contenido y gestionando redes y comunidades para marcas y negocios.
             </EditorialBody>
           </div>
           <div className="overflow-hidden rounded-sm bg-white/10">
@@ -51,18 +51,18 @@ export default function EstudioPage() {
           <div>
             <EditorialKicker>Quién soy</EditorialKicker>
             <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">
-              Formación audiovisual, oficio de contenido y mirada local.
+              Oficio de toda la vida. IA bien usada.
             </h2>
           </div>
           <div className="space-y-6 text-lg leading-[1.65] text-gray-700">
             <p>
-              Trabajo como fotógrafo, videógrafo y creador de contenido desde Toledo. Mi experiencia mezcla producción audiovisual, dirección de fotografía, social media y campañas visuales asistidas por IA.
+              Monté HEYDE para unir dos mundos: el oficio de toda la vida, luz, encuadre y criterio, con la potencia de la IA bien usada y siempre etiquetada.
             </p>
             <p>
-              En negocio local, la confianza se decide rápido: una foto de carta, una vivienda mal iluminada, una ficha de Google abandonada o un Instagram sin ritmo pueden hacer que alguien elija al de al lado.
+              El resultado: tu negocio publica como los grandes, con una sola persona al otro lado, sin sustos en la factura.
             </p>
             <p>
-              Por eso el servicio está pensado para bajar a tierra: audito, propongo, produzco y entrego material que puedas usar sin traducirlo a otros tres proveedores.
+              Trabajo desde Toledo, con base también en la Costa Blanca, y me muevo por Castilla-La Mancha y Madrid.
             </p>
           </div>
         </div>
