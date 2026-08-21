@@ -7,7 +7,11 @@ import {
   isAuditTestMode,
   normalizeAuditRequest,
 } from '@/lib/auditFunnelCore';
-import { parseJson, rateLimit } from '@/lib/apiSecurity';
+import {
+  isAuthorizedPreviewQaRequest,
+  parseJson,
+  rateLimit,
+} from '@/lib/apiSecurity';
 import { sendBrevoEmail } from '@/lib/brevo';
 import { buildAuditRequestConfirmationEmail } from '@/lib/emailTemplates/auditRequestConfirmation';
 import {
@@ -31,7 +35,10 @@ export async function POST(request: NextRequest) {
   if (!isAuditFormEnabled(process.env)) {
     const expectedToken = process.env.INTERNAL_API_TOKEN;
     const providedToken = request.headers.get('x-internal-token');
-    if (!expectedToken || providedToken !== expectedToken) {
+    if (
+      (!expectedToken || providedToken !== expectedToken) &&
+      !isAuthorizedPreviewQaRequest(request)
+    ) {
       return NextResponse.json(
         {
           success: false,
