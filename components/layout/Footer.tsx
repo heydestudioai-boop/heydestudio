@@ -25,6 +25,7 @@ const localRoutes = new Set([
   '/hosteleria',
   '/inmobiliaria',
   '/bodegas',
+  '/faq',
 ]);
 
 const localFooterLinks = [
@@ -32,6 +33,7 @@ const localFooterLinks = [
   { label: 'Casos', href: '/casos' },
   { label: 'Auditoría', href: '/audit' },
   { label: 'Estudio', href: '/estudio' },
+  { label: 'Preguntas frecuentes', href: '/faq' },
 ];
 
 const localSectorLinks = [

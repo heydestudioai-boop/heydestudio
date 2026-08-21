@@ -2,21 +2,22 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { Button } from '@/components/Button';
 import { EditorialBody, EditorialKicker, EditorialTitle } from '@/components/EditorialText';
+import { aiPolicy, canonicalBrand } from '@/lib/canonical';
 import { pageSeo } from '@/lib/seo';
 
 export const metadata: Metadata = pageSeo.estudio;
 
 const facts = [
   ['Base', 'Toledo'],
-  ['Base también', 'Costa Blanca'],
-  ['Zona', 'Castilla-La Mancha y Madrid'],
+  ['Zona presencial', 'Castilla-La Mancha y Madrid'],
+  ['Proyectos de temporada', 'Costa Blanca'],
 ];
 
 const principles = [
   ['Claro antes de contratar', 'Planes, packs y precios visibles para que no tengas que pedir una reunión solo para entender el alcance.'],
-  ['Una persona responsable', 'Hablas conmigo: preparo, produzco, edito, publico cuando toca y respondo.'],
-  ['Contenido que se usa', 'El objetivo no es entregar archivos bonitos, sino piezas útiles para redes, web, Google Business, WhatsApp y ventas.'],
-  ['IA con etiqueta', 'Cuando uso IA para multiplicar formatos o escenarios, lo digo. El rodaje real sigue siendo la base.'],
+  ['Una persona responsable', 'Oliver dirige la cuenta, coordina el trabajo y mantiene el criterio. Si una pieza necesita apoyo especializado, sigues teniendo un único punto de contacto.'],
+  ['Contenido que se usa', 'El objetivo no es acumular archivos bonitos, sino sostener piezas útiles para redes, web, Google Business y WhatsApp.'],
+  ['IA con criterio', aiPolicy.disclosure],
 ];
 
 export default function EstudioPage() {
@@ -27,10 +28,10 @@ export default function EstudioPage() {
           <div>
             <EditorialKicker muted>Estudio</EditorialKicker>
             <h1 className="mb-7 max-w-5xl text-4xl font-bold leading-none md:text-6xl lg:text-7xl">
-              <EditorialTitle text="Detrás de HEYDE hay una persona, no una agencia." />
+              <EditorialTitle text="Una persona responsable. Un criterio de principio a fin." />
             </h1>
             <EditorialBody dark className="max-w-2xl">
-              Soy fotógrafo y videógrafo, formado en producción audiovisual y dirección de fotografía, y llevo años creando contenido y gestionando redes y comunidades para marcas y negocios.
+              HEYDE es {canonicalBrand.definition.toLowerCase()} Oliver Heyde dirige cada cuenta y combina producción audiovisual, estrategia, publicación y comunidad.
             </EditorialBody>
           </div>
           <div className="overflow-hidden rounded-sm bg-white/10">
@@ -56,13 +57,16 @@ export default function EstudioPage() {
           </div>
           <div className="space-y-6 text-lg leading-[1.65] text-gray-700">
             <p>
-              Monté HEYDE para unir dos mundos: el oficio de toda la vida, luz, encuadre y criterio, con la potencia de la IA bien usada y siempre etiquetada.
+              Monté HEYDE para unir dos mundos: el oficio audiovisual —luz, encuadre y criterio— con herramientas que ayudan a producir y adaptar mejor.
             </p>
             <p>
-              El resultado: tu negocio publica como los grandes, con una sola persona al otro lado, sin sustos en la factura.
+              El resultado es una cuenta con una persona responsable al frente, un sistema claro y precio por escrito. No depende de coordinar por tu cuenta a varios proveedores.
             </p>
             <p>
-              Trabajo desde Toledo, con base también en la Costa Blanca, y me muevo por Castilla-La Mancha y Madrid.
+              {aiPolicy.short} La tecnología se elige por utilidad, no por novedad.
+            </p>
+            <p>
+              Trabajo desde Toledo y me muevo por Castilla-La Mancha, Madrid y Costa Blanca según el servicio y el proyecto.
             </p>
           </div>
         </div>
@@ -81,17 +85,17 @@ export default function EstudioPage() {
         </div>
       </section>
 
-      <section className="bg-white px-6 py-16 sm:px-8 md:px-12 md:py-24">
+      <section id="como-trabajo" className="scroll-mt-24 bg-white px-6 py-16 sm:px-8 md:px-12 md:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 grid gap-8 md:grid-cols-[0.65fr_1fr] md:items-end">
             <div>
               <EditorialKicker>Cómo trabajo</EditorialKicker>
               <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">
-                Menos discurso de agencia. Más claridad de servicio.
+                Del negocio real a un mes de contenido útil.
               </h2>
             </div>
             <EditorialBody>
-              La idea es sencilla: que sepas qué necesitas, cuánto cuesta y qué vas a recibir antes de meterte en llamadas largas.
+              Estrategia, guiones, rodaje, edición, publicación y aprendizaje comparten una dirección. Sabes qué necesitas, cuánto cuesta y qué vas a recibir.
             </EditorialBody>
           </div>
           <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 md:grid-cols-2">

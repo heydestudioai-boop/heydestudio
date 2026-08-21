@@ -6,13 +6,13 @@ const legalCopy = {
   EN: {
     privacy: {
       title: 'Privacy Policy',
-      updated: 'Last updated: May 7, 2026',
+      updated: 'Last updated: August 21, 2026',
       intro:
         'HEYDE Studio collects only the information needed to respond to enquiries, deliver requested resources, run audits, and improve the website.',
       sections: [
         {
           title: 'Information We Collect',
-          body: 'We may collect contact details, company information, form messages, audit questionnaire answers, analytics events, and basic technical data such as browser, device, and page interactions.',
+          body: 'We may collect contact details, business name, city or area, website or Instagram profile, optional phone number, form messages, privacy-consent timestamp, analytics events, and basic technical data such as browser, device, and page interactions.',
         },
         {
           title: 'How We Use Information',
@@ -20,7 +20,7 @@ const legalCopy = {
         },
         {
           title: 'Third-Party Services',
-          body: 'The website may use services such as Brevo, HubSpot, Calendly, and Google Analytics. These services process data according to their own terms and privacy policies.',
+          body: 'The website may use HubSpot to keep request records, Brevo for transactional email, Google Analytics after consent, and Calendly only for optional scheduling when that option is enabled. These services process data according to their own terms and privacy policies.',
         },
         {
           title: 'Security',
@@ -72,11 +72,11 @@ const legalCopy = {
         },
         {
           title: 'Analytics',
-          body: 'If you accept analytics, Google Analytics may measure page views and interactions such as Calendly link clicks. Analytics is not loaded until you accept it.',
+          body: 'If you accept analytics, Google Analytics may measure page views and non-personal interactions in the audit funnel. Form values, names, emails, phone numbers, and business identifiers are not sent as analytics event parameters. Analytics is not loaded until you accept it.',
         },
         {
           title: 'Third-Party Services',
-          body: 'Some pages may include third-party services such as Calendly for booking calls. These providers may process technical data according to their own policies when you interact with them.',
+          body: 'Some pages may offer an optional Calendly scheduling link after an audit. Calendly is not required to request an audit and can process technical data only when you interact with its link.',
         },
         {
           title: 'Changing Your Choice',
@@ -88,13 +88,13 @@ const legalCopy = {
   ES: {
     privacy: {
       title: 'Política De Privacidad',
-      updated: 'Última actualización: 7 de mayo de 2026',
+      updated: 'Última actualización: 21 de agosto de 2026',
       intro:
         'HEYDE Studio recoge únicamente la información necesaria para responder solicitudes, entregar recursos, gestionar auditorías y mejorar la web.',
       sections: [
         {
           title: 'Información Que Recogemos',
-          body: 'Podemos recoger datos de contacto, información de empresa, mensajes de formularios, respuestas de auditoría, eventos de analítica y datos técnicos básicos como navegador, dispositivo e interacción con páginas.',
+          body: 'Podemos recoger datos de contacto, nombre del negocio, ciudad o zona, web o perfil de Instagram, teléfono opcional, mensajes de formularios, fecha del consentimiento de privacidad, eventos de analítica y datos técnicos básicos como navegador, dispositivo e interacción con páginas.',
         },
         {
           title: 'Cómo Usamos La Información',
@@ -102,7 +102,7 @@ const legalCopy = {
         },
         {
           title: 'Servicios De Terceros',
-          body: 'La web puede usar servicios como Brevo, HubSpot, Calendly y Google Analytics. Estos servicios procesan datos según sus propias políticas y condiciones.',
+          body: 'La web puede usar HubSpot para conservar solicitudes, Brevo para email transaccional, Google Analytics después del consentimiento y Calendly solo para una reserva opcional cuando esté habilitada. Estos servicios procesan datos según sus propias políticas y condiciones.',
         },
         {
           title: 'Seguridad',
@@ -144,7 +144,7 @@ const legalCopy = {
     },
     cookies: {
       title: 'Política De Cookies',
-      updated: 'Última actualización: 14 de mayo de 2026',
+      updated: 'Última actualización: 21 de agosto de 2026',
       intro:
         'HEYDE Studio usa almacenamiento necesario para preferencias básicas de la web y analítica opcional solo si das tu consentimiento.',
       sections: [
@@ -154,11 +154,11 @@ const legalCopy = {
         },
         {
           title: 'Analítica',
-          body: 'Si aceptas analítica, Google Analytics puede medir visitas e interacciones como clics en enlaces de Calendly. La analítica no se carga hasta que la aceptas.',
+          body: 'Si aceptas analítica, Google Analytics puede medir visitas e interacciones no personales del embudo de auditoría. Los valores del formulario, nombres, emails, teléfonos e identificadores de negocio no se envían como parámetros de analítica. La analítica no se carga hasta que la aceptas.',
         },
         {
           title: 'Servicios De Terceros',
-          body: 'Algunas páginas pueden incluir servicios de terceros como Calendly para reservar llamadas. Estos proveedores pueden procesar datos técnicos según sus propias políticas cuando interactúas con ellos.',
+          body: 'Algunas páginas pueden ofrecer un enlace opcional de Calendly después de una auditoría. Calendly no es necesario para pedir la auditoría y solo puede procesar datos técnicos cuando interactúas con su enlace.',
         },
         {
           title: 'Cambiar Tu Elección',

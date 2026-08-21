@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { FAQPageContent } from '@/components/pages/FAQPageContent';
+import { localFaqSections } from '@/lib/canonical';
 import { pageSeo, siteUrl } from '@/lib/seo';
-import { siteContent } from '@/lib/siteContent';
 
 export const metadata: Metadata = pageSeo.faq;
 
@@ -9,7 +9,7 @@ export default function FAQPage() {
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: siteContent.EN.faqPage.sections.flatMap((section) =>
+    mainEntity: localFaqSections.flatMap((section) =>
       section.items.map((item) => ({
         '@type': 'Question',
         name: item.question,

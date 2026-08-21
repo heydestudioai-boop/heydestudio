@@ -1,13 +1,14 @@
 'use client';
 
 import {
+  useCallback,
   createContext,
   useContext,
   useEffect,
   useMemo,
-  useState,
   type ReactNode,
 } from 'react';
+import { usePathname } from 'next/navigation';
 import { type Language, siteContent } from './siteContent';
 
 interface LanguageContextValue {
@@ -22,28 +23,17 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 const STORAGE_KEY = 'heyde-language';
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(() => {
-    if (typeof window === 'undefined') {
-      return 'ES';
-    }
-
-    const savedLanguage = window.localStorage.getItem(STORAGE_KEY);
-    if (savedLanguage === 'EN' || savedLanguage === 'ES') {
-      return savedLanguage;
-    }
-
-    return 'ES';
-  });
+  const pathname = usePathname();
+  const language: Language = pathname === '/marcas' || pathname.startsWith('/en/') ? 'EN' : 'ES';
 
   useEffect(() => {
     document.documentElement.lang = language.toLowerCase();
   }, [language]);
 
-  const setLanguage = (nextLanguage: Language) => {
-    setLanguageState(nextLanguage);
+  const setLanguage = useCallback((nextLanguage: Language) => {
     window.localStorage.setItem(STORAGE_KEY, nextLanguage);
     document.documentElement.lang = nextLanguage.toLowerCase();
-  };
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -52,7 +42,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       toggleLanguage: () => setLanguage(language === 'EN' ? 'ES' : 'EN'),
       content: siteContent[language],
     }),
-    [language]
+    [language, setLanguage]
   );
 
   return (

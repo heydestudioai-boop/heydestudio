@@ -1,3 +1,10 @@
+import {
+  AUDIT_STATUSES,
+  assessProposalDealEligibility,
+  proposalDealAuditMarker,
+  type AuditStatus,
+} from '@/lib/auditFunnelCore';
+
 type HubSpotProperties = Record<string, string | number | undefined>;
 
 interface HubSpotContactInput {
@@ -417,4 +424,630 @@ export async function checkHubSpotConnection() {
     contactsStatus: contactsResponse.status,
     dealsStatus: dealsResponse.status,
   };
+}
+
+export type HubSpotAuditConfirmationStatus =
+  | 'pending'
+  | 'sent'
+  | 'failed';
+
+export interface HubSpotAuditRequestInput {
+  requestId: string;
+  businessName: string;
+  cityArea: string;
+  businessPresence: string;
+  contactName: string;
+  email: string;
+  phone: string;
+  locale: 'es' | 'en';
+  requestedAt: Date;
+  privacyConsentAt: Date;
+  isTest: boolean;
+}
+
+export type HubSpotAuditSaveResult =
+  | {
+      ok: true;
+      created: boolean;
+      contactId: string;
+      confirmationStatus: HubSpotAuditConfirmationStatus;
+    }
+  | {
+      ok: false;
+      reason: 'not_configured' | 'schema_invalid' | 'provider_unavailable';
+    };
+
+interface HubSpotPropertyDefinition {
+  name?: string;
+  type?: string;
+  fieldType?: string;
+  hasUniqueValue?: boolean;
+  options?: Array<{ value?: string }>;
+}
+
+interface HubSpotPropertyRead {
+  property?: HubSpotPropertyDefinition;
+  providerUnavailable: boolean;
+}
+
+interface HubSpotAuditContactSnapshot {
+  id: string;
+  auditRequestId?: string;
+  auditStatus?: AuditStatus;
+  confirmationStatus: HubSpotAuditConfirmationStatus;
+  isTest: boolean;
+}
+
+const AUDIT_CONTACT_PROPERTIES = [
+  'lead_type',
+  'lead_source',
+  'audit_request_id',
+  'audit_status',
+  'audit_requested_at',
+  'audit_delivered_at',
+  'audit_locale',
+  'audit_source',
+  'is_test',
+  'audit_privacy_consent_at',
+  'audit_confirmation_status',
+  'audit_confirmation_sent_at',
+] as const;
+
+let auditContactSchemaValidated = false;
+
+function hasOption(definition: HubSpotPropertyDefinition | undefined, option: string) {
+  return Boolean(definition?.options?.some((item) => item.value === option));
+}
+
+function isAuditConfirmationStatus(
+  value: string | undefined
+): value is HubSpotAuditConfirmationStatus {
+  return (
+    value === 'pending' ||
+    value === 'sent' ||
+    value === 'failed'
+  );
+}
+
+function parseAuditStatus(value: string | undefined): AuditStatus | undefined {
+  return AUDIT_STATUSES.includes(value as AuditStatus)
+    ? (value as AuditStatus)
+    : undefined;
+}
+
+async function readHubSpotProperty(
+  objectType: 'contacts' | 'deals',
+  propertyName: string
+): Promise<HubSpotPropertyRead> {
+  const response = await hubSpotFetch(
+    '/crm/v3/properties/' +
+      objectType +
+      '/' +
+      encodeURIComponent(propertyName),
+    { method: 'GET' },
+    false
+  );
+
+  if (response.ok) {
+    return {
+      property: (await response.json()) as HubSpotPropertyDefinition,
+      providerUnavailable: false,
+    };
+  }
+
+  return {
+    providerUnavailable: response.status === 429 || response.status >= 500,
+  };
+}
+
+async function ensureHubSpotAuditContactSchema(): Promise<
+  | { ok: true }
+  | {
+      ok: false;
+      reason: 'not_configured' | 'schema_invalid' | 'provider_unavailable';
+    }
+> {
+  if (!isHubSpotConfigured()) {
+    return { ok: false, reason: 'not_configured' };
+  }
+  if (auditContactSchemaValidated) return { ok: true };
+
+  const reads = await Promise.all(
+    AUDIT_CONTACT_PROPERTIES.map((propertyName) =>
+      readHubSpotProperty('contacts', propertyName)
+    )
+  );
+
+  if (reads.some((readResult) => readResult.providerUnavailable)) {
+    return { ok: false, reason: 'provider_unavailable' };
+  }
+
+  const definitions = new Map(
+    reads
+      .map((readResult) => readResult.property)
+      .filter(
+        (property): property is HubSpotPropertyDefinition =>
+          Boolean(property?.name)
+      )
+      .map((property) => [property.name as string, property])
+  );
+  const property = (name: (typeof AUDIT_CONTACT_PROPERTIES)[number]) =>
+    definitions.get(name);
+
+  const schemaValid = Boolean(
+    property('lead_type')?.type === 'enumeration' &&
+      hasOption(property('lead_type'), 'local_audit') &&
+      hasOption(property('lead_type'), 'brand_inquiry') &&
+      property('lead_source')?.type === 'enumeration' &&
+      hasOption(property('lead_source'), 'audit') &&
+      property('audit_request_id')?.type === 'string' &&
+      property('audit_request_id')?.hasUniqueValue === true &&
+      property('audit_status')?.type === 'enumeration' &&
+      AUDIT_STATUSES.every((status) =>
+        hasOption(property('audit_status'), status)
+      ) &&
+      property('audit_requested_at')?.type === 'datetime' &&
+      property('audit_delivered_at')?.type === 'datetime' &&
+      property('audit_locale')?.type === 'enumeration' &&
+      hasOption(property('audit_locale'), 'es') &&
+      hasOption(property('audit_locale'), 'en') &&
+      property('audit_source')?.type === 'string' &&
+      property('is_test')?.type === 'enumeration' &&
+      hasOption(property('is_test'), 'true') &&
+      hasOption(property('is_test'), 'false') &&
+      property('audit_privacy_consent_at')?.type === 'datetime' &&
+      property('audit_confirmation_status')?.type === 'enumeration' &&
+      ['pending', 'sent', 'failed'].every((status) =>
+        hasOption(property('audit_confirmation_status'), status)
+      ) &&
+      property('audit_confirmation_sent_at')?.type === 'datetime'
+  );
+
+  if (!schemaValid) {
+    return { ok: false, reason: 'schema_invalid' };
+  }
+
+  auditContactSchemaValidated = true;
+  return { ok: true };
+}
+
+async function findHubSpotAuditContact(
+  propertyName: 'audit_request_id' | 'email',
+  value: string
+): Promise<
+  | { ok: true; contact?: HubSpotAuditContactSnapshot }
+  | { ok: false }
+> {
+  const response = await hubSpotFetch(
+    '/crm/v3/objects/contacts/search',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        filterGroups: [
+          {
+            filters: [
+              {
+                propertyName,
+                operator: 'EQ',
+                value,
+              },
+            ],
+          },
+        ],
+        properties: [
+          'audit_request_id',
+          'audit_status',
+          'audit_confirmation_status',
+          'is_test',
+        ],
+        limit: 1,
+      }),
+    },
+    false
+  );
+
+  if (!response.ok) return { ok: false };
+
+  const data = (await response.json()) as {
+    results?: Array<{
+      id: string;
+      properties?: {
+        audit_request_id?: string;
+        audit_status?: string;
+        audit_confirmation_status?: string;
+        is_test?: string;
+      };
+    }>;
+  };
+  const match = data.results?.[0];
+
+  if (!match) return { ok: true };
+
+  return {
+    ok: true,
+    contact: {
+      id: match.id,
+      auditRequestId: match.properties?.audit_request_id,
+      auditStatus: parseAuditStatus(match.properties?.audit_status),
+      confirmationStatus: isAuditConfirmationStatus(
+        match.properties?.audit_confirmation_status
+      )
+        ? match.properties.audit_confirmation_status
+        : 'pending',
+      isTest: match.properties?.is_test === 'true',
+    },
+  };
+}
+
+function duplicateAuditContact(
+  contact: HubSpotAuditContactSnapshot
+): HubSpotAuditSaveResult {
+  return {
+    ok: true,
+    created: false,
+    contactId: contact.id,
+    confirmationStatus: contact.confirmationStatus,
+  };
+}
+
+function auditContactProperties(
+  input: HubSpotAuditRequestInput,
+  initialConfirmationStatus: HubSpotAuditConfirmationStatus
+) {
+  const { firstName, lastName } = splitName(input.contactName);
+
+  return cleanProperties({
+    email: input.email,
+    firstname: firstName,
+    lastname: lastName,
+    company: input.businessName,
+    city: input.cityArea,
+    website: input.businessPresence,
+    phone: input.phone,
+    lead_type: 'local_audit',
+    lead_source: 'audit',
+    audit_request_id: input.requestId,
+    audit_status: 'audit_requested',
+    audit_requested_at: String(input.requestedAt.getTime()),
+    audit_locale: input.locale,
+    audit_source: 'website',
+    is_test: String(input.isTest),
+    audit_privacy_consent_at: String(input.privacyConsentAt.getTime()),
+    audit_confirmation_status: initialConfirmationStatus,
+  });
+}
+
+export async function saveHubSpotAuditContactRequest(
+  input: HubSpotAuditRequestInput,
+  initialConfirmationStatus: HubSpotAuditConfirmationStatus
+): Promise<HubSpotAuditSaveResult> {
+  const schema = await ensureHubSpotAuditContactSchema();
+  if (!schema.ok) return schema;
+
+  const existingByRequest = await findHubSpotAuditContact(
+    'audit_request_id',
+    input.requestId
+  );
+  if (!existingByRequest.ok) {
+    return { ok: false, reason: 'provider_unavailable' };
+  }
+  if (existingByRequest.contact) {
+    return duplicateAuditContact(existingByRequest.contact);
+  }
+
+  const existingByEmail = await findHubSpotAuditContact('email', input.email);
+  if (!existingByEmail.ok) {
+    return { ok: false, reason: 'provider_unavailable' };
+  }
+
+  const currentContact = existingByEmail.contact;
+  if (
+    currentContact?.auditRequestId &&
+    currentContact.auditStatus !== 'audit_delivered'
+  ) {
+    return duplicateAuditContact(currentContact);
+  }
+
+  const properties = auditContactProperties(input, initialConfirmationStatus);
+  if (currentContact) {
+    properties.audit_delivered_at = '';
+    properties.audit_confirmation_sent_at = '';
+
+    const response = await hubSpotFetch(
+      '/crm/v3/objects/contacts/' + encodeURIComponent(currentContact.id),
+      {
+        method: 'PATCH',
+        body: JSON.stringify({ properties }),
+      },
+      false
+    );
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        reason: response.status === 400 ? 'schema_invalid' : 'provider_unavailable',
+      };
+    }
+
+    return {
+      ok: true,
+      created: true,
+      contactId: currentContact.id,
+      confirmationStatus: initialConfirmationStatus,
+    };
+  }
+
+  const response = await hubSpotFetch(
+    '/crm/v3/objects/contacts',
+    {
+      method: 'POST',
+      body: JSON.stringify({ properties }),
+    },
+    false
+  );
+
+  if (response.status === 409) {
+    const duplicateByRequest = await findHubSpotAuditContact(
+      'audit_request_id',
+      input.requestId
+    );
+    if (duplicateByRequest.ok && duplicateByRequest.contact) {
+      return duplicateAuditContact(duplicateByRequest.contact);
+    }
+
+    const duplicateByEmail = await findHubSpotAuditContact('email', input.email);
+    if (
+      duplicateByEmail.ok &&
+      duplicateByEmail.contact?.auditRequestId &&
+      duplicateByEmail.contact.auditStatus !== 'audit_delivered'
+    ) {
+      return duplicateAuditContact(duplicateByEmail.contact);
+    }
+  }
+
+  if (!response.ok) {
+    return {
+      ok: false,
+      reason: response.status === 400 ? 'schema_invalid' : 'provider_unavailable',
+    };
+  }
+
+  const data = (await response.json()) as { id: string };
+  return {
+    ok: true,
+    created: true,
+    contactId: data.id,
+    confirmationStatus: initialConfirmationStatus,
+  };
+}
+
+export async function updateHubSpotAuditContactConfirmationStatus(
+  contactId: string,
+  status: HubSpotAuditConfirmationStatus,
+  sentAt?: Date
+) {
+  if (!isHubSpotConfigured()) return false;
+
+  const response = await hubSpotFetch(
+    '/crm/v3/objects/contacts/' + encodeURIComponent(contactId),
+    {
+      method: 'PATCH',
+      body: JSON.stringify({
+        properties: cleanProperties({
+          audit_confirmation_status: status,
+          audit_confirmation_sent_at: sentAt
+            ? String(sentAt.getTime())
+            : undefined,
+        }),
+      }),
+    },
+    false
+  );
+
+  return response.ok;
+}
+
+export async function updateHubSpotAuditContactStatus(
+  contactId: string,
+  status: AuditStatus,
+  changedAt = new Date()
+) {
+  if (!isHubSpotConfigured()) return false;
+
+  const response = await hubSpotFetch(
+    '/crm/v3/objects/contacts/' + encodeURIComponent(contactId),
+    {
+      method: 'PATCH',
+      body: JSON.stringify({
+        properties: cleanProperties({
+          audit_status: status,
+          audit_delivered_at:
+            status === 'audit_delivered'
+              ? String(changedAt.getTime())
+              : undefined,
+        }),
+      }),
+    },
+    false
+  );
+
+  return response.ok;
+}
+
+export interface CreateProposalDealInput {
+  contactId: string;
+  auditRequestId: string;
+  dealName: string;
+  amount?: number;
+  closeDate?: Date;
+  description?: string;
+}
+
+export type CreateProposalDealResult =
+  | { ok: true; created: boolean; dealId: string }
+  | {
+      ok: false;
+      reason:
+        | 'not_configured'
+        | 'schema_invalid'
+        | 'provider_unavailable'
+        | 'contact_not_found'
+        | 'test_contact'
+        | 'request_mismatch'
+        | 'audit_not_delivered';
+    };
+
+async function validateProposalDealStage(): Promise<
+  | { ok: true; pipelineId: string; stageId: string }
+  | {
+      ok: false;
+      reason: 'schema_invalid' | 'provider_unavailable';
+    }
+> {
+  const pipelineId = process.env.HUBSPOT_DEAL_PIPELINE?.trim() || 'default';
+  const stageId =
+    process.env.HUBSPOT_PROPOSAL_SENT_STAGE?.trim() || 'contractsent';
+
+  const response = await hubSpotFetch(
+    '/crm/v3/pipelines/deals/' + encodeURIComponent(pipelineId),
+    { method: 'GET' },
+    false
+  );
+
+  if (!response.ok) {
+    return {
+      ok: false,
+      reason:
+        response.status === 404 || response.status === 400
+          ? 'schema_invalid'
+          : 'provider_unavailable',
+    };
+  }
+
+  const pipeline = (await response.json()) as {
+    stages?: Array<{ id?: string }>;
+  };
+  if (!pipeline.stages?.some((stage) => stage.id === stageId)) {
+    return { ok: false, reason: 'schema_invalid' };
+  }
+
+  return { ok: true, pipelineId, stageId };
+}
+
+export async function createProposalDeal(
+  input: CreateProposalDealInput
+): Promise<CreateProposalDealResult> {
+  if (!isHubSpotConfigured()) {
+    return { ok: false, reason: 'not_configured' };
+  }
+
+  const contactSchema = await ensureHubSpotAuditContactSchema();
+  if (!contactSchema.ok) return contactSchema;
+
+  const proposalStage = await validateProposalDealStage();
+  if (!proposalStage.ok) return proposalStage;
+
+  const contactResponse = await hubSpotFetch(
+    '/crm/v3/objects/contacts/' +
+      encodeURIComponent(input.contactId) +
+      '?properties=audit_request_id,audit_status,is_test',
+    { method: 'GET' },
+    false
+  );
+
+  if (contactResponse.status === 404) {
+    return { ok: false, reason: 'contact_not_found' };
+  }
+  if (!contactResponse.ok) {
+    return { ok: false, reason: 'provider_unavailable' };
+  }
+
+  const contact = (await contactResponse.json()) as {
+    properties?: {
+      audit_request_id?: string;
+      audit_status?: string;
+      is_test?: string;
+    };
+  };
+  const eligibility = assessProposalDealEligibility(
+    {
+      auditRequestId: contact.properties?.audit_request_id,
+      auditStatus: parseAuditStatus(contact.properties?.audit_status),
+      isTest: contact.properties?.is_test === 'true',
+    },
+    input.auditRequestId
+  );
+  if (!eligibility.allowed) {
+    return { ok: false, reason: eligibility.reason };
+  }
+
+  const marker = proposalDealAuditMarker(input.auditRequestId);
+  const searchResponse = await hubSpotFetch(
+    '/crm/v3/objects/deals/search',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        query: input.auditRequestId,
+        properties: ['description'],
+        limit: 10,
+      }),
+    },
+    false
+  );
+
+  if (!searchResponse.ok) {
+    return { ok: false, reason: 'provider_unavailable' };
+  }
+
+  const searchData = (await searchResponse.json()) as {
+    results?: Array<{
+      id: string;
+      properties?: { description?: string };
+    }>;
+  };
+  const duplicate = searchData.results?.find((deal) =>
+    deal.properties?.description?.includes(marker)
+  );
+  if (duplicate) {
+    return { ok: true, created: false, dealId: duplicate.id };
+  }
+
+  const description = input.description
+    ? marker + '\n' + input.description
+    : marker;
+  const createResponse = await hubSpotFetch(
+    '/crm/v3/objects/deals',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        properties: cleanProperties({
+          dealname: input.dealName,
+          pipeline: proposalStage.pipelineId,
+          dealstage: proposalStage.stageId,
+          closedate: input.closeDate?.getTime(),
+          amount: input.amount,
+          description,
+        }),
+        associations: [
+          {
+            to: { id: input.contactId },
+            types: [
+              {
+                associationCategory: 'HUBSPOT_DEFINED',
+                associationTypeId: 3,
+              },
+            ],
+          },
+        ],
+      }),
+    },
+    false
+  );
+
+  if (!createResponse.ok) {
+    return { ok: false, reason: 'provider_unavailable' };
+  }
+
+  const deal = (await createResponse.json()) as { id: string };
+  return { ok: true, created: true, dealId: deal.id };
 }

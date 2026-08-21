@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
+import { canonicalBrand } from '@/lib/canonical';
 
-export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://heydestudio.com';
+export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || canonicalBrand.siteUrl;
 
 export const siteName = 'HEYDE Studio';
 
@@ -61,15 +62,15 @@ export function createMetadata({
 
 export const pageSeo = {
   home: createMetadata({
-    title: 'HEYDE Studio | Fotografía, vídeo y redes para negocios en Toledo',
+    title: 'Contenido que hace crecer negocios locales | HEYDE Studio',
     description:
-      'Fotografía, vídeo y redes para negocios locales en Toledo. Planes mensuales, packs por sector y auditoría gratuita en 72 horas.',
+      'Fotografía, vídeo y gestión de redes para negocios locales. Una persona responsable, planes con precio visible y auditoría gratuita sin reunión previa.',
     keywords: ['fotografía Toledo', 'vídeo para negocios', 'redes sociales Toledo', 'contenido para hostelería'],
   }),
   planes: createMetadata({
     title: 'Planes y precios para negocios en Toledo | HEYDE Studio',
     description:
-      'Planes mensuales de fotografía, vídeo y redes para negocios locales. Precios cerrados, auditoría gratuita y packs por sector.',
+      'Sesión de contenido por 490 € y planes Base, Crecimiento y Dominio con precios, alcance, módulos, packs y condiciones visibles.',
     path: '/planes',
     keywords: ['planes contenido Toledo', 'fotografía comercial Toledo', 'redes sociales negocios Toledo'],
   }),
@@ -83,7 +84,7 @@ export const pageSeo = {
   estudio: createMetadata({
     title: 'Estudio local en Toledo | HEYDE Studio',
     description:
-      'Conoce a Oliver Heyde y el enfoque de HEYDE Studio: fotografía, vídeo, redes y contenido para negocios locales.',
+      'Conoce a Oliver Heyde y el método híbrido de HEYDE Studio: una persona responsable para estrategia, contenido y redes de negocios locales.',
     path: '/estudio',
     keywords: ['Oliver Heyde', 'estudio audiovisual Toledo', 'fotógrafo Toledo'],
   }),
@@ -137,9 +138,9 @@ export const pageSeo = {
     keywords: ['visual systems blog', 'AI fashion imagery', 'brand infrastructure'],
   }),
   faq: createMetadata({
-    title: 'FAQ | HEYDE Studio',
+    title: 'Preguntas frecuentes sobre contenido y redes | HEYDE Studio',
     description:
-      'Answers about visual systems, timelines, pricing, implementation, and working with HEYDE Studio.',
+      'Respuestas sobre planes, publicación, permanencia, derechos, brutos, IA, desplazamientos y auditoría gratuita de HEYDE Studio.',
     path: '/faq',
     keywords: ['FAQ', 'visual systems', 'pricing', 'implementation'],
   }),

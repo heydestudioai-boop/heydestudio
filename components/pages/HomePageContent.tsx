@@ -1,89 +1,59 @@
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/Button';
 import { EditorialBody, EditorialKicker, EditorialTitle } from '@/components/EditorialText';
+import {
+  aiPolicy,
+  canonicalBrand,
+  contentSession,
+  launchOffer,
+  localFaqSections,
+  monthlyPlans,
+  rightsPolicy,
+} from '@/lib/canonical';
 
 const audiences = [
-  ['Restaurantes y hoteles', '/hosteleria'],
-  ['Inmobiliarias', '/inmobiliaria'],
-  ['Bodegas', '/bodegas'],
-  ['Clínicas', '/planes'],
-  ['Comercio local', '/planes'],
-  ['Alquiler vacacional', '/inmobiliaria'],
-];
+  ['Restaurantes y hoteles', '/hosteleria', 'Platos, espacios, equipo y momentos del servicio convertidos en contenido constante.'],
+  ['Inmobiliarias', '/inmobiliaria', 'Viviendas explicadas con claridad en foto y vídeo para portales, redes y visitas.'],
+  ['Bodegas', '/bodegas', 'Producto, territorio y elaboración traducidos en piezas de marca y contenido social.'],
+  ['Clínicas', '/planes', 'Instalaciones, equipo y conocimiento explicados con una presencia visual coherente.'],
+  ['Comercio local', '/planes', 'Producto, escaparate y personas con material listo para mantener una presencia activa.'],
+  ['Alquiler vacacional', '/inmobiliaria', 'Foto y vídeo para mostrar espacios, experiencia y entorno en los canales adecuados.'],
+] as const;
 
 const audienceNotes = [
-  ['Oficio real', 'Formación en dirección de fotografía y años de trabajo con cámara, luz y criterio.'],
-  ['IA honesta', 'La IA multiplica la producción, pero todo lo generado va etiquetado como tal.'],
-];
+  ['Producción real', 'Cámara o móvil según el objetivo, con dirección, luz y criterio audiovisual.'],
+  ['IA cuando aporta', 'Amplía formatos y variantes sin sustituir lo que debe mostrar el negocio real.'],
+] as const;
 
-const plans = [
-  {
-    name: 'Base',
-    price: '390 €/mes',
-    description: 'Para negocios que necesitan publicar mejor sin montar un departamento.',
-    features: ['1 sesión mensual', 'Foto y vídeo corto', 'Piezas listas para redes', 'Calendario básico'],
-  },
-  {
-    name: 'Crecimiento',
-    price: '650 €/mes',
-    description: 'Para el negocio que quiere olvidarse de las redes.',
-    features: ['2 visitas de rodaje al mes', '25-35 piezas mensuales', 'Publico y respondo por ti', 'Informe sencillo mensual'],
-    highlighted: true,
-  },
-  {
-    name: 'Dominio',
-    price: '990 €/mes',
-    description: 'Para negocios que quieren verse como referencia en su categoría.',
-    features: ['Producción recurrente', 'Campañas por temporada', 'Piezas con IA etiquetada', 'Dirección mensual'],
-  },
-];
+const localProof = [
+  ['Precio visible', 'Alcance y precio por escrito antes de empezar.'],
+  ['Responsable único', 'La misma persona dirige la cuenta, coordina el trabajo y responde cada mes.'],
+  ['Producción híbrida', 'Estrategia, rodaje, edición, publicación y aprendizaje con un solo criterio.'],
+] as const;
 
-const work = [
+const aiBenefits = [
+  'Más formatos y variantes desde una misma sesión',
+  'Adaptaciones para cada canal sin repetir todo el rodaje',
+  'Transparencia cuando una pieza pueda confundirse con una representación real',
+] as const;
+
+const labWork = [
   {
-    title: 'Solea',
-    label: 'Laboratorio',
-    description: 'Concept work de producción visual con IA para explorar identidad, luz y campaña.',
+    title: 'Soleá',
+    description: 'Exploración autoiniciada de producto, luz e identidad visual. HEYDE Lab; no es un cliente.',
     image: '/images/work-solea-cover.jpg',
     href: '/case-studies/solea',
   },
   {
     title: 'Eden',
-    label: 'Laboratorio',
-    description: 'Proyecto autoiniciado sobre lenguaje editorial, producto y mundos visuales escalables.',
+    description: 'Proyecto autoiniciado de lenguaje editorial, espacios y dirección de imagen. No es un cliente.',
     image: '/images/work-eden-cover.jpg',
     href: '/case-studies/eden',
   },
-  {
-    title: 'Trabajo real',
-    label: 'Portfolio',
-    description: 'Fotografía, vídeo y dirección de contenido para negocios que necesitan vender mejor.',
-    image: '/images/HEYDE_Story_Portfolio.jpg',
-    href: '/work',
-  },
-];
+] as const;
 
-const faqs = [
-  ['¿Qué incluye exactamente cada plan?', 'Lo que ves en la página de planes, sin letra pequeña. Sesiones de rodaje reales en tu negocio, piezas editadas listas para publicar y, según el plan, la gestión completa de tus redes.'],
-  ['¿De quién es el contenido?', 'Tuyo. Para siempre. Si algún día dejamos de trabajar juntos, te llevas todo.'],
-  ['¿Hay permanencia?', 'Tres meses al empezar, porque el contenido necesita ese tiempo para dar resultados. Después, cancelas con 30 días de aviso.'],
-  ['¿Qué es eso de la IA y cómo la usáis?', 'El rodaje es real, con cámara y con oficio. La IA multiplica lo grabado: más formatos, variantes y escenarios que serían carísimos de producir. Todo lo generado va etiquetado.'],
-  ['¿Trabajáis fuera de Toledo?', 'Sí: Castilla-La Mancha, Madrid y la Costa Blanca. ¿Otra zona? Escríbeme y lo vemos.'],
-];
-
-const localProof = [
-  ['Oficio real', 'Formación en dirección de fotografía, años de rodaje y criterio visual antes de tocar la IA.'],
-  ['Precio cerrado', 'Alcance y precio por escrito antes de empezar, sin sustos en la factura.'],
-  ['IA etiquetada', 'Lo real es real, y lo generado se dice. Tus clientes lo agradecen.'],
-];
-
-const aiBenefits = [
-  'Más formatos desde cada sesión en tu negocio',
-  'Más variantes y semanas de contenido sin otro rodaje',
-  'IA siempre etiquetada, sin hacer pasar lo generado por real',
-];
+const homeFaqs = localFaqSections.flatMap((section) => section.items).slice(0, 6);
 
 export function HomePageContent() {
   return (
@@ -95,7 +65,7 @@ export function HomePageContent() {
           muted
           loop
           playsInline
-          poster="/images/HEYDE_Story_Portfolio.jpg"
+          poster="/images/hero-fallback-cover.jpg"
           aria-hidden="true"
         >
           <source src="/videos/hero.mp4" type="video/mp4" />
@@ -104,19 +74,23 @@ export function HomePageContent() {
 
         <div className="relative mx-auto flex w-full max-w-7xl flex-col items-start">
           <div className="max-w-5xl [text-shadow:0_2px_24px_rgba(18,18,18,0.62)]">
-            <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.18em] text-white/62 md:text-xs">
-              Toledo · Castilla-La Mancha · Madrid · Costa Blanca
+            <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.18em] text-white/72 md:text-xs">
+              {canonicalBrand.claim}
             </p>
             <h1 className="mb-7 max-w-5xl text-4xl font-bold leading-none md:text-6xl lg:text-7xl">
-              Todo el contenido de tu negocio. Una sola persona. Un precio fijo al mes.
+              {canonicalBrand.launchProposition}
             </h1>
-            <p className="mb-9 max-w-2xl text-base leading-relaxed text-white/82 md:text-xl">
-              Fotografía y vídeo profesionales, potenciados con IA. Para negocios de Toledo, Castilla-La Mancha, Madrid y la Costa Blanca que quieren publicar como los grandes sin pagar una agencia.
+            <p className="mb-4 max-w-2xl text-base leading-relaxed text-white/82 md:text-xl">
+              Fotografía, vídeo y gestión de redes para negocios locales. {canonicalBrand.operatingPromise}
+            </p>
+            <p className="mb-9 text-xs font-bold uppercase tracking-[0.16em] text-white/58">
+              Toledo · Castilla-La Mancha · Madrid · Costa Blanca
             </p>
             <div className="flex flex-col gap-4 sm:flex-row [text-shadow:none]">
               <Button href="/audit" label="Pide tu auditoría gratuita" />
               <Button href="/planes" label="Ver planes y precios" variant="secondary" />
             </div>
+            <p className="mt-7 text-xs text-white/55">Visual de HEYDE Lab · proyecto autoiniciado</p>
           </div>
         </div>
       </section>
@@ -126,7 +100,7 @@ export function HomePageContent() {
           <EditorialKicker>Para quién</EditorialKicker>
           <div className="mb-10 grid gap-8 md:grid-cols-[0.75fr_1fr] md:items-end">
             <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">
-              Contenido para negocios que se deciden antes de la llamada.
+              Tu negocio ya tiene historias. Falta convertirlas en un sistema constante.
             </h2>
             <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 sm:grid-cols-2">
               {audienceNotes.map(([title, body]) => (
@@ -138,22 +112,10 @@ export function HomePageContent() {
             </div>
           </div>
           <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 md:grid-cols-3">
-            {audiences.map(([audience, href]) => (
+            {audiences.map(([audience, href, body]) => (
               <Link key={audience} href={href} className="bg-white p-7 transition hover:bg-gray-50">
                 <h3 className="text-xl font-bold">{audience}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-gray-700">
-                  {audience === 'Restaurantes y hoteles'
-                    ? 'Platos, sala y ambiente que dan hambre y traen reservas.'
-                    : audience === 'Inmobiliarias'
-                      ? 'Viviendas que se ven mejor que en persona y se venden antes.'
-                      : audience === 'Bodegas'
-                        ? 'Contenido de marca para vender dentro y fuera de España.'
-                        : audience === 'Clínicas'
-                          ? 'Confianza a primera vista: instalaciones, equipo y resultados.'
-                          : audience === 'Comercio local'
-                            ? 'Tu escaparate, abierto 24 horas en el móvil de tu cliente.'
-                            : 'Fotos y vídeo que suben la ocupación y el precio por noche.'}
-                </p>
+                <p className="mt-3 text-sm leading-relaxed text-gray-700">{body}</p>
                 <p className="mt-5 text-sm font-bold text-magenta">Ver opciones</p>
               </Link>
             ))}
@@ -166,7 +128,7 @@ export function HomePageContent() {
           <div className="mb-12 grid gap-8 md:grid-cols-[0.7fr_1fr] md:items-end">
             <div>
               <EditorialKicker>Cómo funciona</EditorialKicker>
-              <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">Tres pasos y precio cerrado.</h2>
+              <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">Primero demuestro criterio. Después hablamos.</h2>
             </div>
             <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200">
               {localProof.map(([title, body]) => (
@@ -179,9 +141,9 @@ export function HomePageContent() {
           </div>
           <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 md:grid-cols-3">
             {[
-              ['01', 'Auditoría gratuita', 'Te digo qué está frenando tu presencia digital y qué haría yo.'],
-              ['02', 'Propuesta en 48 h', 'Tienes propuesta con plan y precio cerrado.'],
-              ['03', 'Rodaje en menos de 7 días', 'A partir de ahí, tu negocio no deja de publicar.'],
+              ['01', 'Auditoría gratuita', 'Pides una revisión de tu presencia digital sin reunión previa.'],
+              ['02', 'Propuesta en 48 h', 'Después de entregar la auditoría, recibes un plan y un precio cerrado.'],
+              ['03', 'Primera sesión en menos de 7 días', 'Si seguimos, ponemos fecha y empezamos a producir.'],
             ].map(([number, title, body]) => (
               <div key={number} className="bg-white p-8">
                 <p className="mb-8 text-xs font-bold uppercase tracking-[0.18em] text-magenta">{number}</p>
@@ -193,7 +155,21 @@ export function HomePageContent() {
         </div>
       </section>
 
-      <section className="bg-white px-6 py-16 sm:px-8 md:px-12 md:py-24">
+      <section className="bg-white px-6 py-14 sm:px-8 md:px-12 md:py-20">
+        <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-[0.7fr_1fr] md:items-center">
+          <div>
+            <EditorialKicker>Para empezar sin compromiso</EditorialKicker>
+            <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">
+              {contentSession.name} · {contentSession.priceLabel}
+            </h2>
+          </div>
+          <EditorialBody>
+            {contentSession.shoot}. {contentSession.pieces}. {contentSession.delivery}. {contentSession.conversionCredit}
+          </EditorialBody>
+        </div>
+      </section>
+
+      <section className="bg-gray-50 px-6 py-16 sm:px-8 md:px-12 md:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div>
@@ -202,15 +178,28 @@ export function HomePageContent() {
             </div>
             <Button href="/planes" label="Ver planes completos" variant="secondary" />
           </div>
+
+          {launchOffer.active && (
+            <div className="mb-8 border-l-4 border-magenta bg-white p-6">
+              <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-magenta">Oferta de lanzamiento activa</p>
+              <p className="text-xl font-bold">
+                {launchOffer.slots} plazas de Crecimiento a {launchOffer.priceLabel} {launchOffer.duration}.
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-gray-700">
+                Precio de lista: {launchOffer.listPriceLabel}; {launchOffer.consideration}.
+              </p>
+            </div>
+          )}
+
           <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 md:grid-cols-3">
-            {plans.map((plan) => (
-              <div key={plan.name} className={`bg-white p-8 ${plan.highlighted ? 'ring-2 ring-inset ring-magenta' : ''}`}>
-                {plan.highlighted && <p className="mb-5 text-xs font-bold uppercase tracking-[0.18em] text-magenta">Recomendado</p>}
+            {monthlyPlans.map((plan) => (
+              <div key={plan.id} className={`bg-white p-8 ${plan.highlighted ? 'ring-2 ring-inset ring-magenta' : ''}`}>
+                {plan.highlighted && <p className="mb-5 text-xs font-bold uppercase tracking-[0.18em] text-magenta">Plan central</p>}
                 <h3 className="mb-3 text-2xl font-bold">{plan.name}</h3>
-                <p className="mb-6 text-3xl font-bold text-magenta">{plan.price}</p>
-                <p className="mb-7 text-sm leading-relaxed text-gray-700">{plan.description}</p>
+                <p className="mb-6 text-3xl font-bold text-magenta">{plan.priceLabel}</p>
+                <p className="mb-7 text-sm leading-relaxed text-gray-700">{plan.bestFor}</p>
                 <ul className="space-y-3 text-sm text-gray-700">
-                  {plan.features.map((feature) => (
+                  {plan.features.slice(0, 4).map((feature) => (
                     <li key={feature}>+ {feature}</li>
                   ))}
                 </ul>
@@ -224,39 +213,35 @@ export function HomePageContent() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 grid gap-8 md:grid-cols-[0.8fr_1fr] md:items-end">
             <div>
-              <EditorialKicker>Trabajo reciente</EditorialKicker>
-              <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">Trabajo real y laboratorio, bien separados.</h2>
+              <EditorialKicker>HEYDE Lab</EditorialKicker>
+              <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">Portfolio creativo, sin inventar clientes.</h2>
             </div>
-            <div className="grid gap-px overflow-hidden rounded-sm border border-white/12 bg-white/12 sm:grid-cols-2">
-              <div className="bg-black p-5">
-                <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-white/42">Portfolio</p>
-                <p className="text-sm leading-relaxed text-white/70">Piezas reales de fotografía, vídeo y dirección de contenido.</p>
-              </div>
-              <div className="bg-black p-5">
-                <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-white/42">Laboratorio</p>
-                <p className="text-sm leading-relaxed text-white/70">Conceptos IA etiquetados como exploración, sin fingir clientes.</p>
-              </div>
-            </div>
+            <p className="text-sm leading-relaxed text-white/70">
+              Soleá, Eden y otros conceptos son proyectos autoiniciados. Enseñan dirección, producción y capacidad visual; no representan encargos ni resultados comerciales.
+            </p>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {work.map((item) => (
+          <div className="grid gap-6 md:grid-cols-2">
+            {labWork.map((item) => (
               <Link key={item.title} href={item.href} className="group">
                 <div className="overflow-hidden rounded-sm bg-[#212121]">
                   <Image
                     src={item.image}
-                    alt={item.title}
+                    alt={`${item.title}, proyecto autoiniciado de HEYDE Lab`}
                     width={1000}
                     height={900}
                     className="h-[25rem] w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
                   />
                 </div>
                 <div className="mt-5 border-t border-white/14 pt-4">
-                  <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-white/42">{item.label}</p>
+                  <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-white/42">Self-initiated · no cliente</p>
                   <h3 className="mb-3 text-xl font-bold">{item.title}</h3>
                   <p className="text-sm leading-relaxed text-white/68">{item.description}</p>
                 </div>
               </Link>
             ))}
+          </div>
+          <div className="mt-10">
+            <Button href="/casos" label="Ver HEYDE Lab" variant="secondary" />
           </div>
         </div>
       </section>
@@ -273,16 +258,16 @@ export function HomePageContent() {
             />
           </div>
           <div>
-            <EditorialKicker>Sobre mí</EditorialKicker>
+            <EditorialKicker>Responsable de tu cuenta</EditorialKicker>
             <h2 className="mb-6 text-3xl font-bold leading-[1.05] md:text-5xl">
-              Soy Oliver Heyde. La cara también es parte del servicio.
+              Soy Oliver Heyde. Siempre sabes quién dirige el trabajo.
             </h2>
             <div className="grid gap-5 md:grid-cols-2">
               <p className="text-lg leading-[1.65] text-gray-700">
-                Formado en producción audiovisual y dirección de fotografía, trabajo como fotógrafo, videógrafo y creador de contenido desde Toledo.
+                Mi base es la producción audiovisual y la dirección de fotografía. Desde Toledo convierto el negocio real en fotografía, vídeo y contenido útil.
               </p>
               <p className="border-l-4 border-magenta pl-5 text-lg leading-[1.65] text-gray-700">
-                En negocio local no compras una agencia abstracta: llamas a una persona que entiende tu negocio, aparece, produce y responde.
+                Tienes una persona responsable que conoce la cuenta, coordina la producción y mantiene el criterio, incluso cuando una pieza requiere apoyo especializado.
               </p>
             </div>
           </div>
@@ -292,26 +277,23 @@ export function HomePageContent() {
       <section className="bg-gray-50 px-6 py-16 sm:px-8 md:px-12 md:py-24">
         <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-2">
           <div>
-            <EditorialKicker>El toque IA</EditorialKicker>
-              <h2 className="mb-6 text-3xl font-bold leading-[1.05] md:text-5xl">El rodaje es real. La IA lo multiplica.</h2>
-            <p className="mb-7 max-w-2xl text-lg leading-[1.65] text-gray-700">
-              Vengo del oficio: cámara, luz y criterio. La IA no sustituye nada de eso, lo multiplica. De cada sesión en tu negocio salen más formatos, más variantes y más semanas de contenido que con una producción tradicional pequeña.
-            </p>
+            <EditorialKicker>Producción híbrida</EditorialKicker>
+            <h2 className="mb-6 text-3xl font-bold leading-[1.05] md:text-5xl">El negocio es real. La IA amplía cuando aporta.</h2>
+            <p className="mb-5 max-w-2xl text-lg leading-[1.65] text-gray-700">{aiPolicy.short}</p>
+            <p className="mb-7 max-w-2xl text-sm leading-relaxed text-gray-700">{aiPolicy.disclosure}</p>
             <ul className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200">
               {aiBenefits.map((benefit) => (
-                <li key={benefit} className="bg-white p-4 text-sm font-bold text-gray-800">
-                  {benefit}
-                </li>
+                <li key={benefit} className="bg-white p-4 text-sm font-bold text-gray-800">{benefit}</li>
               ))}
             </ul>
           </div>
           <div>
             <EditorialKicker>Zona de servicio</EditorialKicker>
             <p className="mb-6 text-lg leading-[1.65] text-gray-700">
-              Trabajo donde llega mi cámara. ¿Estás fuera de estas zonas? Escríbeme igualmente: si el proyecto lo merece, la distancia se negocia.
+              Toledo es la base. Castilla-La Mancha y Madrid se atienden según proyecto; Costa Blanca combina inmobiliario, hostelería y campañas de temporada.
             </p>
             <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200">
-              {['Toledo y provincia', 'Castilla-La Mancha', 'Madrid', 'Costa Blanca: Jávea y alrededores'].map((zone) => (
+              {canonicalBrand.serviceAreas.map((zone) => (
                 <div key={zone} className="bg-white p-5 text-lg font-bold">{zone}</div>
               ))}
             </div>
@@ -322,15 +304,16 @@ export function HomePageContent() {
       <section className="bg-white px-6 py-16 sm:px-8 md:px-12 md:py-24">
         <div className="mx-auto max-w-7xl">
           <EditorialKicker>FAQ</EditorialKicker>
-          <h2 className="mb-10 text-3xl font-bold leading-[1.05] md:text-5xl">Preguntas normales antes de empezar.</h2>
+          <h2 className="mb-10 text-3xl font-bold leading-[1.05] md:text-5xl">Lo importante, antes de empezar.</h2>
           <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 md:grid-cols-2">
-            {faqs.map(([question, answer]) => (
+            {homeFaqs.map(({ question, answer }) => (
               <div key={question} className="bg-white p-7">
                 <h3 className="mb-3 text-xl font-bold">{question}</h3>
                 <p className="text-sm leading-relaxed text-gray-700">{answer}</p>
               </div>
             ))}
           </div>
+          <p className="mt-6 text-sm text-gray-700">{rightsPolicy}</p>
         </div>
       </section>
 
@@ -341,7 +324,7 @@ export function HomePageContent() {
               <EditorialTitle text="Pide tu auditoría gratuita." />
             </h2>
             <EditorialBody dark>
-              En 72 horas tienes una lectura clara de tu presencia visual. Si estás en Toledo, te la llevo en persona.
+              Analizo redes, web y Google Business sin exigir una reunión previa. En 72 horas tienes una lectura clara; en Toledo, puedo llevártela en persona.
             </EditorialBody>
           </div>
           <div className="md:text-right">

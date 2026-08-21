@@ -97,7 +97,7 @@ export default function RootLayout({
                   name: 'Oliver Heyde',
                   jobTitle: 'Fundador y director creativo',
                   worksFor: { '@id': `${siteUrl}/#organization` },
-                  url: `${siteUrl}/about`,
+                  url: `${siteUrl}/estudio`,
                   image: `${siteUrl}/images/oliver-heyde.jpeg`,
                   sameAs: ['https://www.linkedin.com/in/oliverheyde'],
                 },
@@ -111,7 +111,7 @@ export default function RootLayout({
                 },
                 {
                   '@type': 'ItemList',
-                  '@id': `${siteUrl}/services#service-list`,
+                  '@id': `${siteUrl}/planes#service-list`,
                   name: 'HEYDE Studio Local Services',
                   itemListElement: [
                     'Fotografía comercial',
