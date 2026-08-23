@@ -9,6 +9,8 @@ interface SendBrevoEmailInput {
   htmlContent: string;
   textContent: string;
   senderName?: string;
+  idempotencyKey?: string;
+  tags?: string[];
 }
 
 interface BrevoSuccess {
@@ -65,6 +67,8 @@ export async function sendBrevoEmail({
   htmlContent,
   textContent,
   senderName = 'HEYDE Studio',
+  idempotencyKey,
+  tags,
 }: SendBrevoEmailInput): Promise<BrevoResult> {
   const apiKey = process.env.BREVO_API_KEY;
   const senderEmail = process.env.BREVO_SENDER_EMAIL;
@@ -92,6 +96,10 @@ export async function sendBrevoEmail({
         subject,
         htmlContent,
         textContent,
+        headers: idempotencyKey
+          ? { idempotencyKey }
+          : undefined,
+        tags,
       }),
     });
 

@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "check:canon": "node scripts/check-canonical-content.mjs",
     "test:audit": "node --no-warnings --test tests/audit-funnel.test.mjs",
+    "test:brand": "node --no-warnings --test tests/brand-inquiry.test.mjs",
     "lint": "eslint",
     "prelaunch": "node scripts/prelaunch-check.mjs && npm run check:canon && npm run typecheck && npm run lint && npm run build"
   },

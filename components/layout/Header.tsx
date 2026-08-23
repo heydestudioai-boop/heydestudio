@@ -17,11 +17,10 @@ const spanishNavItems = [
 ] as const;
 
 const englishNavItems = [
-  { label: 'Real estate', href: '/en/real-estate' },
-  { label: 'Work', href: '/casos' },
-  { label: 'Free audit', href: '/audit' },
-  { label: 'Studio', href: '/estudio' },
   { label: 'Brands', href: '/marcas' },
+  { label: 'Capabilities', href: '/marcas#capabilities' },
+  { label: 'HEYDE Lab', href: '/marcas#heyde-lab' },
+  { label: 'Real estate', href: '/en/real-estate' },
 ] as const;
 
 export function Header() {
@@ -29,8 +28,15 @@ export function Header() {
   const pathname = usePathname();
   const { language } = useLanguage();
   const navItems = language === 'EN' ? englishNavItems : spanishNavItems;
-  const homeHref = pathname.startsWith('/en/') ? '/en/real-estate' : '/';
-  const contactLabel = language === 'EN' ? 'Contact' : 'Contacto';
+  const homeHref =
+    pathname === '/marcas' || pathname === '/contact'
+      ? '/marcas'
+      : pathname.startsWith('/en/')
+        ? '/en/real-estate'
+        : '/';
+  const contactHref = language === 'EN' ? '/contact' : '/audit';
+  const contactLabel =
+    language === 'EN' ? 'Start a project' : 'Auditoría gratuita';
 
   const isActive = (href: string) => pathname === href;
 
@@ -67,7 +73,7 @@ export function Header() {
         <div className="hidden items-center gap-4 md:flex">
           <LanguageToggle />
           <Link
-            href="/contact"
+            href={contactHref}
             className="rounded-sm bg-magenta px-4 py-2 text-[13px] font-bold text-white transition-colors hover:bg-magenta-dark"
           >
             {contactLabel}
@@ -108,7 +114,7 @@ export function Header() {
             ))}
 
             <Link
-              href="/contact"
+              href={contactHref}
               className="block rounded-sm bg-magenta px-5 py-3 text-center text-sm font-bold text-white transition-colors hover:bg-magenta-dark"
               onClick={() => setMobileMenuOpen(false)}
             >

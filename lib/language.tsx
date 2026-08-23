@@ -24,7 +24,12 @@ const STORAGE_KEY = 'heyde-language';
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const language: Language = pathname === '/marcas' || pathname.startsWith('/en/') ? 'EN' : 'ES';
+  const language: Language =
+    pathname === '/marcas' ||
+    pathname === '/contact' ||
+    pathname.startsWith('/en/')
+      ? 'EN'
+      : 'ES';
 
   useEffect(() => {
     document.documentElement.lang = language.toLowerCase();

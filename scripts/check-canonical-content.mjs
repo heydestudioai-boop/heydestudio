@@ -17,6 +17,11 @@ const scopedFiles = [
   'app/(en)/en/real-estate/page.tsx',
   'app/(es)/bodegas/page.tsx',
   'app/(es)/casos/page.tsx',
+  'app/(en)/marcas/page.tsx',
+  'app/(en)/contact/page.tsx',
+  'components/pages/BrandInquiryPageContent.tsx',
+  'lib/emailTemplates/brandInquiryConfirmation.ts',
+  'app/api/contact/submit/route.ts',
 ];
 
 const forbidden = [
@@ -30,6 +35,21 @@ const forbidden = [
   { pattern: /Trabajo real/i, reason: 'etiqueta de portfolio sin evidencia' },
   { pattern: /mejores fotos que las del móvil/i, reason: 'planteamiento legacy que desacredita producción móvil' },
   { pattern: /se nota en las reservas|se nota en las visitas|se nota en las ventas/i, reason: 'promesa comercial legacy sin evidencia' },
+];
+
+const brandScopedFiles = [
+  'app/(en)/marcas/page.tsx',
+  'app/(en)/contact/page.tsx',
+  'components/pages/BrandInquiryPageContent.tsx',
+  'lib/emailTemplates/brandInquiryConfirmation.ts',
+  'app/api/contact/submit/route.ts',
+];
+
+const brandForbidden = [
+  { pattern: /AI Visual Systems/i, reason: 'posicionamiento AI-first legacy' },
+  { pattern: /Identity Lock/i, reason: 'terminología legacy como categoría maestra' },
+  { pattern: /Visual Infrastructure/i, reason: 'terminología legacy como categoría maestra' },
+  { pattern: /luxury maison/i, reason: 'posicionamiento luxury-first legacy' },
 ];
 
 const requiredCanonicalSnippets = [
@@ -57,11 +77,25 @@ for (const file of scopedFiles) {
   }
 }
 
+for (const file of brandScopedFiles) {
+  const source = readFileSync(join(root, file), 'utf8');
+  for (const rule of brandForbidden) {
+    if (rule.pattern.test(source)) {
+      violations.push(`${file}: ${rule.reason}`);
+    }
+  }
+}
+
 const canonicalSource = readFileSync(join(root, 'lib/canonical.ts'), 'utf8');
 for (const snippet of requiredCanonicalSnippets) {
   if (!canonicalSource.includes(snippet)) {
     violations.push(`lib/canonical.ts: falta el canon requerido: ${snippet}`);
   }
+}
+
+const brandInquirySource = readFileSync(join(root, 'lib/brandInquiryCore.ts'), 'utf8');
+if (!brandInquirySource.includes("BRAND_INQUIRY_LEAD_TYPE = 'brand_inquiry'")) {
+  violations.push('lib/brandInquiryCore.ts: falta lead_type=brand_inquiry');
 }
 
 if (violations.length > 0) {

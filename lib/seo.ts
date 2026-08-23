@@ -158,10 +158,12 @@ export const pageSeo = {
     keywords: ['FAQ', 'visual systems', 'pricing', 'implementation'],
   }),
   contact: createMetadata({
-    title: 'Contact | HEYDE Studio',
+    title: 'Start a creative production project | HEYDE Studio',
     description:
-      'Tell HEYDE Studio what you are building and start a conversation about your visual system.',
+      'Tell HEYDE Studio about your campaign, production or advanced content project. A short English project inquiry with no mandatory meeting.',
     path: '/contact',
+    locale: 'en_US',
+    alternateLocale: ['es_ES'],
   }),
   audit: createMetadata({
     title: 'Auditoría gratuita para negocios locales | HEYDE Studio',

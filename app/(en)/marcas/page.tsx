@@ -2,92 +2,168 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/Button';
-import { EditorialBody, EditorialKicker, EditorialTitle } from '@/components/EditorialText';
+import {
+  EditorialBody,
+  EditorialKicker,
+  EditorialTitle,
+} from '@/components/EditorialText';
 import { labProjects } from '@/lib/canonical';
 import { createMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = createMetadata({
-  title: 'HEYDE Studio for Brands | AI visual systems',
+  title: 'Creative production for brands and teams | HEYDE Studio',
   description:
-    'Premium AI visual systems, campaign imagery, avatars and production infrastructure for brands.',
+    'Advanced creative production for campaigns, launches and content: real, social-native, hybrid and generative work selected according to the objective.',
   path: '/marcas',
   locale: 'en_US',
   alternateLocale: ['es_ES'],
+  keywords: [
+    'creative production',
+    'campaign production',
+    'hybrid production',
+    'content production for brands',
+  ],
 });
 
-const services = [
-  ['Avatar System', 'Reusable digital assets with identity logic, expressions, angles and usage rules.'],
-  ['Image', 'Campaign-quality static imagery, from single assets to editorial image packs.'],
-  ['Video / Reel', 'Motion pieces for social, teasers and campaign moments.'],
-  ['Campaign', 'A complete visual narrative with image world, formats and derivation rules.'],
-  ['Visual Infrastructure', 'Documentation, workflows, training and support for repeatable production.'],
-];
+const capabilities = [
+  {
+    name: 'Real production',
+    body: 'Photography, video and direction with real locations, products and people. Camera or mobile is chosen according to the use, pace and visual objective.',
+  },
+  {
+    name: 'Social / digital',
+    body: 'Vertical content, campaign adaptation and platform-native assets designed to move across formats without losing a consistent direction.',
+  },
+  {
+    name: 'Hybrid',
+    body: 'Real photography or video combined with AI-assisted extension, product visualisation or controlled transformation when it adds useful range.',
+  },
+  {
+    name: 'Generative',
+    body: 'Concept development, scenarios, avatars or synthetic production when the brief genuinely benefits from them — always selected as tools, never as the identity of the studio.',
+  },
+] as const;
+
+const audiences = [
+  'Brands preparing a campaign or product launch',
+  'Agencies that need a reliable production partner',
+  'Creative teams extending a concept across formats',
+  'Hospitality, real estate, lifestyle and personal brands with advanced production needs',
+] as const;
 
 export default function MarcasPage() {
   return (
-    <main className="bg-white">
-      <section className="bg-black px-6 pb-12 pt-16 text-white sm:px-8 md:px-12 md:pb-16 md:pt-24">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-6 flex flex-wrap items-center gap-4">
-            <EditorialKicker>HEYDE for brands</EditorialKicker>
-            <Link href="/" className="text-sm font-bold text-white/58 transition hover:text-white">
-              ¿Negocio local en España? → Para negocios
-            </Link>
+    <main className="bg-white text-black">
+      <section className="bg-black px-6 pb-14 pt-16 text-white sm:px-8 md:px-12 md:pb-20 md:pt-24">
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-end">
+          <div>
+            <div className="mb-7 flex flex-wrap items-center gap-4">
+              <EditorialKicker>HEYDE for brands</EditorialKicker>
+              <Link href="/" className="text-sm font-bold text-white/52 transition hover:text-white">
+                Local business in Spain? → Main studio
+              </Link>
+            </div>
+            <h1 className="mb-7 max-w-5xl text-4xl font-bold leading-none md:text-6xl lg:text-7xl">
+              <EditorialTitle text="Creative production built around the project." />
+            </h1>
+            <EditorialBody dark className="max-w-2xl text-base md:text-lg">
+              Campaigns, launches and content produced with one creative
+              direction. Real, social-native, hybrid or generative methods are
+              combined according to what the work needs.
+            </EditorialBody>
+            <div className="mt-9 flex flex-col gap-4 sm:flex-row">
+              <Button href="/contact" label="Start a project" />
+              <Button href="#heyde-lab" label="Explore HEYDE Lab" variant="secondary" />
+            </div>
           </div>
-          <h1 className="mb-7 max-w-5xl text-4xl font-bold leading-none md:text-6xl lg:text-7xl">
-            <EditorialTitle text="Visual identity. Campaign systems. Scalable production." />
-          </h1>
-          <EditorialBody dark className="max-w-2xl">
-            We turn AI production into a controlled brand asset: direction, identity lock, campaign derivation and documentation your team can reuse.
-          </EditorialBody>
-          <p className="mt-6 max-w-2xl text-sm font-bold uppercase tracking-[0.14em] text-white/48">
-            Remote-first. Proyectos para marcas de España y Europa.
-          </p>
-          <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-            <Button href="/contact" label="Start a project" />
-            <Button href="/work" label="See work" variant="secondary" />
+
+          <div className="border-t border-white/18 pt-6">
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-magenta">
+              One studio, two doors
+            </p>
+            <p className="text-sm leading-relaxed text-white/68">
+              HEYDE Studio is a hybrid content creation and social media
+              management studio. This page is its advanced production path for
+              brands, agencies and creative teams.
+            </p>
           </div>
         </div>
       </section>
 
-      <section className="bg-white px-6 py-16 sm:px-8 md:px-12 md:py-24">
+      <section id="capabilities" className="scroll-mt-24 px-6 py-16 sm:px-8 md:px-12 md:py-24">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-12 grid gap-8 md:grid-cols-[0.7fr_1fr] md:items-end">
+          <div className="mb-12 grid gap-8 md:grid-cols-[0.72fr_1fr] md:items-end">
             <div>
-              <EditorialKicker>Services</EditorialKicker>
-              <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">Five ways to build your visual system.</h2>
+              <EditorialKicker>Capabilities</EditorialKicker>
+              <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">
+                The production method follows the objective.
+              </h2>
             </div>
             <EditorialBody>
-              The premium lane keeps the current HEYDE logic: systems, avatars, campaigns and controlled production for brands.
+              The value is not a preferred tool. It is the ability to choose,
+              direct and connect the right production layers into one coherent
+              body of work.
             </EditorialBody>
           </div>
-          <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 md:grid-cols-5">
-            {services.map(([name, body], index) => (
-              <div key={name} className="bg-white p-7">
-                <p className="mb-8 text-xs font-bold uppercase tracking-[0.18em] text-magenta">0{index + 1}</p>
-                <h3 className="mb-4 text-xl font-bold">{name}</h3>
-                <p className="text-sm leading-relaxed text-gray-700">{body}</p>
+
+          <div className="grid overflow-hidden border border-gray-200 bg-gray-200 md:grid-cols-2 xl:grid-cols-4">
+            {capabilities.map((capability, index) => (
+              <article key={capability.name} className="bg-white p-7 md:p-8">
+                <p className="mb-8 text-xs font-bold uppercase tracking-[0.18em] text-magenta">
+                  0{index + 1}
+                </p>
+                <h3 className="mb-4 text-2xl font-bold">{capability.name}</h3>
+                <p className="text-sm leading-relaxed text-gray-700">{capability.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-gray-50 px-6 py-16 sm:px-8 md:px-12 md:py-24">
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.42fr_0.58fr] lg:items-start">
+          <div>
+            <EditorialKicker>Production support</EditorialKicker>
+            <h2 className="mb-6 text-3xl font-bold leading-tight md:text-5xl">
+              For teams that need range without losing direction.
+            </h2>
+            <EditorialBody>
+              HEYDE can lead the production or work alongside an agency or
+              in-house team. The role is defined by the project, not by a fixed
+              service catalogue.
+            </EditorialBody>
+          </div>
+
+          <div className="grid gap-px overflow-hidden border border-gray-200 bg-gray-200 sm:grid-cols-2">
+            {audiences.map((audience) => (
+              <div key={audience} className="min-h-36 bg-white p-7">
+                <p className="text-lg font-bold leading-snug">{audience}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-black px-6 py-16 text-white sm:px-8 md:px-12 md:py-24">
+      <section id="heyde-lab" className="scroll-mt-24 bg-black px-6 py-16 text-white sm:px-8 md:px-12 md:py-24">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-12 grid gap-8 md:grid-cols-[0.7fr_1fr] md:items-end">
+          <div className="mb-12 grid gap-8 md:grid-cols-[0.72fr_1fr] md:items-end">
             <div>
-              <EditorialKicker>Laboratory</EditorialKicker>
-              <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">Concept work and selected systems.</h2>
+              <EditorialKicker>HEYDE Lab</EditorialKicker>
+              <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">
+                Self-initiated work as creative evidence.
+              </h2>
             </div>
             <EditorialBody dark>
-              Self-initiated projects where we explore the limits of AI-assisted production. Honest labelling, high ambition.
+              HEYDE Lab is where direction, experimentation and production
+              capability are tested. These projects are not client commissions
+              and make no claim about sales, ROI, metrics or testimonials.
             </EditorialBody>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
+
+          <div className="grid gap-8 md:grid-cols-3">
             {labProjects.map((project) => (
               <Link key={project.slug} href={project.href} className="group">
-                <div className="overflow-hidden rounded-sm bg-[#212121]">
+                <div className="overflow-hidden bg-[#202020]">
                   {project.media.type === 'video' ? (
                     <video
                       className="h-[25rem] w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
@@ -105,15 +181,17 @@ export default function MarcasPage() {
                       alt={project.media.altEn}
                       width={1000}
                       height={900}
+                      sizes="(min-width: 768px) 33vw, 100vw"
                       className="h-[25rem] w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
                     />
                   )}
                 </div>
                 <div className="mt-5 border-t border-white/14 pt-4">
-                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-white/42">
-                    HEYDE Lab · Self-initiated · Not a client
+                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-white/44">
+                    HEYDE Lab · Self-initiated project · Not a client
                   </p>
-                  <h3 className="text-xl font-bold">{project.name}</h3>
+                  <h3 className="mb-3 text-2xl font-bold">{project.name}</h3>
+                  <p className="text-sm leading-relaxed text-white/64">{project.summaryEn}</p>
                 </div>
               </Link>
             ))}
@@ -121,18 +199,20 @@ export default function MarcasPage() {
         </div>
       </section>
 
-      <section className="bg-white px-6 py-16 sm:px-8 md:px-12 md:py-24">
-        <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1fr_0.55fr] md:items-end">
+      <section className="px-6 py-16 sm:px-8 md:px-12 md:py-24">
+        <div className="mx-auto grid max-w-7xl gap-10 border-t border-gray-200 pt-12 md:grid-cols-[1fr_0.52fr] md:items-end">
           <div>
-            <h2 className="mb-6 text-4xl font-bold md:text-6xl">
-              <EditorialTitle text="Bring us the production bottleneck." />
+            <EditorialKicker>Engagement</EditorialKicker>
+            <h2 className="mb-6 text-4xl font-bold leading-none md:text-6xl">
+              <EditorialTitle text="Bring the brief. We will define the production." />
             </h2>
             <EditorialBody>
-              Pricing for premium systems is scoped in proposal after context, not listed in the local business plan catalogue.
+              Advanced work is project-based and quoted according to scope. No
+              local SME plan, legacy price or invented minimum is applied here.
             </EditorialBody>
           </div>
           <div className="md:text-right">
-            <Button href="/contact" label="Schedule a call" />
+            <Button href="/contact" label="Tell us about your project" />
           </div>
         </div>
       </section>

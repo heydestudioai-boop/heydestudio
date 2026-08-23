@@ -1,125 +1,194 @@
-# Lote 5 — segunda puerta `/marcas`
+# Lote 5 + 5A — `/marcas` y brand inquiry
 
-Estado: **STOP — gate de arquitectura CRM/contacto activado antes de la implementación**  
-Branch: `codex/lote-5-marcas`  
-Base aprobada: `25c7d6e`  
-Production: **sin cambios**  
-Preview Lote 5: **no creado; se evita publicar un flujo incompleto**
+Estado: **IMPLEMENTADO Y VALIDADO EN BRANCH/PREVIEW — STOP antes de Production**
 
-## Alcance realizado
+Branch: `codex/lote-5-marcas`
 
-- Se creó una branch nueva desde el commit aprobado de Lote 4.
-- Se releyeron el Maestro v1.3.4, el OnePager v2.1, `AGENTS.md`, la auditoría y el plan de migración, y `LOT_4_RESULT.md`.
-- Se auditó el contenido renderizado por `/marcas`, sus CTA, assets, rutas de HEYDE Lab, metadatos y el flujo frontend/backend de `/contact`.
-- No se modificaron `/marcas`, `/contact`, `/audit`, APIs, HubSpot, Brevo, variables, crons ni automatizaciones.
-- No se ejecutó ningún submit y no se generó tráfico CRM o transaccional.
+Base aprobada: `25c7d6e`
 
-El OnePager se extrajo estructuralmente, incluidos sus textos en tablas. El render visual del DOCX no pudo ejecutarse porque LibreOffice no está disponible en el entorno; esta limitación no afecta al contraste textual de identidad, oferta o precios.
+Production: **sin cambios**
 
-## Gate que obliga al STOP
+## 1. Auditoría previa y reutilización controlada
 
-El CTA de `/marcas` debe llegar a `/contact` como consulta de marca y conservar `lead_type=brand_inquiry`. El flujo actualmente desplegado no puede cumplirlo sin cambios backend:
+El gate documentado en `eb8bc14` confirmó que el `/contact` legacy no podía preservar `lead_type=brand_inquiry`. La extensión 5A autorizada separa el flujo de marca sin modificar `/audit`.
 
-1. `ContactPageContent` envía el formulario a `/api/lead-capture`.
-2. Ese endpoint acepta `service`, pero llama a `upsertHubSpotContact` sin `lead_type`.
-3. `upsertHubSpotContact` transforma ese valor en `project_type`; no escribe la propiedad CRM `lead_type`.
-4. La única escritura de `lead_type` existente pertenece al funnel de auditoría y fija `local_audit`.
-5. El endpoint de contacto también conserva copy transaccional y enlaces de Calendly legacy.
+Se reutilizan:
 
-Por tanto, añadir `?inquiry=brand` o preseleccionar una opción solo en frontend no separaría durablemente el lead en HubSpot. Afirmar que el routing está resuelto sería incorrecto.
+- `parseJson` y `rateLimit` como primitivas de entrada segura;
+- el cliente privado de HubSpot, su normalización de nombres y la lectura defensiva de propiedades;
+- el transporte Brevo validado, ampliado solo con idempotency key y tags;
+- la shell global de layouts, consent, analytics y navegación;
+- el modelo canónico `labProjects` y sus assets existentes.
 
-La instrucción del owner establece: si `/contact` requiere cambios backend para separar correctamente `brand_inquiry`, detenerse y documentar la necesidad para un lote posterior. Ese supuesto se ha confirmado. No se modifica el backend en Lote 5.
+No se reutilizan las semánticas de auditoría, Deals, questionnaire, follow-ups, Calendly, `/api/lead-capture` ni emails legacy.
 
-## Auditoría del contenido actual de `/marcas`
+## 2. Arquitectura final
 
-### KEEP
+```text
+Negocio local → /audit    → lead_type=local_audit
+Marca/proyecto → /contact → lead_type=brand_inquiry
+```
 
-- URL pública `/marcas`.
-- Root layout EN ya implementado: HTML inicial `lang=en`.
-- Sistema visual editorial negro/blanco, tipografía, grid y componentes compartidos.
-- Separación visible de HEYDE Lab.
-- Etiqueta actual de cada proyecto: `HEYDE Lab · Self-initiated · Not a client`.
-- Soleá, Eden y Motion Studies como prueba de dirección y capacidad creativa.
-- Modelo canónico `labProjects` y sus rutas de detalle.
-- Pricing avanzado expresado como alcance a medida, sin publicar importes legacy ni planes SME.
+`/contact` está en el root layout EN y sirve HTML inicial con `lang="en"`. La URL pública no cambia. El endpoint activo es `POST /api/contact/submit`; `GET` responde 405.
 
-### ADAPT
+El orden del workflow es:
 
-- Metadata: sustituir `AI visual systems` y `Premium AI visual systems` por creative/hybrid production para marcas.
-- Hero: sustituir “Visual identity. Campaign systems. Scalable production.” por una entrada centrada en creative production, campañas, dirección y adaptación.
-- Descripción del hero: retirar `identity lock` como concepto maestro y presentar producción real, social, híbrida y generativa según objetivo.
-- Enlace de retorno a negocios: mantener la relación entre las dos puertas, pero usar copy inglés coherente.
-- Servicios: reorganizar en cuatro familias reales — Real Production, Social / Digital, Hybrid y Generative when appropriate.
-- HEYDE Lab: mantener la jerarquía y ampliar el contexto de experimentación sin atribuir clientes, briefs ni resultados.
-- Cierre: cambiar “production bottleneck” y “premium systems” por una invitación directa a discutir el proyecto.
-- CTA principal: `Start a project` o `Tell me about your project`, con contexto de brand inquiry cuando exista el soporte backend aprobado.
+1. validar, normalizar, honeypot y rate limit;
+2. aplicar gate QA allowlisted fuera de Production;
+3. calcular un request id HMAC determinista por contenido y día, sin exponer PII;
+4. validar read-only el schema CRM;
+5. localizar/upsert del Contact y guardar estado `pending`;
+6. enviar una única confirmación Brevo con idempotency key;
+7. marcar `sent` o `failed` en el mismo Contact.
 
-### MOVE_TO_LAB
+Si HubSpot falla, no se envía email ni se presenta éxito. Si Brevo falla después de persistir el Contact, la UI devuelve estado aceptado con confirmación retrasada; el reintento reutiliza el Contact.
 
-- Avatar systems, digital doubles, synthetic production, identity locks y escenarios generativos: solo como capacidades secundarias o lenguaje específico de una exploración Lab.
-- Soleá, Eden y Motion Studies: permanecen visibles, pero exclusivamente dentro de HEYDE Lab.
-- Los assets `/images/work-solea-cover.jpg`, `/images/work-eden-cover.jpg` y `/images/work-motion-cover.mp4`: solo bajo esta jerarquía Lab.
+## 3. HubSpot
 
-### REMOVE
+La inspección read-only confirmó que el schema existente ya admite:
 
-- “AI visual systems” como categoría empresarial y keyword principal.
-- “The premium lane keeps the current HEYDE logic”.
-- Avatar System y Visual Infrastructure como pilares de primer nivel.
-- “Five ways to build your visual system”.
-- Enlace secundario a `/work`, ruta legacy prevista para retirada.
-- “Schedule a call” como CTA final por defecto y cualquier dependencia nueva del Calendly legacy.
-- Reducción implícita de la audiencia a moda, lujo, belleza o premium.
+- `lead_type=brand_inquiry`;
+- `lead_source=website`;
+- `project_type=campaign|digital_identity` para los únicos casos donde la taxonomía aporta información útil;
+- `is_test=true|false`;
+- `message` como campo string.
 
-## Estructura actual frente a estructura propuesta
+No se modificó el schema, no se creó pipeline y no se creó ningún estado comercial.
 
-### Actual
+El Contact persiste nombre, empresa, email, web/social, brief, consentimiento, `lead_type`, `lead_source`, `project_type` cuando existe una equivalencia honesta, `is_test` y un marcador técnico versionado. `project_type` nunca sustituye a `lead_type`.
 
-1. Hero AI/system-first.
-2. Cinco servicios centrados en avatar, imagen, reel, campaña e infraestructura visual.
-3. Laboratorio.
-4. CTA a `/contact` y `/work`, con lenguaje de premium systems y llamada.
+No existe ninguna llamada a Deals en el flujo activo.
 
-### Propuesta canónica pendiente de implementación
+## 4. Formulario y experiencia `/contact`
 
-1. Hero: advanced creative production for brands, agencies and creative teams.
-2. Relación “one studio, two doors”: HEYDE sigue siendo un estudio híbrido de contenido y redes; `/marcas` es la capacidad avanzada.
-3. Capabilities: Real Production, Social / Digital, Hybrid y Generative when appropriate.
-4. Método: dirección coherente, producción seleccionada según objetivo y adaptación multiformato.
-5. HEYDE Lab: Soleá, Eden y Motion Studies, siempre autoiniciados y no clientes.
-6. Engagement: custom project / project-based pricing / quoted according to scope.
-7. CTA de brand inquiry a `/contact`, cuando el backend pueda preservar `lead_type=brand_inquiry`.
+Campos:
 
-## Copy, capabilities, SEO y assets
+- Name;
+- Brand / company;
+- Email;
+- Website / social (optional);
+- Project type;
+- Brief / what do you need?;
+- consentimiento explícito.
 
-- No se publica copy final mientras el CTA no pueda cumplir la taxonomía de lead aprobada.
-- Las capabilities propuestas no introducen servicios, precios, mínimos ni resultados no canónicos.
-- No se incorpora Valenne: no hay documentación o assets publicables en el repositorio.
-- Canonical de `/marcas`, metadata EN, OpenGraph y `lang=en` se conservarán en la implementación.
-- El schema global debe seguir describiendo a HEYDE como estudio híbrido de creación y gestión de contenido, nunca como AI company.
-- No se crean fotografías ni clientes ficticios.
+Se retiraron de la ruta activa el visual bottleneck, avatares, identity lock, diagnóstico de visual systems, reunión obligatoria y Calendly. La UI diferencia éxito completo, confirmación de email retrasada y fallo de persistencia.
 
-## Rutas legacy todavía relacionadas
+El CTA local conduce a `/audit`; los CTA de `/marcas` conducen a `/contact`.
 
-- `/work`: enlazada actualmente desde el hero de `/marcas`; debe sustituirse por un ancla interna a HEYDE Lab o `/casos#heyde-lab` cuando se implemente el lote.
-- `/services` y `/pricing/*`: siguen existiendo por alcance de limpieza posterior; no deben recibir enlaces nuevos desde `/marcas`.
-- `/contact`: conserva taxonomía, copy, confirmaciones y Calendly del funnel anterior. Su corrección backend queda fuera del alcance autorizado.
+## 5. Email
 
-## QA y checks
+Nuevo template aislado: `Project inquiry received`.
 
-- QA de implementación: **no ejecutada**, porque el gate se detectó antes de cambiar código.
-- Checks de código: **no ejecutados**, porque no existe un diff funcional de Lote 5 que validar.
-- Preview: **no creado**.
-- Se verificó que la branch continúa en la base `25c7d6e` y que Production no ha sido modificada.
+- confirma recepción;
+- indica que HEYDE revisará el contexto;
+- no promete plazo, precio o presupuesto;
+- no incluye Calendly, questionnaire, templates, auditoría ni terminología AI-first;
+- se envía como máximo una vez por request id;
+- no existe email interno, sequence o follow-up adicional.
 
-## Decisión owner requerida
+No se envió ningún email durante esta implementación o QA.
 
-Autorizar un lote posterior y aislado para el contacto de marcas que, como mínimo:
+## 6. Idempotencia y errores
 
-1. acepte un intent frontend controlado `brand_inquiry`;
-2. lo valide server-side y escriba `lead_type=brand_inquiry` en HubSpot;
-3. preserve el flujo local y no toque `/audit`;
-4. sustituya las confirmaciones/contact copy legacy por mensajes compatibles con la consulta de proyecto;
-5. defina si Calendly se retira del contacto de marcas o queda como paso opcional posterior;
-6. incorpore idempotencia y QA read-only/específica antes de activar el CTA.
+La deduplicación usa dos capas:
 
-Hasta esa autorización, **STOP**. No Production, no Preview incompleto y no limpieza legacy.
+- marcador durable del request y estado de confirmación en el Contact;
+- idempotency key UUID en Brevo para proteger carreras concurrentes.
+
+Un doble submit con el mismo request:
+
+- reutiliza el Contact;
+- no crea Deal;
+- si el estado es `sent`, no llama de nuevo a Brevo;
+- si el estado es `failed`, puede reintentar la única confirmación pendiente;
+- no dispara Calendly ni legacy.
+
+## 7. Analytics y privacidad
+
+Eventos nuevos:
+
+- `brand_inquiry_view`;
+- `brand_inquiry_started`;
+- `brand_inquiry_submitted`;
+- `brand_inquiry_confirmation_view`.
+
+Payload allowlisted: `event_category`, `page_path=/contact`, `locale=en`. No contiene email, nombre, empresa, web/social ni brief. No se registran payloads ni secretos en logs de la ruta.
+
+## 8. Resultado de `/marcas`
+
+La página queda reorientada a creative production para marcas, agencias y equipos:
+
+- hero project-first, no AI-company;
+- una sola HEYDE con dos puertas;
+- capabilities: Real production, Social / digital, Hybrid y Generative cuando aporta;
+- modelo project-based y quoted according to scope, sin precios SME ni mínimos inventados;
+- CTA único y coherente hacia `/contact`;
+- metadata EN y canonical `https://www.heydestudio.com/marcas`;
+- navegación y footer específicos de la puerta de marcas.
+
+Se retiraron del contenido activo `AI Visual Systems`, `Identity Lock`, `Visual Infrastructure`, avatar systems como pilar, luxury/premium positioning y el CTA `/work`.
+
+## 9. HEYDE Lab y assets
+
+Soleá, Eden y Motion Studies permanecen exclusivamente como HEYDE Lab, con las etiquetas `Self-initiated project` y `Not a client`. No se atribuyen briefs, resultados, ROI, métricas o testimonios.
+
+Clasificación:
+
+- **KEEP + MOVE_TO_LAB:** `work-solea-cover.jpg`, `work-eden-cover.jpg`, `work-motion-cover.mp4`;
+- **REPLACE en `/marcas`:** la jerarquía y framing AI/fashion legacy, sustituidos por capabilities y Lab;
+- **REMOVE del flujo activo:** links `/work`, Calendly y recursos/confirmaciones legacy;
+- **NO CREADO:** ningún asset de cliente, Valenne o caso comercial sin evidencia publicable.
+
+Los detalles existentes `/case-studies/solea`, `/case-studies/eden` y `/case-studies/motion` continúan bajo la experiencia ES aprobada en Lote 4. La tarjeta EN de `/marcas` ya deja inequívoca su condición antes de navegar.
+
+## 10. Validación
+
+Checks finales:
+
+- `npm run check:canon`: PASS;
+- `npm run typecheck`: PASS;
+- `npm run lint`: PASS;
+- `npm run build`: PASS — 59 páginas estáticas; `/marcas` y `/contact` static; `/api/contact/submit` dynamic;
+- `npm audit --omit=dev`: PASS — 0 vulnerabilidades;
+- `npm run test:audit`: PASS — 16/16;
+- `npm run test:brand`: PASS — 12/12.
+
+QA Playwright local, sin submit:
+
+- `/marcas`, `/contact`, `/` y `/casos` en 1440×1000 y 390×844;
+- navegación `/marcas → /contact` correcta;
+- formulario rellenado localmente sin envío;
+- HTML inicial: `/marcas` y `/contact` EN; `/` y `/casos` ES;
+- metadata y canonical correctos;
+- sin overflow horizontal, assets rotos ni errores/warnings de consola;
+- `/case-studies/solea|eden|motion`: HTTP 200 y contenido HEYDE Lab;
+- confirmación y fallos cubiertos por tests, sin crear Contact o email externo.
+
+La automatización integrada del navegador no pudo inicializar sus assets en Windows (`os error 3`); se usó Playwright CLI como fallback y la QA quedó completada.
+
+## 11. Preview
+
+URL: `https://heydestudio-jbj9qo57r-heydestudioai-8944s-projects.vercel.app`
+
+Deployment `dpl_Ck8rVFihfphTZ8S6ynxe6vtX8Z5z`: target `preview`, estado `READY`. `/`, `/marcas`, `/contact` y `/casos` responden 200 mediante el acceso autenticado de Vercel. El HTML remoto confirma `lang="en"`, canonical propio y ausencia de claims legacy en `/marcas` y `/contact`.
+
+El deployment mantiene Vercel Authentication; la revisión visual requiere una sesión autorizada. La QA visual completa se ejecutó contra el mismo build local antes del deployment y la verificación remota read-only se hizo con el bypass autenticado del CLI.
+
+No se ha enviado el formulario en Preview, no se ha creado Contact TEST y no se ha enviado email. El gate allowlisted de Preview permanece activo.
+
+## 12. Legacy pendiente fuera de alcance
+
+- `/api/lead-capture` y `ContactPageContent` legacy permanecen sin consumidores desde `/contact`;
+- endpoints de Calendly, questionnaire, follow-ups y handlers legacy continúan para una limpieza posterior autorizada;
+- `/services`, `/work`, `/pricing/*` y componentes AI-first no enlazados siguen fuera del alcance;
+- no se tocaron crons, variables ni `/audit`.
+
+## 13. Decisiones de owner pendientes
+
+- autorización separada para Production;
+- decidir en una futura limpieza si se crean propiedades dedicadas para histórico de múltiples brand inquiries en vez de conservar el último brief en `message`;
+- decidir si los detalles HEYDE Lab requieren rutas EN propias;
+- decidir el destino de Valenne cuando existan asset y canon publicables;
+- autorizar, en otro lote, la retirada de endpoints y componentes legacy no consumidos.
+
+**STOP. No Production y no limpieza legacy final.**

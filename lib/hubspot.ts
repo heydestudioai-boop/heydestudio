@@ -4,6 +4,16 @@ import {
   proposalDealAuditMarker,
   type AuditStatus,
 } from '@/lib/auditFunnelCore';
+import {
+  BRAND_INQUIRY_LEAD_TYPE,
+  BRAND_INQUIRY_SOURCE,
+  buildBrandInquiryMessage,
+  hubSpotProjectType,
+  parseBrandInquiryMessage,
+  type BrandInquiryConfirmationStatus,
+  type BrandInquiryRecord,
+} from '@/lib/brandInquiryCore';
+import type { BrandInquirySaveResult } from '@/lib/brandInquiryWorkflow';
 
 type HubSpotProperties = Record<string, string | number | undefined>;
 
@@ -844,6 +854,291 @@ export async function updateHubSpotAuditContactConfirmationStatus(
     false
   );
 
+  return response.ok;
+}
+
+const BRAND_INQUIRY_CONTACT_PROPERTIES = [
+  'lead_type',
+  'lead_source',
+  'project_type',
+  'message',
+  'is_test',
+] as const;
+
+let brandInquiryContactSchemaValidated = false;
+
+async function ensureHubSpotBrandInquiryContactSchema(): Promise<
+  | { ok: true }
+  | {
+      ok: false;
+      reason: 'not_configured' | 'schema_invalid' | 'provider_unavailable';
+    }
+> {
+  if (!isHubSpotConfigured()) return { ok: false, reason: 'not_configured' };
+  if (brandInquiryContactSchemaValidated) return { ok: true };
+
+  const reads = await Promise.all(
+    BRAND_INQUIRY_CONTACT_PROPERTIES.map((propertyName) =>
+      readHubSpotProperty('contacts', propertyName)
+    )
+  );
+  if (reads.some((readResult) => readResult.providerUnavailable)) {
+    return { ok: false, reason: 'provider_unavailable' };
+  }
+
+  const definitions = new Map(
+    reads
+      .map((readResult) => readResult.property)
+      .filter(
+        (property): property is HubSpotPropertyDefinition =>
+          Boolean(property?.name)
+      )
+      .map((property) => [property.name as string, property])
+  );
+  const property = (name: (typeof BRAND_INQUIRY_CONTACT_PROPERTIES)[number]) =>
+    definitions.get(name);
+  const valid = Boolean(
+    property('lead_type')?.type === 'enumeration' &&
+      hasOption(property('lead_type'), BRAND_INQUIRY_LEAD_TYPE) &&
+      property('lead_source')?.type === 'enumeration' &&
+      hasOption(property('lead_source'), BRAND_INQUIRY_SOURCE) &&
+      property('project_type')?.type === 'enumeration' &&
+      hasOption(property('project_type'), 'campaign') &&
+      hasOption(property('project_type'), 'digital_identity') &&
+      property('message')?.type === 'string' &&
+      property('is_test')?.type === 'enumeration' &&
+      hasOption(property('is_test'), 'true') &&
+      hasOption(property('is_test'), 'false')
+  );
+  if (!valid) return { ok: false, reason: 'schema_invalid' };
+
+  brandInquiryContactSchemaValidated = true;
+  return { ok: true };
+}
+
+interface HubSpotBrandInquirySnapshot {
+  id: string;
+  message?: string;
+}
+
+async function findHubSpotBrandInquiryContactByEmail(email: string): Promise<
+  | { ok: true; contact?: HubSpotBrandInquirySnapshot }
+  | { ok: false }
+> {
+  const response = await hubSpotFetch(
+    '/crm/v3/objects/contacts/search',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        filterGroups: [
+          {
+            filters: [
+              {
+                propertyName: 'email',
+                operator: 'EQ',
+                value: email,
+              },
+            ],
+          },
+        ],
+        properties: ['message'],
+        limit: 1,
+      }),
+    },
+    false
+  );
+  if (!response.ok) return { ok: false };
+
+  const data = (await response.json()) as {
+    results?: Array<{ id: string; properties?: { message?: string } }>;
+  };
+  const contact = data.results?.[0];
+  if (!contact) return { ok: true };
+  return {
+    ok: true,
+    contact: { id: contact.id, message: contact.properties?.message },
+  };
+}
+
+function brandInquiryContactProperties(
+  record: BrandInquiryRecord,
+  confirmationStatus: BrandInquiryConfirmationStatus,
+  includeLifecycleStage: boolean
+) {
+  const { firstName, lastName } = splitName(record.name);
+  return cleanProperties({
+    email: record.email,
+    firstname: firstName,
+    lastname: lastName,
+    company: record.company,
+    website: record.presence,
+    lead_type: BRAND_INQUIRY_LEAD_TYPE,
+    lead_source: BRAND_INQUIRY_SOURCE,
+    project_type: hubSpotProjectType(record.projectType),
+    message: buildBrandInquiryMessage(record, confirmationStatus),
+    is_test: String(record.isTest),
+    lifecyclestage: includeLifecycleStage ? 'lead' : undefined,
+  });
+}
+
+function duplicateBrandInquiry(
+  contact: HubSpotBrandInquirySnapshot
+): BrandInquirySaveResult | undefined {
+  const marker = parseBrandInquiryMessage(contact.message);
+  if (!marker) return undefined;
+  return {
+    ok: true,
+    created: false,
+    contactId: contact.id,
+    confirmationStatus: marker.confirmationStatus,
+  };
+}
+
+export async function saveHubSpotBrandInquiry(
+  record: BrandInquiryRecord,
+  initialConfirmationStatus: BrandInquiryConfirmationStatus
+): Promise<BrandInquirySaveResult> {
+  const schema = await ensureHubSpotBrandInquiryContactSchema();
+  if (!schema.ok) return schema;
+
+  const existing = await findHubSpotBrandInquiryContactByEmail(record.email);
+  if (!existing.ok) return { ok: false, reason: 'provider_unavailable' };
+
+  if (existing.contact) {
+    const marker = parseBrandInquiryMessage(existing.contact.message);
+    if (marker?.requestId === record.requestId) {
+      return duplicateBrandInquiry(existing.contact)!;
+    }
+
+    const response = await hubSpotFetch(
+      '/crm/v3/objects/contacts/' + encodeURIComponent(existing.contact.id),
+      {
+        method: 'PATCH',
+        body: JSON.stringify({
+          properties: brandInquiryContactProperties(
+            record,
+            initialConfirmationStatus,
+            false
+          ),
+        }),
+      },
+      false
+    );
+    if (!response.ok) {
+      return {
+        ok: false,
+        reason:
+          response.status === 400 ? 'schema_invalid' : 'provider_unavailable',
+      };
+    }
+    return {
+      ok: true,
+      created: true,
+      contactId: existing.contact.id,
+      confirmationStatus: initialConfirmationStatus,
+    };
+  }
+
+  const response = await hubSpotFetch(
+    '/crm/v3/objects/contacts',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        properties: brandInquiryContactProperties(
+          record,
+          initialConfirmationStatus,
+          true
+        ),
+      }),
+    },
+    false
+  );
+
+  if (response.status === 409) {
+    const raced = await findHubSpotBrandInquiryContactByEmail(record.email);
+    if (!raced.ok || !raced.contact) {
+      return { ok: false, reason: 'provider_unavailable' };
+    }
+    const marker = parseBrandInquiryMessage(raced.contact.message);
+    if (marker?.requestId === record.requestId) {
+      return duplicateBrandInquiry(raced.contact)!;
+    }
+
+    const update = await hubSpotFetch(
+      '/crm/v3/objects/contacts/' + encodeURIComponent(raced.contact.id),
+      {
+        method: 'PATCH',
+        body: JSON.stringify({
+          properties: brandInquiryContactProperties(
+            record,
+            initialConfirmationStatus,
+            false
+          ),
+        }),
+      },
+      false
+    );
+    if (!update.ok) return { ok: false, reason: 'provider_unavailable' };
+    return {
+      ok: true,
+      created: true,
+      contactId: raced.contact.id,
+      confirmationStatus: initialConfirmationStatus,
+    };
+  }
+
+  if (!response.ok) {
+    return {
+      ok: false,
+      reason:
+        response.status === 400 ? 'schema_invalid' : 'provider_unavailable',
+    };
+  }
+  const data = (await response.json()) as { id: string };
+  return {
+    ok: true,
+    created: true,
+    contactId: data.id,
+    confirmationStatus: initialConfirmationStatus,
+  };
+}
+
+export async function updateHubSpotBrandInquiryConfirmationStatus(
+  contactId: string,
+  record: BrandInquiryRecord,
+  status: BrandInquiryConfirmationStatus
+) {
+  if (!isHubSpotConfigured()) return false;
+  const current = await hubSpotFetch(
+    '/crm/v3/objects/contacts/' +
+      encodeURIComponent(contactId) +
+      '?properties=message',
+    { method: 'GET' },
+    false
+  );
+  if (!current.ok) return false;
+  const snapshot = (await current.json()) as {
+    properties?: { message?: string };
+  };
+  if (
+    parseBrandInquiryMessage(snapshot.properties?.message)?.requestId !==
+    record.requestId
+  ) {
+    return false;
+  }
+
+  const response = await hubSpotFetch(
+    '/crm/v3/objects/contacts/' + encodeURIComponent(contactId),
+    {
+      method: 'PATCH',
+      body: JSON.stringify({
+        properties: {
+          message: buildBrandInquiryMessage(record, status),
+        },
+      }),
+    },
+    false
+  );
   return response.ok;
 }
 
