@@ -9,13 +9,12 @@ import {
   type ReactNode,
 } from 'react';
 import { usePathname } from 'next/navigation';
-import { type Language, siteContent } from './siteContent';
+
+export type Language = 'EN' | 'ES';
 
 interface LanguageContextValue {
   language: Language;
   setLanguage: (language: Language) => void;
-  toggleLanguage: () => void;
-  content: (typeof siteContent)[Language];
 }
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
@@ -44,8 +43,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     () => ({
       language,
       setLanguage,
-      toggleLanguage: () => setLanguage(language === 'EN' ? 'ES' : 'EN'),
-      content: siteContent[language],
     }),
     [language, setLanguage]
   );

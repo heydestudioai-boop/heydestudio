@@ -101,61 +101,19 @@ export const pageSeo = {
     path: '/estudio',
     keywords: ['Oliver Heyde', 'estudio audiovisual Toledo', 'fotógrafo Toledo'],
   }),
-  about: createMetadata({
-    title: 'About HEYDE Studio | Visual Systems for Modern Brands',
-    description:
-      'Learn the philosophy behind HEYDE Studio: creative direction, AI systems, and visual infrastructure for modern brands.',
-    path: '/about',
-    keywords: ['HEYDE Studio', 'visual systems', 'creative direction', 'AI brand systems'],
-  }),
-  services: createMetadata({
-    title: 'Services, Process & Pricing | HEYDE Studio',
-    description:
-      'Explore HEYDE Studio services, process, timelines, pricing levels, and AI visual infrastructure for modern brands.',
-    path: '/services',
-    keywords: ['visual systems', 'AI campaigns', 'brand infrastructure', 'pricing', 'process'],
-  }),
-  work: createMetadata({
-    title: 'Work | HEYDE Studio',
-    description:
-      'Explore concept systems, visual studies, and production frameworks built to test campaign logic and scalable AI production.',
-    path: '/work',
-    keywords: ['case studies', 'visual systems', 'brand systems', 'AI production'],
-  }),
-  process: createMetadata({
-    title: 'Process | HEYDE Studio',
-    description:
-      'A clear methodology for building visual systems: discover, design, build, document, and deploy.',
-    path: '/process',
-    keywords: ['visual system process', 'design methodology', 'AI implementation'],
-  }),
-  pricing: createMetadata({
-    title: 'Pricing | HEYDE Studio',
-    description:
-      'Transparent pricing for visual production, AI campaigns, avatars, and complete brand systems.',
-    path: '/pricing',
-    keywords: ['pricing', 'visual systems pricing', 'AI infrastructure pricing'],
-  }),
-  resources: createMetadata({
-    title: 'Resources | HEYDE Studio',
-    description:
-      'Free templates, guides, and practical resources for building scalable visual systems.',
-    path: '/resources',
-    keywords: ['visual system template', 'brand guidelines template', 'free resources'],
-  }),
   blog: createMetadata({
-    title: 'Blog | HEYDE Studio',
+    title: 'Archivo editorial | HEYDE Studio',
     description:
-      'Articles on visual systems, AI production, fashion imagery, and scalable brand infrastructure.',
+      'El archivo editorial de HEYDE Studio está en revisión. Consulta la oferta actual y HEYDE Lab desde las páginas canónicas.',
     path: '/blog',
-    keywords: ['visual systems blog', 'AI fashion imagery', 'brand infrastructure'],
+    noIndex: true,
   }),
   faq: createMetadata({
     title: 'Preguntas frecuentes sobre contenido y redes | HEYDE Studio',
     description:
       'Respuestas sobre planes, publicación, permanencia, derechos, brutos, IA, desplazamientos y auditoría gratuita de HEYDE Studio.',
     path: '/faq',
-    keywords: ['FAQ', 'visual systems', 'pricing', 'implementation'],
+    keywords: ['preguntas contenido Toledo', 'planes contenido', 'derechos de uso'],
   }),
   contact: createMetadata({
     title: 'Start a creative production project | HEYDE Studio',
@@ -172,19 +130,6 @@ export const pageSeo = {
     path: '/audit',
     keywords: ['auditoría gratuita Toledo', 'Google Business Toledo', 'redes sociales negocios Toledo'],
   }),
-  questionnaire: createMetadata({
-    title: 'Audit Questionnaire | HEYDE Studio',
-    description: 'Private pre-audit questionnaire for scheduled HEYDE Studio clients.',
-    path: '/audit-questionnaire',
-    noIndex: true,
-  }),
-  template: createMetadata({
-    title: 'System Documentation Template | HEYDE Studio',
-    description:
-      'Download a practical template for documenting visual systems, identity locks, rules, quality control, and production notes.',
-    path: '/system-documentation-template',
-    keywords: ['system documentation template', 'visual system template', 'brand documentation'],
-  }),
   privacy: createMetadata({
     title: 'Privacy Policy | HEYDE Studio',
     description:
@@ -194,7 +139,7 @@ export const pageSeo = {
   terms: createMetadata({
     title: 'Terms | HEYDE Studio',
     description:
-      'Terms of use for the HEYDE Studio website, resources, forms, and service enquiries.',
+      'Terms of use for the HEYDE Studio website, its forms, and service enquiries.',
     path: '/terms',
   }),
 };

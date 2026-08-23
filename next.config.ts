@@ -1,13 +1,14 @@
 import type { NextConfig } from 'next';
+import { LEGACY_REDIRECTS } from './lib/routePolicy';
 
 const contentSecurityPolicy = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com https://www.googletagmanager.com",
-  "style-src 'self' 'unsafe-inline' https://assets.calendly.com",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com",
+  "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://images.unsplash.com https://*.unsplash.com https://www.googletagmanager.com https://www.google-analytics.com",
   "font-src 'self' data:",
-  "connect-src 'self' https://api.brevo.com https://api.hubapi.com https://calendly.com https://*.calendly.com https://www.google-analytics.com https://region1.google-analytics.com",
-  "frame-src https://calendly.com https://*.calendly.com",
+  "connect-src 'self' https://api.brevo.com https://api.hubapi.com https://www.google-analytics.com https://region1.google-analytics.com",
+  "frame-src 'none'",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -19,13 +20,7 @@ const nextConfig: NextConfig = {
   devIndicators: false,
 
   async redirects() {
-    return [
-      {
-        source: '/how-we-work',
-        destination: '/services#process',
-        permanent: true,
-      },
-    ];
+    return LEGACY_REDIRECTS.map((redirect) => ({ ...redirect }));
   },
 
   async headers() {

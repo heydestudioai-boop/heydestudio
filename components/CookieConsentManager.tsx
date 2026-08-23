@@ -125,17 +125,6 @@ function GoogleAnalytics({ gaId, enabled }: { gaId?: string; enabled: boolean })
             window.gtag = gtag;
             gtag('js', new Date());
             gtag('config', '${gaId}');
-
-            document.addEventListener('click', function(e) {
-              var target = e.target && e.target.closest ? e.target.closest('a') : null;
-              if (target && target.href && target.href.includes('calendly.com')) {
-                gtag('event', 'calendly_link_clicked', {
-                  'event_category': 'engagement',
-                  'event_label': 'calendly_booking',
-                  'value': 1
-                });
-              }
-            }, true);
           `,
         }}
       />

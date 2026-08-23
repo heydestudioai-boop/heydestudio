@@ -8,7 +8,7 @@ const legalCopy = {
       title: 'Privacy Policy',
       updated: 'Last updated: August 21, 2026',
       intro:
-        'HEYDE Studio collects only the information needed to respond to enquiries, deliver requested resources, run audits, and improve the website.',
+        'HEYDE Studio collects only the information needed to respond to enquiries, run audits, and improve the website.',
       sections: [
         {
           title: 'Information We Collect',
@@ -16,11 +16,11 @@ const legalCopy = {
         },
         {
           title: 'How We Use Information',
-          body: 'We use information to respond to requests, send resources, manage audit workflows, improve website performance, and maintain CRM or email-service records when you submit a form.',
+          body: 'We use information to respond to requests, manage audit and project-enquiry workflows, improve website performance, and maintain CRM or email-service records when you submit a form.',
         },
         {
           title: 'Third-Party Services',
-          body: 'The website may use HubSpot to keep request records, Brevo for transactional email, Google Analytics after consent, and Calendly only for optional scheduling when that option is enabled. These services process data according to their own terms and privacy policies.',
+          body: 'The website may use HubSpot to keep request records, Brevo for transactional email, and Google Analytics after consent. These services process data according to their own terms and privacy policies.',
         },
         {
           title: 'Security',
@@ -36,19 +36,15 @@ const legalCopy = {
       title: 'Terms of Use',
       updated: 'Last updated: May 7, 2026',
       intro:
-        'By using the HEYDE Studio website, resources, forms, or booking flows, you agree to use them lawfully and responsibly.',
+        'By using the HEYDE Studio website or its forms, you agree to use them lawfully and responsibly.',
       sections: [
         {
           title: 'Website Content',
-          body: 'All website copy, templates, frameworks, and examples are provided for general informational purposes and do not create a client relationship unless a separate agreement is signed.',
-        },
-        {
-          title: 'Free Resources',
-          body: 'Downloadable resources are provided as practical guides. You may use them internally, but you may not resell, redistribute, or present them as your own product.',
+          body: 'Website copy, frameworks, and examples are provided for general informational purposes and do not create a client relationship unless a separate agreement is signed.',
         },
         {
           title: 'Service Enquiries',
-          body: 'Submitting a form or booking a call does not guarantee availability, pricing, timeline, or acceptance of a project. Project scope is confirmed separately in writing.',
+          body: 'Submitting a form does not guarantee availability, pricing, timeline, or acceptance of a project. Project scope is confirmed separately in writing.',
         },
         {
           title: 'Acceptable Use',
@@ -72,11 +68,7 @@ const legalCopy = {
         },
         {
           title: 'Analytics',
-          body: 'If you accept analytics, Google Analytics may measure page views and non-personal interactions in the audit funnel. Form values, names, emails, phone numbers, and business identifiers are not sent as analytics event parameters. Analytics is not loaded until you accept it.',
-        },
-        {
-          title: 'Third-Party Services',
-          body: 'Some pages may offer an optional Calendly scheduling link after an audit. Calendly is not required to request an audit and can process technical data only when you interact with its link.',
+          body: 'If you accept analytics, Google Analytics may measure page views and non-personal interactions. Form values, names, emails, phone numbers, and business identifiers are not sent as analytics event parameters. Analytics is not loaded until you accept it.',
         },
         {
           title: 'Changing Your Choice',
@@ -90,7 +82,7 @@ const legalCopy = {
       title: 'Política De Privacidad',
       updated: 'Última actualización: 21 de agosto de 2026',
       intro:
-        'HEYDE Studio recoge únicamente la información necesaria para responder solicitudes, entregar recursos, gestionar auditorías y mejorar la web.',
+        'HEYDE Studio recoge únicamente la información necesaria para responder solicitudes, gestionar auditorías y mejorar la web.',
       sections: [
         {
           title: 'Información Que Recogemos',
@@ -98,11 +90,11 @@ const legalCopy = {
         },
         {
           title: 'Cómo Usamos La Información',
-          body: 'Usamos la información para responder solicitudes, enviar recursos, gestionar flujos de auditoría, mejorar rendimiento y mantener registros en CRM o servicios de email cuando envías un formulario.',
+          body: 'Usamos la información para responder solicitudes, gestionar flujos de auditoría y consultas de proyecto, mejorar rendimiento y mantener registros en CRM o servicios de email cuando envías un formulario.',
         },
         {
           title: 'Servicios De Terceros',
-          body: 'La web puede usar HubSpot para conservar solicitudes, Brevo para email transaccional, Google Analytics después del consentimiento y Calendly solo para una reserva opcional cuando esté habilitada. Estos servicios procesan datos según sus propias políticas y condiciones.',
+          body: 'La web puede usar HubSpot para conservar solicitudes, Brevo para email transaccional y Google Analytics después del consentimiento. Estos servicios procesan datos según sus propias políticas y condiciones.',
         },
         {
           title: 'Seguridad',
@@ -118,19 +110,15 @@ const legalCopy = {
       title: 'Términos De Uso',
       updated: 'Última actualización: 7 de mayo de 2026',
       intro:
-        'Al usar la web, recursos, formularios o flujos de reserva de HEYDE Studio aceptas usarlos de forma legal y responsable.',
+        'Al usar la web o los formularios de HEYDE Studio aceptas usarlos de forma legal y responsable.',
       sections: [
         {
           title: 'Contenido De La Web',
-          body: 'El copy, plantillas, frameworks y ejemplos se ofrecen como información general y no crean una relación de cliente salvo que exista un acuerdo firmado aparte.',
-        },
-        {
-          title: 'Recursos Gratuitos',
-          body: 'Los recursos descargables son guías prácticas. Puedes usarlos internamente, pero no revenderlos, redistribuirlos ni presentarlos como producto propio.',
+          body: 'El copy, frameworks y ejemplos se ofrecen como información general y no crean una relación de cliente salvo que exista un acuerdo firmado aparte.',
         },
         {
           title: 'Solicitudes De Servicio',
-          body: 'Enviar un formulario o reservar una llamada no garantiza disponibilidad, precios, plazos ni aceptación de un proyecto. El alcance se confirma por escrito.',
+          body: 'Enviar un formulario no garantiza disponibilidad, precios, plazos ni aceptación de un proyecto. El alcance se confirma por escrito.',
         },
         {
           title: 'Uso Aceptable',
@@ -154,11 +142,7 @@ const legalCopy = {
         },
         {
           title: 'Analítica',
-          body: 'Si aceptas analítica, Google Analytics puede medir visitas e interacciones no personales del embudo de auditoría. Los valores del formulario, nombres, emails, teléfonos e identificadores de negocio no se envían como parámetros de analítica. La analítica no se carga hasta que la aceptas.',
-        },
-        {
-          title: 'Servicios De Terceros',
-          body: 'Algunas páginas pueden ofrecer un enlace opcional de Calendly después de una auditoría. Calendly no es necesario para pedir la auditoría y solo puede procesar datos técnicos cuando interactúas con su enlace.',
+          body: 'Si aceptas analítica, Google Analytics puede medir visitas e interacciones no personales. Los valores del formulario, nombres, emails, teléfonos e identificadores de negocio no se envían como parámetros de analítica. La analítica no se carga hasta que la aceptas.',
         },
         {
           title: 'Cambiar Tu Elección',

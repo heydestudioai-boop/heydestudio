@@ -6,10 +6,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: [
-        '/audit-questionnaire',
-        '/api/',
-      ],
+      disallow: ['/api/'],
     },
     sitemap: new URL('/sitemap.xml', siteUrl).toString(),
   };

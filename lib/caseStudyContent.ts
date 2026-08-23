@@ -120,10 +120,10 @@ export const caseStudyContent: Record<CaseStudyLanguage, Record<string, CaseStud
         'The campaign is documented as reusable logic: what must stay consistent, what can change and how each format should derive from the same identity.',
       breakdown: [
         {
-          label: 'Identity lock',
+          label: 'Continuity rules',
           title: 'Material permanence over seasonal imagery.',
           body:
-            'Soleá is locked around Mediterranean light, tactile materiality, solar memory and a premium fragrance identity that avoids summer cliches.',
+            'Soleá keeps Mediterranean light, tactile materiality and solar memory consistent while avoiding seasonal cliches.',
         },
         {
           label: 'Visual rules',
@@ -242,10 +242,10 @@ export const caseStudyContent: Record<CaseStudyLanguage, Record<string, CaseStud
         'The editorial world is designed as a repeatable system: character logic, spatial rules, material cues and format behavior are defined before production scales.',
       breakdown: [
         {
-          label: 'Identity lock',
+          label: 'Continuity rules',
           title: 'One controlled editorial world.',
           body:
-            'eden is locked around figure, space, styling and atmosphere operating with continuity across the wider campaign language.',
+            'eden keeps figure, space, styling and atmosphere consistent across the wider campaign language.',
         },
         {
           label: 'Visual rules',
@@ -486,10 +486,10 @@ export const caseStudyContent: Record<CaseStudyLanguage, Record<string, CaseStud
         'La campaña se documenta como lógica reutilizable: qué debe mantenerse, qué puede cambiar y cómo cada formato deriva de la misma identidad.',
       breakdown: [
         {
-          label: 'Identity lock',
+          label: 'Reglas de continuidad',
           title: 'Permanencia material frente a imaginario estacional.',
           body:
-            'Soleá se bloquea alrededor de luz mediterránea, materialidad táctil, memoria solar y una identidad premium de fragancia que evita clichés de verano.',
+            'Soleá mantiene constantes la luz mediterránea, la materialidad táctil y la memoria solar, evitando clichés estacionales.',
         },
         {
           label: 'Reglas visuales',
@@ -608,10 +608,10 @@ export const caseStudyContent: Record<CaseStudyLanguage, Record<string, CaseStud
         'El mundo editorial se diseña como sistema repetible: lógica de personaje, reglas espaciales, materiales y comportamiento por formato se definen antes de escalar producción.',
       breakdown: [
         {
-          label: 'Identity lock',
+          label: 'Reglas de continuidad',
           title: 'Un mundo editorial controlado.',
           body:
-            'eden se bloquea alrededor de figura, espacio, styling y atmósfera operando con continuidad dentro del lenguaje de campaña.',
+            'eden mantiene figura, espacio, styling y atmósfera con continuidad dentro del lenguaje de campaña.',
         },
         {
           label: 'Reglas visuales',
