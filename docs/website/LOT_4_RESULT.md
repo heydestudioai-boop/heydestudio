@@ -1,8 +1,10 @@
 # Lote 4 — verticales, casos y HEYDE Lab
 
-Estado: implementación en `codex/lote-4-canonical-sectors`, Preview READY y pendiente de revisión del owner. Production no se modifica.
+Estado: Lote 4 aprobado funcional y visualmente; refactorización técnica de internacionalización completada en `codex/lote-4-canonical-sectors`. Preview READY. Production no se modifica.
 
-Preview: `https://heydestudio-gob73m2il-heydestudioai-8944s-projects.vercel.app`
+Preview con refactorización i18n: `https://heydestudio-iph6egt0q-heydestudioai-8944s-projects.vercel.app`
+
+Preview anterior del Lote 4: `https://heydestudio-gob73m2il-heydestudioai-8944s-projects.vercel.app`
 
 ## Alcance implementado
 
@@ -12,6 +14,58 @@ Preview: `https://heydestudio-gob73m2il-heydestudioai-8944s-projects.vercel.app`
 - `/bodegas`: finca, elaboración, personas, producto, visitas y experiencia. La Campaña Bodega se consume desde el modelo canónico.
 - `/casos`: separación entre «Trabajo con negocios» y «HEYDE Lab». No se publica una cuadrícula de clientes sin evidencia.
 - HEYDE Lab: Soleá, Eden y Motion Studies se identifican como proyectos autoiniciados, no clientes y no prueba comercial, tanto en las tarjetas como en el detalle.
+
+## Refactorización técnica de internacionalización
+
+### Arquitectura elegida
+
+- Dos route groups internos sin impacto en la URL: `app/(es)` y `app/(en)`.
+- Dos root layouts estáticos: `app/(es)/layout.tsx` fija `lang="es"` y `app/(en)/layout.tsx` fija `lang="en"`.
+- `components/layout/SiteRoot.tsx` conserva una sola implementación de metadata raíz, CSS global, schema, `LanguageProvider`, Header, Footer, analytics/consent, scroll y WhatsApp.
+- Se elimina la lectura de `headers()` del root y se retira `proxy.ts`; el idioma ya no depende de request-time.
+- Las APIs permanecen fuera de los route groups y no se ha modificado ningún endpoint ni lógica del funnel `/audit`.
+
+Las URLs públicas se mantienen idénticas. Todas las rutas locales y españolas viven bajo `(es)`; `/marcas` y `/en/real-estate` viven bajo `(en)`.
+
+### Archivos movidos y modificados
+
+- Movidos sin cambiar contenido: `app/page.tsx` y 23 directorios de páginas españolas a `app/(es)`; `app/marcas` y `app/en` a `app/(en)`.
+- Nuevos: `app/(es)/layout.tsx`, `app/(en)/layout.tsx` y `components/layout/SiteRoot.tsx`.
+- Retirados: `app/layout.tsx` y `proxy.ts`.
+- Ajustados por la nueva ubicación física: `scripts/check-canonical-content.mjs` y una referencia de archivo en `tests/audit-funnel.test.mjs`.
+- Actualizado: `docs/website/LOT_4_RESULT.md`.
+
+### Build antes/después
+
+| Medida | Antes | Después |
+| --- | --- | --- |
+| Páginas generadas | 59 | 59 |
+| Rutas visibles | Todas `ƒ` dinámicas | Todas `○` estáticas o `●` SSG |
+| APIs | `ƒ` dinámicas | `ƒ` dinámicas, sin cambio |
+| Proxy | Presente para `/en/*` | Ausente |
+| Warnings de build | 0 | 0 |
+
+El build final compila en 2,5 s, valida TypeScript en 3,6 s y genera 59/59 páginas en 961 ms en ejecución incremental local. Los tiempos no se usan como comparación causal porque el estado de caché no es idéntico; el impacto determinante es el cambio verificable de todas las páginas públicas de dinámicas a estáticas sin alterar el recuento.
+
+### Idioma server-side
+
+- `lang="es"`: `/`, `/planes`, `/audit`, `/casos`, `/estudio`, `/hosteleria`, `/inmobiliaria`, `/bodegas`, `/faq` y el resto de la experiencia local.
+- `lang="en"`: `/marcas` y `/en/real-estate`.
+- El HTML crudo anterior a hidratación se verificó en las ocho rutas de QA, localmente y en Preview.
+
+### Navegación entre root layouts
+
+- La navegación dentro del mismo root mantiene navegación cliente y estado en memoria; se verificó `/` → `/hosteleria` con un marcador de sesión conservado.
+- Next.js realiza una carga documental completa al cruzar roots. Se verificó `/` → `/marcas` y `/inmobiliaria` ↔ `/en/real-estate`: el marcador en memoria se reinicia, como prevé App Router.
+- El consentimiento persiste en `localStorage`, Header/Footer se renderizan de nuevo con el idioma correcto y no se observó flash, overlay, error de consola ni regresión visible.
+- Este coste queda limitado a transiciones explícitas ES ↔ EN; no afecta la navegación ordinaria dentro de la experiencia española.
+
+### SEO preservado
+
+- `/inmobiliaria`: canonical propio y alternates `es-ES`, `en` y `x-default` español.
+- `/en/real-estate`: canonical propio y el mismo conjunto recíproco de alternates.
+- `/marcas`: HTML inicial inglés, metadata inglesa y canonical `https://www.heydestudio.com/marcas`.
+- No cambia ningún slug ni URL pública.
 
 ## Auditoría de assets
 
@@ -51,7 +105,7 @@ La estructura queda preparada para incorporar fotografía sectorial real cuando 
 
 - Aportar y autorizar fotografía real o material neutro de proceso para los tres heroes sectoriales si se desea sustituir la composición tipográfica actual.
 - No se encontró contenido ni asset de Valenne en el repositorio. Para publicarlo en HEYDE Lab hacen falta asset, copy y confirmación de que debe quedar visible; no bloquea este lote.
-- El `lang="en"` de servidor se resuelve con un header de request limitado a `/en/*` y lectura en el root layout. Next.js 16 marca por ello todas las páginas como dinámicas en el build. Antes de Production, el owner debe decidir entre aceptar ese coste de renderizado o autorizar una migración más amplia a root layouts por route groups. Production no recibe este cambio durante la revisión de Preview.
+- No queda ninguna decisión de owner pendiente para la arquitectura de internacionalización.
 
 ## Límites preservados
 
@@ -61,14 +115,20 @@ La estructura queda preparada para incorporar fotografía sectorial real cuando 
 
 ## QA y checks
 
-- QA local en 1440×1000 y 390×844 sobre `/hosteleria`, `/inmobiliaria`, `/bodegas`, `/casos`, `/en/real-estate` y los detalles Soleá, Eden y Motion Studies.
-- Todas las rutas devolvieron 200, sin errores de consola, 4xx/5xx, overflow horizontal, imágenes rotas ni errores de vídeo.
-- Selector recíproco verificado: `/inmobiliaria` → `/en/real-estate` (`lang="en"`) → `/inmobiliaria` (`lang="es"`).
-- Canonical y hreflang verificados en el HTML de Preview con host `https://www.heydestudio.com`, `es-ES`, `en` y `x-default` español.
-- QA remota read-only: las ocho rutas del lote devolvieron HTTP 200 en el deployment READY.
+- QA local en 1440×1000 y 390×844 sobre `/`, `/audit`, `/hosteleria`, `/inmobiliaria`, `/en/real-estate`, `/bodegas`, `/casos` y `/marcas`.
+- Todas las rutas devolvieron 200, con Header/Footer, CTA, assets y responsive correctos; sin errores de consola, framework overlay, 4xx/5xx, overflow horizontal, imágenes rotas ni errores de vídeo.
+- Selector recíproco verificado: `/inmobiliaria` → `/en/real-estate` (`lang="en"`) → `/inmobiliaria` (`lang="es"`). Navegación hacia y desde `/marcas` verificada también en móvil.
+- Consent/analytics conservado: la decisión de consentimiento persiste al cruzar root layouts y Google Analytics no se carga tras rechazo.
+- Canonical y hreflang verificados en el HTML crudo de Preview con host `https://www.heydestudio.com`, `es-ES`, `en` y `x-default` español.
+- QA remota read-only mediante `vercel curl`: las ocho rutas devolvieron contenido correcto en el deployment Preview READY y `lang` inicial esperado.
+- El navegador integrado no pudo inicializarse por una limitación del runtime local (`failed to write kernel assets: path not found`); se usó Playwright 1.62.1 como fallback, sin añadir dependencias al proyecto.
 - `npm run check:canon`: PASS.
 - `npm run typecheck`: PASS.
 - `npm run lint`: PASS.
 - `npm run build`: PASS.
 - `npm audit --omit=dev`: 0 vulnerabilidades.
 - `npm run test:audit`: 16/16 PASS, sin modificar el funnel.
+
+## Recomendación
+
+`READY FOR PRODUCTION`, manteniendo el STOP explícito: esta rama y Preview no se han promovido ni desplegado a Production y no se inicia Lote 5.

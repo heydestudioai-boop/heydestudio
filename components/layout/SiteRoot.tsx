@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { headers } from 'next/headers';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ScrollToTopButton } from '@/components/ScrollToTopButton';
@@ -7,9 +6,9 @@ import { CookieConsentManager } from '@/components/CookieConsentManager';
 import { FloatingWhatsApp } from '@/components/FloatingWhatsApp';
 import { LanguageProvider } from '@/lib/language';
 import { pageSeo, siteName, siteUrl } from '@/lib/seo';
-import './globals.css';
+import '@/app/globals.css';
 
-export const metadata: Metadata = {
+export const siteMetadata: Metadata = {
   ...pageSeo.home,
   applicationName: siteName,
   authors: [{ name: 'HEYDE Studio' }],
@@ -32,18 +31,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export function SiteRoot({
   children,
+  lang,
 }: {
   children: React.ReactNode;
+  lang: 'es' | 'en';
 }) {
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
-  const requestHeaders = await headers();
-  const routeLanguage = requestHeaders.get('x-heyde-route-language') === 'en' ? 'en' : 'es';
 
   return (
-    <html lang={routeLanguage} data-scroll-behavior="smooth">
-      <head>
+    <html lang={lang} data-scroll-behavior="smooth">
+      <body className="bg-white text-black">
         {/* Schema.org */}
         <script
           type="application/ld+json"
@@ -138,13 +137,9 @@ export default async function RootLayout({
             }),
           }}
         />
-      </head>
-      <body className="bg-white text-black">
         <LanguageProvider>
           <Header />
-          <main className="pt-16">
-            {children}
-          </main>
+          <main className="pt-16">{children}</main>
           <Footer />
           <ScrollToTopButton />
           <CookieConsentManager gaId={gaId} />

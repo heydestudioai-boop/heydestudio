@@ -324,7 +324,7 @@ test('the submit route cannot create Deals and Calendly is absent from the v1 fu
 
   const funnelFiles = await Promise.all(
     [
-      '../app/audit/page.tsx',
+      '../app/(es)/audit/page.tsx',
       '../components/pages/AuditPageContent.tsx',
       '../lib/auditAnalytics.ts',
       '../lib/emailTemplates/auditRequestConfirmation.ts',
