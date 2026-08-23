@@ -111,9 +111,11 @@ Bloqueo operativo adicional: el `vercel.json` de `HEAD` todavía declara los dos
 - Todos: HTTP 200, idioma/canonical/OG esperados, 1 `h1`, 1 `main`, sin overflow, imágenes rotas, alt ausente, consola o responses 4xx/5xx.
 - Navegación completa, Header/Footer, CTA, formularios rellenables sin submit, assets y cinco vídeos `200 video/mp4`.
 - Teclado/focus visible de 3 px; mobile menu abre/cierra; `prefers-reduced-motion` reduce animación y usa scroll no animado.
-- Consentimiento: cero GA antes de decidir; rechazar persiste `false`; configuración reabre; revocar elimina `_ga`, `_gid` y `_gat`. El build local no posee GA ID, por lo que la request real de GA se verifica en Preview sin enviar formularios.
+- Consentimiento: cero GA antes de decidir; rechazar persiste `false`; configuración reabre; revocar elimina `_ga`, `_gid` y `_gat`. La Preview también entregó cero scripts GA en el HTML inicial. La secuencia aceptar/revocar se probó localmente para no generar analítica artificial en Preview.
 - Redirects, 410, 404, sitemap, robots, security headers y hreflang comprobados por HTTP.
 - `/audit` permaneció cerrado localmente por el flag seguro de Preview; no se generó tráfico artificial.
+
+La verificación remota confirmó 19/19 rutas en `200`, 16/16 redirects en `308`, el único `410` con `noindex, nofollow`, 13/13 endpoints retirados en `404`, `/audit` cerrado y cero errores runtime registrados durante la QA.
 
 ## 15. Checks
 
@@ -136,8 +138,11 @@ Bloqueo operativo adicional: el `vercel.json` de `HEAD` todavía declara los dos
 
 - Branch: `codex/lote-7-release-candidate`.
 - Ancestry verificada: Lote 4 `25c7d6e`, Lote 5/5A `94847ea`, Lote 6 `244b95e` y cierre Preview Lote 6 `219d6cc` son ancestros.
-- Commit funcional de este release candidate: `PENDING_FINAL_COMMIT`.
-- Commit documental de cierre y URL Preview: `PENDING_AFTER_PREVIEW`.
+- Commit funcional y `HEAD` usado para el deploy: `50c7f54f1ebd90e78c1d2bc423c2928c01e519d5`.
+- Preview: `https://heydestudio-5gncljvnj-heydestudioai-8944s-projects.vercel.app`.
+- Deployment: `dpl_J4KsJ62qRa1s937H98saggjrmKo7`, `target=preview`, `READY`.
+- El commit documental posterior solo registra estos identificadores; su hash se entrega en el handoff.
+- Caveat de reproducibilidad: el deploy Preview respetó el `vercel.json` preexistente del working tree que elimina los crons. Ese cambio no pertenece a Lote 7 ni está en el commit funcional; debe resolverse mediante autorización separada antes de Production.
 
 ## 17. Plan de deployment Production
 
