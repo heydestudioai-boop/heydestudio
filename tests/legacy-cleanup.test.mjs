@@ -151,6 +151,18 @@ test('retired endpoints are absent while current funnels and health checks remai
   }
 });
 
+test('versioned Vercel config cannot recreate the retired legacy cron jobs', async () => {
+  const vercelConfig = JSON.parse(await readFile(join(root, 'vercel.json'), 'utf8'));
+
+  assert.equal('crons' in vercelConfig, false);
+
+  const serializedConfig = JSON.stringify(vercelConfig);
+  assert.doesNotMatch(serializedConfig, /\/api\/calendly\/sync/);
+  assert.doesNotMatch(serializedConfig, /\/api\/followups\/run/);
+  assert.doesNotMatch(serializedConfig, /0 8 \* \* \*/);
+  assert.doesNotMatch(serializedConfig, /30 8 \* \* \*/);
+});
+
 test('active runtime has no internal links to legacy destinations', async () => {
   const legacyLinks = expectedRedirects.map(([source]) => source);
 

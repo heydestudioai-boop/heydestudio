@@ -102,7 +102,7 @@ El inventario completo está en `LEGAL_OWNER_INPUTS_REQUIRED.md`. Bloquean Produ
 
 `POST_MIGRATION_EXTERNAL_CLEANUP.md` clasifica cada acción como `SAFE_AFTER_48H`, `KEEP`, `ROTATE`, `ARCHIVE` u `OWNER_ACTION`. No se ejecutó limpieza. Permanecen, entre otros, el evento `/20min`, 8 Deals TEST, 2 Contacts TEST, emails de QA, allowlists y credenciales legacy deshabilitadas.
 
-Bloqueo operativo adicional: el `vercel.json` de `HEAD` todavía declara los dos crons legacy, aunque el estado externo aprobado tiene cron count `0` y el working tree previo los elimina. Lote 7 no toca crons. Un deploy Production desde el commit sin una resolución autorizada podría recrearlos.
+El blocker de configuración versionada queda resuelto por autorización específica posterior a Lote 7: `vercel.json` conserva únicamente su `$schema` y ya no declara `/api/calendly/sync`, `/api/followups/run` ni sus schedules. Production permanece en el estado aprobado `cron count = 0`; no se ha modificado directamente. Los futuros deployments desde este árbol ya no deben registrar de nuevo esos jobs.
 
 ## 14. QA
 
@@ -129,7 +129,7 @@ La verificación remota confirmó 19/19 rutas en `200`, 16/16 redirects en `308`
 | `npm audit --omit=dev` | PASS — 0 vulnerabilidades de producción |
 | `npm run test:audit` | PASS — 16/16 |
 | `npm run test:brand` | PASS — 12/12 |
-| `npm run test:legacy` | PASS — 7/7 |
+| `npm run test:legacy` | PASS — 8/8, incluida la ausencia de crons legacy en `vercel.json` |
 | `npm run test:legal` | PASS — 8/8 |
 
 `npm audit` sin omitir dev reporta 3 transitivas de tooling (1 low en `@babel/core`; 2 high en `brace-expansion` y `js-yaml`), todas con fix disponible. No afectan al árbol de producción y no se aplicó `npm audit fix`.
@@ -142,18 +142,17 @@ La verificación remota confirmó 19/19 rutas en `200`, 16/16 redirects en `308`
 - Preview: `https://heydestudio-5gncljvnj-heydestudioai-8944s-projects.vercel.app`.
 - Deployment: `dpl_J4KsJ62qRa1s937H98saggjrmKo7`, `target=preview`, `READY`.
 - El commit documental posterior solo registra estos identificadores; su hash se entrega en el handoff.
-- Caveat de reproducibilidad: el deploy Preview respetó el `vercel.json` preexistente del working tree que elimina los crons. Ese cambio no pertenece a Lote 7 ni está en el commit funcional; debe resolverse mediante autorización separada antes de Production.
+- Corrección de crons autorizada y versionada posteriormente: el manifiesto ya no contiene schedules legacy. El commit final exacto se entrega en el handoff de esta corrección.
 
 ## 17. Plan de deployment Production
 
 1. Mantener STOP hasta checkpoint 48 h `GREEN`.
 2. Recibir/incorporar inputs legales y revisión jurídica; cambiar estado a `COMPLETE`.
-3. Resolver de forma explícita y autorizada el manifiesto de crons para garantizar cron count `0`.
-4. Cerrar cualquier advisory o decisión técnica adicional aceptada por el owner.
-5. Actualizar branch desde su artefacto aprobado, ejecutar nuevamente el set completo de checks y verificar Preview exacta.
-6. Tomar snapshot read-only de Production y confirmar variables/flags sin mostrar secretos.
-7. Desplegar el commit exacto a Production solo con autorización expresa.
-8. Verificar rutas, `/audit`, `/contact`, Brevo health, HubSpot health, canonical/robots/sitemap, logs, cron count `0` y ausencia de side effects legacy, sin crear tráfico salvo un test oscuro expresamente autorizado.
-9. Ejecutar observación post-deploy y solo después la limpieza externa como una operación separada.
+3. Cerrar cualquier advisory o decisión técnica adicional aceptada por el owner.
+4. Actualizar branch desde su artefacto aprobado, ejecutar nuevamente el set completo de checks y verificar Preview exacta.
+5. Tomar snapshot read-only de Production y confirmar variables/flags sin mostrar secretos.
+6. Desplegar el commit exacto a Production solo con autorización expresa.
+7. Verificar rutas, `/audit`, `/contact`, Brevo health, HubSpot health, canonical/robots/sitemap, logs, cron count `0` y ausencia de side effects legacy, sin crear tráfico salvo un test oscuro expresamente autorizado.
+8. Ejecutar observación post-deploy y solo después la limpieza externa como una operación separada.
 
-Recomendación actual: **BLOCKED**. Production permanece intacta.
+Recomendación actual: **BLOCKED** por checkpoint 48 h e inputs legales. El blocker de configuración de crons está resuelto. Production permanece intacta.

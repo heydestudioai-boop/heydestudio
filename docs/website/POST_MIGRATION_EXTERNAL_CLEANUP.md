@@ -45,9 +45,9 @@ Este documento no autoriza escrituras. Durante Lote 7 no se modificaron Vercel, 
 5. Una operación por proveedor, con lista exacta de targets y rollback.
 6. Verificación posterior: cron count `0`, endpoints legacy `404/410` según mapa, funnels activos, cero Deals automáticos y cero mensajes inesperados.
 
-## Riesgo de configuración versionada detectado
+## Riesgo de configuración versionada resuelto
 
-El `vercel.json` versionado en `HEAD` todavía declara los dos schedules legacy, mientras el working tree preexistente los elimina y el estado externo aprobado tiene cron count `0`. Lote 7 no modifica ni versiona este archivo por la prohibición expresa de tocar crons. **No debe ejecutarse un deploy Production desde el commit final sin resolver este punto de forma autorizada**, porque el manifiesto versionado podría recrear schedules cuyos endpoints ya no existen. La resolución debe ser un cambio de configuración separado, aprobado y verificado antes del deploy Production.
+Una autorización específica posterior a Lote 7 permitió eliminar del `vercel.json` versionado los schedules de `/api/calendly/sync` y `/api/followups/run`. El manifiesto conserva únicamente su `$schema`; ningún deployment futuro desde este árbol debe volver a registrar esos jobs. Production no se modificó y conserva el estado aprobado `cron count = 0`. Tras cualquier deploy Production futuro seguirá siendo obligatorio verificar ese count como gate read-only.
 
 ## No ejecutar como parte del release
 
