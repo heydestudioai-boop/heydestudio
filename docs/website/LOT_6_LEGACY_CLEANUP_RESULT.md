@@ -267,4 +267,18 @@ El navegador integrado no pudo inicializarse por `failed to write kernel assets:
 
 ## Preview
 
-Pendiente de despliegue. STOP antes de Production.
+URL: `https://heydestudio-o9z0rky0s-heydestudioai-8944s-projects.vercel.app`
+
+Deployment: `dpl_FiMMgmoKvryVeubnVEN3VH8afZ7f` — target `preview`, estado `READY`.
+
+Verificación remota con Deployment Protection bypass autenticado:
+
+- 200 en las 12 rutas QA, `/blog`, `/sitemap.xml` y `/robots.txt`;
+- 16 redirects 308 con el `Location` directo aprobado;
+- 410 + `noindex, nofollow` en el artículo fabricado de Soleá;
+- 404 en los 13 endpoints retirados;
+- `lang`, canonical y robots correctos;
+- hreflang `es-ES`, `en` y `x-default` presente en ambas versiones inmobiliarias;
+- sitemap en `www.heydestudio.com`, con `/marcas` y sin URLs legacy.
+
+STOP antes de Production.
