@@ -10,6 +10,13 @@ const scopedFiles = [
   'app/estudio/page.tsx',
   'app/faq/page.tsx',
   'components/pages/FAQPageContent.tsx',
+  'components/pages/LocalVerticalPage.tsx',
+  'components/pages/CaseStudyPageContent.tsx',
+  'app/hosteleria/page.tsx',
+  'app/inmobiliaria/page.tsx',
+  'app/en/real-estate/page.tsx',
+  'app/bodegas/page.tsx',
+  'app/casos/page.tsx',
 ];
 
 const forbidden = [
@@ -21,6 +28,8 @@ const forbidden = [
   { pattern: /siempre etiquetad|todo lo generado va etiquetado/i, reason: 'política universal de IA no canónica' },
   { pattern: /Tuyo\. Para siempre|te llevas todo/i, reason: 'cesión de derechos demasiado amplia' },
   { pattern: /Trabajo real/i, reason: 'etiqueta de portfolio sin evidencia' },
+  { pattern: /mejores fotos que las del móvil/i, reason: 'planteamiento legacy que desacredita producción móvil' },
+  { pattern: /se nota en las reservas|se nota en las visitas|se nota en las ventas/i, reason: 'promesa comercial legacy sin evidencia' },
 ];
 
 const requiredCanonicalSnippets = [
@@ -32,6 +41,10 @@ const requiredCanonicalSnippets = [
   "priceLabel: '690 €/mes'",
   'active: true',
   'Los brutos y proyectos editables no se entregan salvo pacto expreso.',
+  "priceLabel: '220 €'",
+  "priceLabel: 'Desde 590 €'",
+  "priceLabel: 'Desde 1.900 €'",
+  "type: 'self_initiated'",
 ];
 
 const violations = [];
@@ -58,4 +71,3 @@ if (violations.length > 0) {
 }
 
 console.log(`Canonical content check passed (${scopedFiles.length} scoped files).`);
-

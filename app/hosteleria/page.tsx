@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { LocalVerticalPage } from '@/components/pages/LocalVerticalPage';
+import { sectorVerticals } from '@/lib/canonical';
 import { createMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = createMetadata({
@@ -9,16 +10,5 @@ export const metadata: Metadata = createMetadata({
 });
 
 export default function HosteleriaPage() {
-  return (
-    <LocalVerticalPage
-      sector="Hostelería y turismo"
-      title="Tu carta merece mejores fotos que las del móvil."
-      pain="Restaurantes y hoteles compiten antes de la reserva: en Google, Instagram y WhatsApp. Si la primera impresión no abre apetito o confianza, el cliente sigue buscando."
-      packName="Pack Carta"
-      price="490 €"
-      description="Fotos de platos, ambiente y piezas listas para relanzar carta, temporada o reservas. Pensado para que el contenido trabaje en redes, ficha de Google y web."
-      image="/images/s2-problema.jpg"
-      area="Toledo, provincia y escapadas de temporada."
-    />
-  );
+  return <LocalVerticalPage model={sectorVerticals.hospitality} />;
 }

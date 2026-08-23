@@ -36,19 +36,38 @@ const localFooterLinks = [
   { label: 'Preguntas frecuentes', href: '/faq' },
 ];
 
+const englishLocalFooterLinks = [
+  { label: 'Real estate', href: '/en/real-estate' },
+  { label: 'Spanish version', href: '/inmobiliaria' },
+  { label: 'Work', href: '/casos' },
+  { label: 'Studio', href: '/estudio' },
+  { label: 'Contact', href: '/contact' },
+];
+
 const localSectorLinks = [
   { label: 'Hostelería', href: '/hosteleria' },
   { label: 'Inmobiliaria', href: '/inmobiliaria' },
   { label: 'Bodegas', href: '/bodegas' },
 ];
 
+const englishLocalSectorLinks = [
+  { label: 'Hospitality (ES)', href: '/hosteleria' },
+  { label: 'Real estate', href: '/en/real-estate' },
+  { label: 'Wineries (ES)', href: '/bodegas' },
+];
+
 const serviceZones = ['Toledo y provincia', 'Castilla-La Mancha', 'Madrid', 'Costa Blanca'];
+const englishServiceZones = ['Toledo and nearby areas', 'Castilla-La Mancha', 'Madrid', 'Costa Blanca'];
 
 export function Footer() {
   const { content } = useLanguage();
   const pathname = usePathname();
   const footer = content.footer;
-  const isLocalRoute = localRoutes.has(pathname);
+  const isEnglishLocalRoute = pathname === '/en/real-estate';
+  const isLocalRoute = localRoutes.has(pathname) || isEnglishLocalRoute || pathname.startsWith('/case-studies/');
+  const footerLinks = isEnglishLocalRoute ? englishLocalFooterLinks : localFooterLinks;
+  const sectorLinks = isEnglishLocalRoute ? englishLocalSectorLinks : localSectorLinks;
+  const zones = isEnglishLocalRoute ? englishServiceZones : serviceZones;
 
   return (
     <footer className="bg-black px-8 py-12 text-white md:px-12 md:py-16">
@@ -66,12 +85,14 @@ export function Footer() {
             </Link>
             <p className="max-w-sm whitespace-pre-line text-sm leading-relaxed text-white/70">
               {isLocalRoute
-                ? 'HEYDE Studio — Fotografía, vídeo y contenido para negocios.\nToledo · Castilla-La Mancha · Madrid · Costa Blanca'
+                ? isEnglishLocalRoute
+                  ? 'HEYDE Studio — Photography, video and content for local businesses.\nToledo · Castilla-La Mancha · Madrid · Costa Blanca'
+                  : 'HEYDE Studio — Fotografía, vídeo y contenido para negocios.\nToledo · Castilla-La Mancha · Madrid · Costa Blanca'
                 : footer.aboutText}
             </p>
             <div className="mt-8">
               <h4 className="mb-4 text-sm font-bold uppercase tracking-wider">
-                {isLocalRoute ? 'Contacto directo' : footer.contactTitle}
+                {isLocalRoute ? (isEnglishLocalRoute ? 'Direct contact' : 'Contacto directo') : footer.contactTitle}
               </h4>
               <div className="space-y-3 text-sm text-white/70">
                 <a className="block transition hover:text-white" href={`mailto:${footer.contactEmail}`}>
@@ -83,11 +104,15 @@ export function Footer() {
                 {isLocalRoute && (
                   <a
                     className="block font-bold text-magenta transition hover:text-white"
-                    href="https://wa.me/34671141135?text=Hola%20HEYDE%20Studio%2C%20quiero%20preguntar%20por%20contenido%20para%20mi%20negocio"
+                    href={
+                      isEnglishLocalRoute
+                        ? 'https://wa.me/34671141135?text=Hello%20HEYDE%20Studio%2C%20I%20would%20like%20to%20discuss%20content%20for%20my%20business'
+                        : 'https://wa.me/34671141135?text=Hola%20HEYDE%20Studio%2C%20quiero%20preguntar%20por%20contenido%20para%20mi%20negocio'
+                    }
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Hablamos por WhatsApp
+                    {isEnglishLocalRoute ? 'Talk on WhatsApp' : 'Hablamos por WhatsApp'}
                   </a>
                 )}
               </div>
@@ -97,9 +122,11 @@ export function Footer() {
           {isLocalRoute ? (
             <div className="grid gap-10 md:grid-cols-3">
               <div>
-                <h4 className="mb-4 text-sm font-bold uppercase tracking-wider">Web local</h4>
+                <h4 className="mb-4 text-sm font-bold uppercase tracking-wider">
+                  {isEnglishLocalRoute ? 'Local services' : 'Web local'}
+                </h4>
                 <ul className="space-y-2">
-                  {localFooterLinks.map((link) => (
+                  {footerLinks.map((link) => (
                     <li key={link.href}>
                       <Link href={link.href} className="text-sm text-white/70 transition hover:text-white">
                         {link.label}
@@ -110,9 +137,11 @@ export function Footer() {
               </div>
 
               <div>
-                <h4 className="mb-4 text-sm font-bold uppercase tracking-wider">Sectores</h4>
+                <h4 className="mb-4 text-sm font-bold uppercase tracking-wider">
+                  {isEnglishLocalRoute ? 'Sectors' : 'Sectores'}
+                </h4>
                 <ul className="space-y-2">
-                  {localSectorLinks.map((link) => (
+                  {sectorLinks.map((link) => (
                     <li key={link.href}>
                       <Link href={link.href} className="text-sm text-white/70 transition hover:text-white">
                         {link.label}
@@ -123,9 +152,11 @@ export function Footer() {
               </div>
 
               <div>
-                <h4 className="mb-4 text-sm font-bold uppercase tracking-wider">Zona de servicio</h4>
+                <h4 className="mb-4 text-sm font-bold uppercase tracking-wider">
+                  {isEnglishLocalRoute ? 'Service area' : 'Zona de servicio'}
+                </h4>
                 <ul className="space-y-2">
-                  {serviceZones.map((zone) => (
+                  {zones.map((zone) => (
                     <li key={zone} className="text-sm text-white/70">
                       {zone}
                     </li>
@@ -135,7 +166,9 @@ export function Footer() {
                   href="/marcas"
                   className="mt-6 block text-sm font-bold text-magenta transition hover:text-white"
                 >
-                  ¿Eres una marca y buscas sistemas visuales con IA? → HEYDE para marcas
+                  {isEnglishLocalRoute
+                    ? 'Looking for a visual system for a brand? → HEYDE for brands'
+                    : '¿Eres una marca y buscas sistemas visuales con IA? → HEYDE para marcas'}
                 </Link>
               </div>
             </div>

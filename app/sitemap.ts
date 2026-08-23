@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { articles } from '@/lib/articles';
-import { content } from '@/lib/i18n';
+import { labProjects } from '@/lib/canonical';
 import { siteUrl } from '@/lib/seo';
 
 const staticRoutes = [
@@ -11,6 +11,7 @@ const staticRoutes = [
   '/hosteleria',
   '/inmobiliaria',
   '/bodegas',
+  '/en/real-estate',
   '/about',
   '/audit',
   '/blog',
@@ -28,12 +29,25 @@ const staticRoutes = [
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  const pages = staticRoutes.map((route) => ({
-    url: new URL(route, siteUrl).toString(),
-    lastModified: now,
-    changeFrequency: route === '' || route === '/planes' || route === '/audit' ? 'weekly' : 'monthly',
-    priority: route === '' ? 1 : ['/planes', '/audit', '/casos', '/estudio'].includes(route) ? 0.85 : 0.7,
-  })) satisfies MetadataRoute.Sitemap;
+  const pages = staticRoutes.map((route) => {
+    const realEstateAlternates = ['/inmobiliaria', '/en/real-estate'].includes(route)
+      ? {
+          languages: {
+            'es-ES': new URL('/inmobiliaria', siteUrl).toString(),
+            en: new URL('/en/real-estate', siteUrl).toString(),
+            'x-default': new URL('/inmobiliaria', siteUrl).toString(),
+          },
+        }
+      : undefined;
+
+    return {
+      url: new URL(route, siteUrl).toString(),
+      lastModified: now,
+      changeFrequency: route === '' || route === '/planes' || route === '/audit' ? 'weekly' : 'monthly',
+      priority: route === '' ? 1 : ['/planes', '/audit', '/casos', '/estudio'].includes(route) ? 0.85 : 0.7,
+      alternates: realEstateAlternates,
+    };
+  }) satisfies MetadataRoute.Sitemap;
 
   const blogPosts = articles.map((article) => ({
     url: new URL(`/blog/${article.slug}`, siteUrl).toString(),
@@ -42,8 +56,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   })) satisfies MetadataRoute.Sitemap;
 
-  const caseStudies = content.EN.caseStudies.cases.map((caseStudy) => ({
-    url: new URL(`/case-studies/${caseStudy.slug}`, siteUrl).toString(),
+  const caseStudies = labProjects.map((project) => ({
+    url: new URL(project.href, siteUrl).toString(),
     lastModified: now,
     changeFrequency: 'monthly',
     priority: 0.6,

@@ -1,11 +1,20 @@
 'use client';
 
 import { useLanguage } from '@/lib/language';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export function LanguageToggle() {
   const { language, setLanguage } = useLanguage();
   const router = useRouter();
+  const pathname = usePathname();
+
+  const languageHref = (option: 'EN' | 'ES') => {
+    if (pathname === '/inmobiliaria' || pathname === '/en/real-estate') {
+      return option === 'EN' ? '/en/real-estate' : '/inmobiliaria';
+    }
+
+    return option === 'EN' ? '/marcas' : '/';
+  };
 
   return (
     <div
@@ -21,7 +30,7 @@ export function LanguageToggle() {
             type="button"
             onClick={() => {
               setLanguage(option);
-              router.push(option === 'EN' ? '/marcas' : '/');
+              router.push(languageHref(option));
             }}
             className={`min-w-10 rounded px-3 py-1.5 text-sm font-bold transition-colors ${
               isActive

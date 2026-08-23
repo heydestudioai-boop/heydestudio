@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { CaseStudyPageContent } from '@/components/pages/CaseStudyPageContent';
-import { caseStudyContent } from '@/lib/caseStudyContent';
+import { getLabProject, labProjects } from '@/lib/canonical';
 import { createMetadata } from '@/lib/seo';
-
-const caseStudies = Object.values(caseStudyContent.EN);
 
 interface CaseStudyPageProps {
   params: Promise<{
@@ -13,8 +11,8 @@ interface CaseStudyPageProps {
 }
 
 export function generateStaticParams() {
-  return caseStudies.map((caseStudy) => ({
-    slug: caseStudy.slug,
+  return labProjects.map((project) => ({
+    slug: project.slug,
   }));
 }
 
@@ -22,29 +20,29 @@ export async function generateMetadata({
   params,
 }: CaseStudyPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const caseStudy = caseStudies.find((item) => item.slug === slug);
+  const project = getLabProject(slug);
 
-  if (!caseStudy) {
+  if (!project) {
     return createMetadata({
-      title: 'Case Study Not Found | HEYDE Studio',
-      description: 'The requested HEYDE Studio case study could not be found.',
+      title: 'Proyecto HEYDE Lab no encontrado | HEYDE Studio',
+      description: 'El proyecto autoiniciado solicitado no está disponible.',
       path: `/case-studies/${slug}`,
       noIndex: true,
     });
   }
 
   return createMetadata({
-    title: `${caseStudy.name} Case Study | HEYDE Studio`,
-    description: caseStudy.description,
-    path: `/case-studies/${caseStudy.slug}`,
-    keywords: ['case study', 'visual system', caseStudy.name],
+    title: `${project.name} — Proyecto autoiniciado HEYDE Lab | HEYDE Studio`,
+    description: project.summary,
+    path: project.href,
+    keywords: ['HEYDE Lab', 'proyecto autoiniciado', project.name],
   });
 }
 
 export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   const { slug } = await params;
 
-  if (!caseStudies.some((caseStudy) => caseStudy.slug === slug)) {
+  if (!getLabProject(slug)) {
     notFound();
   }
 

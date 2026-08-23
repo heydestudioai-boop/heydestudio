@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { ArrowUp } from 'lucide-react';
+import { useLanguage } from '@/lib/language';
 
 export function ScrollToTopButton() {
   const [isVisible, setIsVisible] = useState(false);
+  const { language } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,7 +26,7 @@ export function ScrollToTopButton() {
   return (
     <button
       type="button"
-      aria-label="Volver arriba"
+      aria-label={language === 'EN' ? 'Back to top' : 'Volver arriba'}
       onClick={scrollToTop}
       className={`fixed bottom-[5.75rem] right-5 z-40 flex h-11 w-11 items-center justify-center rounded-sm border border-magenta bg-[#121212] text-white shadow-[0_12px_28px_rgba(0,0,0,0.18)] transition-all duration-300 hover:bg-magenta focus:outline-none focus:ring-2 focus:ring-magenta focus:ring-offset-2 focus:ring-offset-[#FAFAFA] md:bottom-[6.25rem] md:right-7 ${
         isVisible

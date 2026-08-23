@@ -63,7 +63,9 @@ export function WorkPageContent() {
                   className="group flex flex-col border-t border-white/14 pt-5"
                 >
                 <p className="mb-5 text-[11px] font-bold uppercase leading-relaxed tracking-[0.12em] text-white/42">
-                  {project.type}
+                  {language === 'ES'
+                    ? 'HEYDE Lab · Proyecto autoiniciado · No cliente'
+                    : 'HEYDE Lab · Self-initiated project · Not a client'}
                 </p>
                 <div className="relative mb-5 overflow-hidden rounded-sm bg-[#212121]">
                   {media?.type === 'video' ? (

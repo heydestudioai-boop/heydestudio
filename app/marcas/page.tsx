@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/Button';
 import { EditorialBody, EditorialKicker, EditorialTitle } from '@/components/EditorialText';
+import { labProjects } from '@/lib/canonical';
 import { createMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = createMetadata({
@@ -20,12 +21,6 @@ const services = [
   ['Video / Reel', 'Motion pieces for social, teasers and campaign moments.'],
   ['Campaign', 'A complete visual narrative with image world, formats and derivation rules.'],
   ['Visual Infrastructure', 'Documentation, workflows, training and support for repeatable production.'],
-];
-
-const projects = [
-  ['Solea', '/images/work-solea-cover.jpg', '/case-studies/solea'],
-  ['Eden', '/images/work-eden-cover.jpg', '/case-studies/eden'],
-  ['Motion Studies', '/images/HEYDE_Story_Portfolio.jpg', '/work'],
 ];
 
 export default function MarcasPage() {
@@ -90,18 +85,36 @@ export default function MarcasPage() {
             </EditorialBody>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
-            {projects.map(([title, image, href]) => (
-              <Link key={title} href={href} className="group">
+            {labProjects.map((project) => (
+              <Link key={project.slug} href={project.href} className="group">
                 <div className="overflow-hidden rounded-sm bg-[#212121]">
-                  <Image
-                    src={image}
-                    alt={title}
-                    width={1000}
-                    height={900}
-                    className="h-[25rem] w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
-                  />
+                  {project.media.type === 'video' ? (
+                    <video
+                      className="h-[25rem] w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      aria-label={project.media.altEn}
+                    >
+                      <source src={project.media.src} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <Image
+                      src={project.media.src}
+                      alt={project.media.altEn}
+                      width={1000}
+                      height={900}
+                      className="h-[25rem] w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
+                    />
+                  )}
                 </div>
-                <h3 className="mt-5 border-t border-white/14 pt-4 text-xl font-bold">{title}</h3>
+                <div className="mt-5 border-t border-white/14 pt-4">
+                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-white/42">
+                    HEYDE Lab · Self-initiated · Not a client
+                  </p>
+                  <h3 className="text-xl font-bold">{project.name}</h3>
+                </div>
               </Link>
             ))}
           </div>

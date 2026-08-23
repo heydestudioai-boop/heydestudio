@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/Button';
 import { EditorialBody, EditorialKicker, EditorialTitle } from '@/components/EditorialText';
+import { getLabProject } from '@/lib/canonical';
 import { getCaseStudyContent, type CaseStudyMedia } from '@/lib/caseStudyContent';
 import { useLanguage } from '@/lib/language';
 
@@ -47,14 +48,15 @@ function MediaFrame({
 export function CaseStudyPageContent({ slug }: { slug: string }) {
   const { language } = useLanguage();
   const caseStudy = getCaseStudyContent(language, slug);
+  const project = getLabProject(slug);
 
   const labels = {
-    notFound: language === 'ES' ? 'Caso no encontrado' : 'Case study not found',
+    notFound: language === 'ES' ? 'Proyecto no encontrado' : 'Project not found',
     notFoundBody:
       language === 'ES'
-        ? 'El caso que buscas no existe.'
-        : "The case study you're looking for doesn't exist.",
-    backPortfolio: language === 'ES' ? 'Volver a Work' : 'Back to Work',
+        ? 'El proyecto que buscas no existe.'
+        : "The project you're looking for doesn't exist.",
+    backPortfolio: language === 'ES' ? 'Volver a HEYDE Lab' : 'Back to HEYDE Lab',
     overview: language === 'ES' ? 'Visión general' : 'Overview',
     system: language === 'ES' ? 'Sistema' : 'System',
     breakdown: language === 'ES' ? 'Desglose del sistema' : 'System breakdown',
@@ -67,16 +69,29 @@ export function CaseStudyPageContent({ slug }: { slug: string }) {
       language === 'ES'
         ? 'Espacio preparado para conectar el reel 9:16 de la campaña.'
         : 'Prepared space for the campaign 9:16 reel.',
+    projectType: language === 'ES' ? 'Tipo' : 'Type',
+    projectTypeValue: language === 'ES' ? 'Proyecto autoiniciado' : 'Self-initiated project',
+    client: language === 'ES' ? 'Cliente' : 'Client',
+    clientValue: language === 'ES' ? 'No es un encargo de cliente' : 'Not a client commission',
+    evidence: language === 'ES' ? 'Tipo de evidencia' : 'Evidence type',
+    evidenceTitle:
+      language === 'ES'
+        ? 'Prueba de capacidad creativa, no prueba comercial.'
+        : 'Creative capability evidence, not commercial proof.',
+    evidenceBody:
+      language === 'ES'
+        ? 'Este proyecto muestra dirección, consistencia y posibilidades de producción. No atribuye cliente, ventas, ROI, métricas ni testimonio.'
+        : 'This project demonstrates direction, consistency and production possibilities. It makes no claim about a client, sales, ROI, metrics or testimonials.',
   };
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  if (!caseStudy) {
+  if (!caseStudy || !project) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-white px-6 text-center">
         <div>
           <h1 className="mb-4 text-4xl font-bold">{labels.notFound}</h1>
           <p className="mb-8 text-gray-700">{labels.notFoundBody}</p>
-          <Link href="/work" className="font-bold text-magenta transition hover:text-magenta-dark">
+          <Link href="/casos#heyde-lab" className="font-bold text-magenta transition hover:text-magenta-dark">
             {labels.backPortfolio}
           </Link>
         </div>
@@ -88,6 +103,11 @@ export function CaseStudyPageContent({ slug }: { slug: string }) {
   const videoGallery = caseStudy.gallery.filter((media) => media.type === 'video');
   const reelMedia = caseStudy.gallery.find((media) => media.type === 'video');
   const hasImageGallery = imageGallery.length > 0;
+  const projectMeta = [
+    { label: labels.projectType, value: labels.projectTypeValue },
+    { label: labels.client, value: labels.clientValue },
+    ...caseStudy.meta.filter((item) => !['project', 'proyecto'].includes(item.label.toLowerCase())),
+  ];
 
   return (
     <main className="bg-white text-black">
@@ -95,12 +115,12 @@ export function CaseStudyPageContent({ slug }: { slug: string }) {
         <div className="mx-auto grid w-full max-w-7xl gap-12 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-end">
           <div>
             <Link
-              href="/work"
+              href="/casos#heyde-lab"
               className="mb-10 inline-flex text-xs font-bold uppercase tracking-[0.16em] text-white/48 transition hover:text-white"
             >
               {labels.backPortfolio}
             </Link>
-            <EditorialKicker>{caseStudy.eyebrow}</EditorialKicker>
+            <EditorialKicker>HEYDE Lab · {caseStudy.eyebrow}</EditorialKicker>
             <h1 className="mb-7 max-w-5xl text-4xl font-bold leading-none md:text-6xl lg:text-7xl">
               <EditorialTitle text={caseStudy.title} />
             </h1>
@@ -110,7 +130,7 @@ export function CaseStudyPageContent({ slug }: { slug: string }) {
           </div>
 
           <div className="grid border-t border-white/18 text-sm text-white/72 sm:grid-cols-2 lg:grid-cols-1">
-            {caseStudy.meta.map((item) => (
+            {projectMeta.map((item) => (
               <div key={`${item.label}-${item.value}`} className="border-b border-white/12 py-5">
                 <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-white/38">
                   {item.label}
@@ -184,24 +204,11 @@ export function CaseStudyPageContent({ slug }: { slug: string }) {
 
           <div className="grid overflow-hidden rounded-sm border border-gray-200 bg-gray-200 lg:grid-cols-[0.36fr_0.64fr]">
             <aside className="bg-black p-8 text-white md:p-10">
-              <p className="mb-6 text-xs font-bold uppercase tracking-[0.18em] text-magenta">
-                {caseStudy.metricsTitle}
-              </p>
+              <p className="mb-6 text-xs font-bold uppercase tracking-[0.18em] text-magenta">{labels.evidence}</p>
               <p className="mb-10 max-w-sm text-2xl font-bold leading-tight">
-                {language === 'ES'
-                  ? 'La pieza visible es solo la superficie. Lo importante es la lógica que permite repetirla.'
-                  : 'The visible piece is only the surface. The value is the logic that makes it repeatable.'}
+                {labels.evidenceTitle}
               </p>
-              <div className="grid gap-px overflow-hidden rounded-sm bg-white/14">
-                {caseStudy.metrics.map((metric) => (
-                  <div key={metric.label} className="bg-[#121212] p-5">
-                    <p className="mb-2 text-4xl font-bold leading-none text-white">{metric.value}</p>
-                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/48">
-                      {metric.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
+              <p className="text-sm leading-relaxed text-white/68">{labels.evidenceBody}</p>
             </aside>
 
             <div className="grid gap-px bg-gray-200 md:grid-cols-2">
@@ -376,7 +383,7 @@ export function CaseStudyPageContent({ slug }: { slug: string }) {
           </div>
           <div className="flex flex-col items-stretch gap-4 justify-self-start md:justify-self-end">
             <Button href="/contact" label={caseStudy.finalCta} />
-            <Button href="/work" label={labels.backPortfolio} variant="secondary" />
+            <Button href="/casos#heyde-lab" label={labels.backPortfolio} variant="secondary" />
           </div>
         </div>
       </section>

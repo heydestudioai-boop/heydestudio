@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ScrollToTopButton } from '@/components/ScrollToTopButton';
@@ -31,15 +32,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
+  const requestHeaders = await headers();
+  const routeLanguage = requestHeaders.get('x-heyde-route-language') === 'en' ? 'en' : 'es';
 
   return (
-    <html lang="es" data-scroll-behavior="smooth">
+    <html lang={routeLanguage} data-scroll-behavior="smooth">
       <head>
         {/* Schema.org */}
         <script

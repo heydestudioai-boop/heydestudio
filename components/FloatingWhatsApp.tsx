@@ -5,12 +5,20 @@ import { MessageCircle } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/lib/language';
 
+const routesWithInlineContact = new Set([
+  '/hosteleria',
+  '/inmobiliaria',
+  '/bodegas',
+  '/casos',
+]);
+
 export function FloatingWhatsApp() {
   const pathname = usePathname();
   const { language } = useLanguage();
   const isSpanishLocal = language === 'ES' && pathname !== '/marcas';
+  const hasInlineContact = routesWithInlineContact.has(pathname) || pathname.startsWith('/case-studies/');
 
-  if (!isSpanishLocal) {
+  if (!isSpanishLocal || hasInlineContact) {
     return null;
   }
 

@@ -6,8 +6,9 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { LanguageToggle } from './LanguageToggle';
+import { useLanguage } from '@/lib/language';
 
-const navItems = [
+const spanishNavItems = [
   { label: 'Planes', href: '/planes' },
   { label: 'Casos', href: '/casos' },
   { label: 'Auditoría', href: '/audit' },
@@ -15,16 +16,28 @@ const navItems = [
   { label: 'Marcas', href: '/marcas' },
 ] as const;
 
+const englishNavItems = [
+  { label: 'Real estate', href: '/en/real-estate' },
+  { label: 'Work', href: '/casos' },
+  { label: 'Free audit', href: '/audit' },
+  { label: 'Studio', href: '/estudio' },
+  { label: 'Brands', href: '/marcas' },
+] as const;
+
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { language } = useLanguage();
+  const navItems = language === 'EN' ? englishNavItems : spanishNavItems;
+  const homeHref = pathname.startsWith('/en/') ? '/en/real-estate' : '/';
+  const contactLabel = language === 'EN' ? 'Contact' : 'Contacto';
 
   const isActive = (href: string) => pathname === href;
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50 bg-[#FAFAFA]/88 backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3.5 md:px-8">
-        <Link href="/" className="flex h-8 w-28 items-center" aria-label="HEYDE Studio home">
+        <Link href={homeHref} className="flex h-8 w-28 items-center" aria-label="HEYDE Studio home">
           <Image
             src="/logos/heyde-logo-nav-black.png"
             alt="HEYDE Studio"
@@ -57,7 +70,7 @@ export function Header() {
             href="/contact"
             className="rounded-sm bg-magenta px-4 py-2 text-[13px] font-bold text-white transition-colors hover:bg-magenta-dark"
           >
-            Contacto
+            {contactLabel}
           </Link>
         </div>
 
@@ -99,7 +112,7 @@ export function Header() {
               className="block rounded-sm bg-magenta px-5 py-3 text-center text-sm font-bold text-white transition-colors hover:bg-magenta-dark"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Contacto
+              {contactLabel}
             </Link>
           </div>
         </div>

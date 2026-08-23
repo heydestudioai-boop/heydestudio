@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { canonicalBrand } from '@/lib/canonical';
 
-export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || canonicalBrand.siteUrl;
+// Canonicals, sitemap and structured data must always point to the approved public host.
+// Environment URLs can identify a runtime, but must not redefine the business canonical.
+export const siteUrl = canonicalBrand.siteUrl;
 
 export const siteName = 'HEYDE Studio';
 
@@ -13,6 +15,7 @@ interface SeoConfig {
   noIndex?: boolean;
   locale?: string;
   alternateLocale?: string[];
+  languages?: Record<string, string>;
 }
 
 export function createMetadata({
@@ -23,8 +26,17 @@ export function createMetadata({
   noIndex = false,
   locale = 'es_ES',
   alternateLocale = ['en_US'],
+  languages,
 }: SeoConfig): Metadata {
   const url = new URL(path, siteUrl).toString();
+  const languageAlternates = languages
+    ? Object.fromEntries(
+        Object.entries(languages).map(([language, languagePath]) => [
+          language,
+          new URL(languagePath, siteUrl).toString(),
+        ])
+      )
+    : undefined;
 
   return {
     metadataBase: new URL(siteUrl),
@@ -33,6 +45,7 @@ export function createMetadata({
     keywords,
     alternates: {
       canonical: url,
+      languages: languageAlternates,
     },
     robots: noIndex
       ? {
@@ -75,11 +88,11 @@ export const pageSeo = {
     keywords: ['planes contenido Toledo', 'fotografía comercial Toledo', 'redes sociales negocios Toledo'],
   }),
   casos: createMetadata({
-    title: 'Casos y portfolio local | HEYDE Studio',
+    title: 'Trabajo con negocios y HEYDE Lab | HEYDE Studio',
     description:
-      'Portfolio de fotografía, vídeo y dirección de contenido para negocios locales, con laboratorio IA separado y etiquetado.',
+      'Método de contenido para negocios locales y proyectos autoiniciados de HEYDE Lab, separados y etiquetados sin atribuir clientes ni resultados.',
     path: '/casos',
-    keywords: ['portfolio fotografía Toledo', 'vídeo comercial Toledo', 'casos HEYDE Studio'],
+    keywords: ['fotografía para negocios Toledo', 'vídeo comercial Toledo', 'HEYDE Lab'],
   }),
   estudio: createMetadata({
     title: 'Estudio local en Toledo | HEYDE Studio',

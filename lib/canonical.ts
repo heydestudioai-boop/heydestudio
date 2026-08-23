@@ -111,38 +111,183 @@ export const monthlyModules = [
   },
 ] as const;
 
-export const sectorPacks = [
+export type SectorPackId = 'menu' | 'property' | 'villa' | 'winery' | 'weddings';
+
+export interface SectorPack {
+  id: SectorPackId;
+  name: string;
+  nameEn?: string;
+  sector: string;
+  sectorEn?: string;
+  priceLabel: string;
+  priceLabelEn?: string;
+  description: string;
+  descriptionEn?: string;
+}
+
+export const sectorPacks: readonly SectorPack[] = [
   {
+    id: 'menu',
     name: 'Pack Carta',
+    nameEn: 'Menu Pack',
     sector: 'Hostelería',
+    sectorEn: 'Hospitality',
     priceLabel: '490 €',
+    priceLabelEn: '€490',
     description: '30–40 fotos de plato, 2 reels y fotos del local y el equipo.',
+    descriptionEn: '30–40 food photographs, 2 reels, plus images of the venue and team.',
   },
   {
+    id: 'property',
     name: 'Pack Vivienda',
+    nameEn: 'Property Pack',
     sector: 'Inmobiliario',
+    sectorEn: 'Real estate',
     priceLabel: '220 €',
+    priceLabelEn: '€220',
     description: '25–35 fotos HDR y 1 vídeo vertical. Entrega en 48 h.',
+    descriptionEn: '25–35 HDR photographs and 1 vertical video. Delivery within 48 hours.',
   },
   {
+    id: 'villa',
     name: 'Villa Premium',
+    nameEn: 'Premium Villa',
     sector: 'Inmobiliario',
+    sectorEn: 'Real estate',
     priceLabel: 'Desde 590 €',
+    priceLabelEn: 'From €590',
     description: 'Vídeo cinematográfico, fotografía al atardecer y piezas lifestyle.',
+    descriptionEn: 'Cinematic video, sunset photography and lifestyle assets.',
   },
   {
+    id: 'winery',
     name: 'Campaña Bodega',
+    nameEn: 'Winery Campaign',
     sector: 'Bodegas',
+    sectorEn: 'Wineries',
     priceLabel: 'Desde 1.900 €',
+    priceLabelEn: 'From €1,900',
     description: 'Concepto, jornada de rodaje, 25–30 piezas y 3 reels.',
+    descriptionEn: 'From €1,900. Concept, one production day, 25–30 assets and 3 reels.',
   },
   {
+    id: 'weddings',
     name: 'Bodas',
+    nameEn: 'Weddings',
     sector: 'Temporada',
+    sectorEn: 'Seasonal',
     priceLabel: 'Desde 1.800 €',
+    priceLabelEn: 'From €1,800',
     description: 'Foto y vídeo bajo petición, con plazas limitadas por temporada.',
+    descriptionEn: 'Photo and video on request, with limited seasonal availability.',
   },
 ] as const;
+
+export function getSectorPack(id: SectorPackId) {
+  const pack = sectorPacks.find((item) => item.id === id);
+
+  if (!pack) {
+    throw new Error(`Unknown canonical sector pack: ${id}`);
+  }
+
+  return pack;
+}
+
+export type CanonicalLocale = 'es' | 'en';
+
+export interface VerticalFocusItem {
+  title: string;
+  body: string;
+}
+
+export interface VerticalPageModel {
+  locale: CanonicalLocale;
+  sector: string;
+  title: string;
+  intro: string;
+  productionNote: string;
+  focus: readonly VerticalFocusItem[];
+  packIds: readonly SectorPackId[];
+  area: string;
+  monthlyPlans?: boolean;
+  alternate?: { href: string; label: string };
+  primaryCta?: { href: string; label: string; external?: boolean };
+}
+
+export const sectorVerticals: Record<'hospitality' | 'realEstateEs' | 'realEstateEn' | 'wineries', VerticalPageModel> = {
+  hospitality: {
+    locale: 'es',
+    sector: 'Hostelería y turismo',
+    title: 'Contenido que abre el apetito y mantiene vivo el negocio.',
+    intro:
+      'Platos, producto, local y equipo contados con la frecuencia que exige el día a día. Creamos material para trabajar la visibilidad y apoyar la comunicación de reservas sin prometer un resultado que depende de más factores.',
+    productionNote:
+      'Móvil para piezas sociales ágiles; cámara cuando el producto, la luz o la campaña requieren más control. El formato se decide por objetivo y canal.',
+    focus: [
+      { title: 'Apetito visual', body: 'Textura, detalle, servicio y contexto para que el producto se entienda de un vistazo.' },
+      { title: 'Local y equipo', body: 'El espacio y las personas forman parte de la experiencia real del negocio.' },
+      { title: 'Frecuencia', body: 'Piezas preparadas para carta, redes, web y ficha de Google sin depender de una única campaña.' },
+    ],
+    packIds: ['menu'],
+    area: 'Toledo, provincia y proyectos de temporada.',
+    monthlyPlans: true,
+  },
+  realEstateEs: {
+    locale: 'es',
+    sector: 'Inmobiliaria',
+    title: 'Espacio, luz y recorrido antes de la visita.',
+    intro:
+      'Cada inmueble pide una lectura distinta. Producimos fotografía, vídeo y piezas sociales para explicar distribución, atmósfera y entorno sin añadir promesas comerciales.',
+    productionNote:
+      'Fotografía, vídeo y contenido social se combinan según el inmueble, el canal y el nivel de producción que necesita la propiedad.',
+    focus: [
+      { title: 'Vivienda', body: 'Imágenes claras para mostrar estancias, proporciones, luz y relación entre espacios.' },
+      { title: 'Recorrido', body: 'Vídeo vertical o cinematográfico cuando ayuda a entender la experiencia de la propiedad.' },
+      { title: 'Publicación', body: 'Piezas preparadas para portales, web y canales sociales según el encargo.' },
+    ],
+    packIds: ['property', 'villa'],
+    area: 'Toledo, Madrid y Costa Blanca.',
+    alternate: { href: '/en/real-estate', label: 'English version' },
+  },
+  realEstateEn: {
+    locale: 'en',
+    sector: 'Real estate',
+    title: 'Space, light and flow before the viewing.',
+    intro:
+      'Every property needs a different visual approach. We produce photography, video and social assets that explain layout, atmosphere and surroundings without making commercial promises.',
+    productionNote:
+      'Photography, video and social-first content are combined according to the property, the channel and the required production level.',
+    focus: [
+      { title: 'Property', body: 'Clear images that show rooms, proportions, natural light and the relationship between spaces.' },
+      { title: 'Flow', body: 'Vertical or cinematic video when movement helps communicate the experience of the property.' },
+      { title: 'Publishing', body: 'Assets prepared for listings, websites and social channels according to the brief.' },
+    ],
+    packIds: ['property', 'villa'],
+    area: 'Toledo, Madrid and Costa Blanca.',
+    alternate: { href: '/inmobiliaria', label: 'Versión en español' },
+    primaryCta: {
+      href: 'https://wa.me/34671141135?text=Hello%20HEYDE%20Studio%2C%20I%20would%20like%20to%20discuss%20real%20estate%20content',
+      label: 'Discuss a property',
+      external: true,
+    },
+  },
+  wineries: {
+    locale: 'es',
+    sector: 'Bodegas',
+    title: 'La bodega completa: finca, elaboración, personas y producto.',
+    intro:
+      'Una campaña puede unir origen, proceso, botella, equipo, visitas y experiencia en un mismo relato visual, con piezas preparadas para distintos canales.',
+    productionNote:
+      'La dirección y el formato se plantean alrededor de la finca, la elaboración y la experiencia real de la bodega, no desde imágenes genéricas de moda o producto.',
+    focus: [
+      { title: 'Origen y elaboración', body: 'Finca, viñedo, bodega y proceso como partes conectadas de la historia.' },
+      { title: 'Personas y producto', body: 'Equipo, oficio, botella, detalle y servicio con una dirección visual coherente.' },
+      { title: 'Visitas y experiencia', body: 'Contenido para presentar el lugar y su experiencia en web, redes y comunicación comercial.' },
+    ],
+    packIds: ['winery'],
+    area: 'Castilla-La Mancha y proyectos seleccionados.',
+  },
+};
 
 export const commercialConditions = [
   'Permanencia inicial de 3 meses; después, 30 días de aviso.',
@@ -271,4 +416,79 @@ export function assertProjectCanBePublished(project: PublicProjectGuardInput) {
   }
 
   return project;
+}
+
+export interface LabProject extends PublicProjectGuardInput {
+  type: 'self_initiated';
+  slug: 'solea' | 'eden' | 'motion';
+  name: string;
+  summary: string;
+  summaryEn: string;
+  href: string;
+  media: {
+    type: 'image' | 'video';
+    src: string;
+    alt: string;
+    altEn: string;
+  };
+}
+
+function defineLabProject(project: LabProject) {
+  assertProjectCanBePublished(project);
+  return project;
+}
+
+export const labProjects: readonly LabProject[] = [
+  defineLabProject({
+    type: 'self_initiated',
+    slug: 'solea',
+    name: 'Soleá',
+    summary:
+      'Exploración autoiniciada de producto, luz mediterránea e identidad visual. Demuestra dirección y consistencia; no resultados comerciales.',
+    summaryEn:
+      'A self-initiated exploration of product, Mediterranean light and visual identity. It demonstrates direction and consistency, not commercial results.',
+    href: '/case-studies/solea',
+    media: {
+      type: 'image',
+      src: '/images/work-solea-cover.jpg',
+      alt: 'Soleá, proyecto autoiniciado de HEYDE Lab',
+      altEn: 'Soleá, a self-initiated HEYDE Lab project',
+    },
+  }),
+  defineLabProject({
+    type: 'self_initiated',
+    slug: 'eden',
+    name: 'Eden',
+    summary:
+      'Proyecto autoiniciado de lenguaje editorial, espacio y dirección de imagen. Prueba capacidad creativa; no es un encargo de cliente.',
+    summaryEn:
+      'A self-initiated study of editorial language, space and image direction. It demonstrates creative capability and is not a client commission.',
+    href: '/case-studies/eden',
+    media: {
+      type: 'image',
+      src: '/images/work-eden-cover.jpg',
+      alt: 'Eden, proyecto autoiniciado de HEYDE Lab',
+      altEn: 'Eden, a self-initiated HEYDE Lab project',
+    },
+  }),
+  defineLabProject({
+    type: 'self_initiated',
+    slug: 'motion',
+    name: 'Motion Studies',
+    summary:
+      'Archivo autoiniciado de pruebas de movimiento, ritmo y adaptación de campaña. No representa trabajo ni resultados de un cliente.',
+    summaryEn:
+      'A self-initiated archive of motion, pacing and campaign adaptation studies. It does not represent client work or results.',
+    href: '/case-studies/motion',
+    media: {
+      type: 'video',
+      src: '/images/work-motion-cover.mp4',
+      alt: 'Motion Studies, proyecto autoiniciado de HEYDE Lab',
+      altEn: 'Motion Studies, a self-initiated HEYDE Lab project',
+    },
+  }),
+] as const;
+
+export function getLabProject(slug: string) {
+  return labProjects.find((project) => project.slug === slug);
 }

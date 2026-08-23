@@ -6,6 +6,7 @@ import {
   aiPolicy,
   canonicalBrand,
   contentSession,
+  labProjects,
   launchOffer,
   localFaqSections,
   monthlyPlans,
@@ -36,21 +37,6 @@ const aiBenefits = [
   'Más formatos y variantes desde una misma sesión',
   'Adaptaciones para cada canal sin repetir todo el rodaje',
   'Transparencia cuando una pieza pueda confundirse con una representación real',
-] as const;
-
-const labWork = [
-  {
-    title: 'Soleá',
-    description: 'Exploración autoiniciada de producto, luz e identidad visual. HEYDE Lab; no es un cliente.',
-    image: '/images/work-solea-cover.jpg',
-    href: '/case-studies/solea',
-  },
-  {
-    title: 'Eden',
-    description: 'Proyecto autoiniciado de lenguaje editorial, espacios y dirección de imagen. No es un cliente.',
-    image: '/images/work-eden-cover.jpg',
-    href: '/case-studies/eden',
-  },
 ] as const;
 
 const homeFaqs = localFaqSections.flatMap((section) => section.items).slice(0, 6);
@@ -220,22 +206,35 @@ export function HomePageContent() {
               Soleá, Eden y otros conceptos son proyectos autoiniciados. Enseñan dirección, producción y capacidad visual; no representan encargos ni resultados comerciales.
             </p>
           </div>
-          <div className="grid gap-6 md:grid-cols-2">
-            {labWork.map((item) => (
-              <Link key={item.title} href={item.href} className="group">
+          <div className="grid gap-6 md:grid-cols-3">
+            {labProjects.map((project) => (
+              <Link key={project.slug} href={project.href} className="group">
                 <div className="overflow-hidden rounded-sm bg-[#212121]">
-                  <Image
-                    src={item.image}
-                    alt={`${item.title}, proyecto autoiniciado de HEYDE Lab`}
-                    width={1000}
-                    height={900}
-                    className="h-[25rem] w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
-                  />
+                  {project.media.type === 'video' ? (
+                    <video
+                      className="h-[25rem] w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      aria-label={project.media.alt}
+                    >
+                      <source src={project.media.src} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <Image
+                      src={project.media.src}
+                      alt={project.media.alt}
+                      width={1000}
+                      height={900}
+                      className="h-[25rem] w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
+                    />
+                  )}
                 </div>
                 <div className="mt-5 border-t border-white/14 pt-4">
                   <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-white/42">Self-initiated · no cliente</p>
-                  <h3 className="mb-3 text-xl font-bold">{item.title}</h3>
-                  <p className="text-sm leading-relaxed text-white/68">{item.description}</p>
+                  <h3 className="mb-3 text-xl font-bold">{project.name}</h3>
+                  <p className="text-sm leading-relaxed text-white/68">{project.summary}</p>
                 </div>
               </Link>
             ))}
