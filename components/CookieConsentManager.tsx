@@ -32,9 +32,10 @@ const copy = {
     analytics: 'Analytics cookies',
     analyticsBody:
       'Allows Google Analytics to measure visits and interactions. Disabled unless you accept it.',
-    necessary: 'Necessary cookies',
+    necessary: 'Necessary storage',
     necessaryBody:
-      'Required for language preference and consent storage. Always active.',
+      'Local storage remembers language and consent choices. Always active.',
+    alwaysOn: 'On',
     policy: 'Cookie policy',
   },
   ES: {
@@ -48,9 +49,10 @@ const copy = {
     analytics: 'Cookies analíticas',
     analyticsBody:
       'Permiten usar Google Analytics para medir visitas e interacciones. No se activan salvo que aceptes.',
-    necessary: 'Cookies necesarias',
+    necessary: 'Almacenamiento necesario',
     necessaryBody:
-      'Necesarias para recordar idioma y consentimiento. Siempre activas.',
+      'El almacenamiento local recuerda el idioma y el consentimiento. Siempre activo.',
+    alwaysOn: 'Activo',
     policy: 'Política de cookies',
   },
 } as const;
@@ -99,9 +101,9 @@ function disableGoogleAnalytics(gaId?: string) {
     (window as unknown as Record<string, boolean>)[`ga-disable-${gaId}`] = true;
   }
 
-  ['_ga', '_gid', '_gat', `_ga_${gaId?.replace(/^G-/, '')}`].forEach((name) => {
-    if (name) deleteCookie(name);
-  });
+  const cookieNames = ['_ga', '_gid', '_gat'];
+  if (gaId) cookieNames.push(`_ga_${gaId.replace(/^G-/, '')}`);
+  cookieNames.forEach(deleteCookie);
 }
 
 function GoogleAnalytics({ gaId, enabled }: { gaId?: string; enabled: boolean }) {
@@ -199,7 +201,7 @@ export function CookieConsentManager({ gaId }: { gaId?: string }) {
                       </p>
                     </div>
                     <span className="text-xs font-bold uppercase tracking-wider text-white/50">
-                      On
+                      {text.alwaysOn}
                     </span>
                   </div>
                   <label className="flex cursor-pointer items-start justify-between gap-4">
@@ -233,7 +235,7 @@ export function CookieConsentManager({ gaId }: { gaId?: string }) {
                     <button
                       type="button"
                       onClick={() => choose(false)}
-                      className="rounded border border-white/25 px-4 py-2 text-sm font-bold text-white transition hover:border-white"
+                      className="rounded border border-white bg-white px-4 py-2 text-sm font-bold text-black transition hover:opacity-80"
                     >
                       {text.reject}
                     </button>

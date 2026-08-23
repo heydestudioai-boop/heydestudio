@@ -1,161 +1,262 @@
-'use client';
+import type { ReactNode } from 'react';
+import {
+  aiPolicy,
+  commercialConditions,
+  launchOffer,
+  rightsPolicy,
+} from '@/lib/canonical';
 
-import { useLanguage } from '@/lib/language';
+type LegalPageType = 'privacy' | 'terms' | 'cookies';
 
-const legalCopy = {
-  EN: {
-    privacy: {
-      title: 'Privacy Policy',
-      updated: 'Last updated: August 21, 2026',
-      intro:
-        'HEYDE Studio collects only the information needed to respond to enquiries, run audits, and improve the website.',
-      sections: [
-        {
-          title: 'Information We Collect',
-          body: 'We may collect contact details, business name, city or area, website or Instagram profile, optional phone number, form messages, privacy-consent timestamp, analytics events, and basic technical data such as browser, device, and page interactions.',
-        },
-        {
-          title: 'How We Use Information',
-          body: 'We use information to respond to requests, manage audit and project-enquiry workflows, improve website performance, and maintain CRM or email-service records when you submit a form.',
-        },
-        {
-          title: 'Third-Party Services',
-          body: 'The website may use HubSpot to keep request records, Brevo for transactional email, and Google Analytics after consent. These services process data according to their own terms and privacy policies.',
-        },
-        {
-          title: 'Security',
-          body: 'Forms and internal endpoints use validation, rate limiting, anti-spam controls, protected internal tokens, and security headers. No website can be guaranteed perfectly secure, but the system is designed to reduce common risks.',
-        },
-        {
-          title: 'Your Choices',
-          body: 'You can request access, correction, or deletion of your personal information by contacting contact@heydestudio.com.',
-        },
-      ],
-    },
-    terms: {
-      title: 'Terms of Use',
-      updated: 'Last updated: May 7, 2026',
-      intro:
-        'By using the HEYDE Studio website or its forms, you agree to use them lawfully and responsibly.',
-      sections: [
-        {
-          title: 'Website Content',
-          body: 'Website copy, frameworks, and examples are provided for general informational purposes and do not create a client relationship unless a separate agreement is signed.',
-        },
-        {
-          title: 'Service Enquiries',
-          body: 'Submitting a form does not guarantee availability, pricing, timeline, or acceptance of a project. Project scope is confirmed separately in writing.',
-        },
-        {
-          title: 'Acceptable Use',
-          body: 'You must not misuse forms, attempt to access internal endpoints, interfere with website security, or submit unlawful, abusive, or misleading content.',
-        },
-        {
-          title: 'Contact',
-          body: 'For questions about these terms, contact contact@heydestudio.com.',
-        },
-      ],
-    },
-    cookies: {
-      title: 'Cookie Policy',
-      updated: 'Last updated: May 14, 2026',
-      intro:
-        'HEYDE Studio uses necessary storage for core website preferences and optional analytics only if you consent.',
-      sections: [
-        {
-          title: 'Necessary Storage',
-          body: 'We use local storage to remember your language preference and cookie consent choice. This is required for the website to work consistently and cannot be disabled from the banner.',
-        },
-        {
-          title: 'Analytics',
-          body: 'If you accept analytics, Google Analytics may measure page views and non-personal interactions. Form values, names, emails, phone numbers, and business identifiers are not sent as analytics event parameters. Analytics is not loaded until you accept it.',
-        },
-        {
-          title: 'Changing Your Choice',
-          body: 'You can reopen Cookie settings from the footer at any time and accept, reject, or change analytics consent.',
-        },
-      ],
-    },
-  },
-  ES: {
-    privacy: {
-      title: 'Política De Privacidad',
-      updated: 'Última actualización: 21 de agosto de 2026',
-      intro:
-        'HEYDE Studio recoge únicamente la información necesaria para responder solicitudes, gestionar auditorías y mejorar la web.',
-      sections: [
-        {
-          title: 'Información Que Recogemos',
-          body: 'Podemos recoger datos de contacto, nombre del negocio, ciudad o zona, web o perfil de Instagram, teléfono opcional, mensajes de formularios, fecha del consentimiento de privacidad, eventos de analítica y datos técnicos básicos como navegador, dispositivo e interacción con páginas.',
-        },
-        {
-          title: 'Cómo Usamos La Información',
-          body: 'Usamos la información para responder solicitudes, gestionar flujos de auditoría y consultas de proyecto, mejorar rendimiento y mantener registros en CRM o servicios de email cuando envías un formulario.',
-        },
-        {
-          title: 'Servicios De Terceros',
-          body: 'La web puede usar HubSpot para conservar solicitudes, Brevo para email transaccional y Google Analytics después del consentimiento. Estos servicios procesan datos según sus propias políticas y condiciones.',
-        },
-        {
-          title: 'Seguridad',
-          body: 'Los formularios y endpoints internos usan validación, rate limiting, controles anti-spam, tokens internos protegidos y cabeceras de seguridad. Ninguna web puede garantizar seguridad perfecta, pero el sistema reduce riesgos comunes.',
-        },
-        {
-          title: 'Tus Opciones',
-          body: 'Puedes solicitar acceso, corrección o eliminación de tus datos escribiendo a contact@heydestudio.com.',
-        },
-      ],
-    },
-    terms: {
-      title: 'Términos De Uso',
-      updated: 'Última actualización: 7 de mayo de 2026',
-      intro:
-        'Al usar la web o los formularios de HEYDE Studio aceptas usarlos de forma legal y responsable.',
-      sections: [
-        {
-          title: 'Contenido De La Web',
-          body: 'El copy, frameworks y ejemplos se ofrecen como información general y no crean una relación de cliente salvo que exista un acuerdo firmado aparte.',
-        },
-        {
-          title: 'Solicitudes De Servicio',
-          body: 'Enviar un formulario no garantiza disponibilidad, precios, plazos ni aceptación de un proyecto. El alcance se confirma por escrito.',
-        },
-        {
-          title: 'Uso Aceptable',
-          body: 'No debes abusar de formularios, intentar acceder a endpoints internos, interferir con la seguridad ni enviar contenido ilegal, abusivo o engañoso.',
-        },
-        {
-          title: 'Contacto',
-          body: 'Para preguntas sobre estos términos, escribe a contact@heydestudio.com.',
-        },
-      ],
-    },
-    cookies: {
-      title: 'Política De Cookies',
-      updated: 'Última actualización: 21 de agosto de 2026',
-      intro:
-        'HEYDE Studio usa almacenamiento necesario para preferencias básicas de la web y analítica opcional solo si das tu consentimiento.',
-      sections: [
-        {
-          title: 'Almacenamiento Necesario',
-          body: 'Usamos local storage para recordar tu idioma y tu elección de consentimiento de cookies. Es necesario para que la web funcione de forma consistente y no se puede desactivar desde el banner.',
-        },
-        {
-          title: 'Analítica',
-          body: 'Si aceptas analítica, Google Analytics puede medir visitas e interacciones no personales. Los valores del formulario, nombres, emails, teléfonos e identificadores de negocio no se envían como parámetros de analítica. La analítica no se carga hasta que la aceptas.',
-        },
-        {
-          title: 'Cambiar Tu Elección',
-          body: 'Puedes reabrir Configurar cookies desde el footer en cualquier momento y aceptar, rechazar o cambiar el consentimiento de analítica.',
-        },
-      ],
-    },
-  },
-} as const;
+interface LegalSection {
+  title: string;
+  body: ReactNode;
+}
 
-export function LegalPageContent({ type }: { type: 'privacy' | 'terms' | 'cookies' }) {
-  const { language } = useLanguage();
-  const page = legalCopy[language][type];
+interface LegalPage {
+  title: string;
+  updated: string;
+  intro: string;
+  sections: readonly LegalSection[];
+}
+
+const privacyPage: LegalPage = {
+  title: 'Política de privacidad',
+  updated: 'Última actualización: 23 de agosto de 2026',
+  intro:
+    'Esta política describe los datos que tratan actualmente los formularios y servicios técnicos de HEYDE Studio. No atribuye finalidades ni condiciones que el sistema no utiliza.',
+  sections: [
+    {
+      title: 'Contacto y estado de esta información',
+      body: (
+        <>
+          Para consultas sobre privacidad o para ejercer los derechos que resulten aplicables, puedes
+          escribir a <a href="mailto:contact@heydestudio.com">contact@heydestudio.com</a>. La
+          identidad jurídica completa del responsable y otros datos obligatorios todavía requieren
+          confirmación del titular antes de que esta política pueda considerarse definitiva.
+        </>
+      ),
+    },
+    {
+      title: 'Solicitud de auditoría local',
+      body: (
+        <>
+          En <code>/audit</code> se solicitan el nombre del negocio, ciudad o zona, web o Instagram,
+          nombre y email de contacto y, de forma opcional, teléfono o WhatsApp. El sistema registra
+          también un identificador de solicitud, fechas de solicitud y consentimiento, estado de la
+          auditoría y estado de la confirmación. La finalidad técnica de este flujo es registrar,
+          preparar y entregar la auditoría solicitada. HubSpot conserva el Contact y Brevo envía una
+          única confirmación transaccional.
+        </>
+      ),
+    },
+    {
+      title: 'Consulta de marca o proyecto',
+      body: (
+        <>
+          En <code>/contact</code> se solicitan nombre, empresa, email, tipo de proyecto y brief; la
+          web o perfil social es opcional. El sistema registra un identificador de solicitud, la fecha
+          de consentimiento y el estado de la confirmación. Este flujo se usa exclusivamente para
+          revisar y responder la consulta de proyecto. HubSpot conserva el Contact y Brevo envía una
+          única confirmación transaccional. No se convierte automáticamente en una auditoría local ni
+          crea un Deal.
+        </>
+      ),
+    },
+    {
+      title: 'Analítica opcional',
+      body: (
+        <>
+          Google Analytics solo se carga después de aceptar la analítica en el panel de cookies. Los
+          eventos propios de <code>/audit</code> y <code>/contact</code> incluyen únicamente el nombre
+          del evento, categoría, ruta e idioma. Los valores de formulario, nombres, emails,
+          teléfonos, empresas, webs, perfiles sociales y briefs no se envían como parámetros de esos
+          eventos.
+        </>
+      ),
+    },
+    {
+      title: 'Infraestructura y enlaces externos',
+      body: (
+        <>
+          Vercel aloja y ejecuta la web, por lo que recibe los datos técnicos de petición necesarios
+          para servirla. La web también ofrece enlaces a WhatsApp; HEYDE Studio no envía datos del
+          formulario a WhatsApp y cualquier interacción con ese servicio comienza cuando la persona
+          decide abrir el enlace externo.
+        </>
+      ),
+    },
+    {
+      title: 'Proveedores, conservación y base jurídica',
+      body: (
+        <>
+          Los proveedores técnicamente confirmados son HubSpot, Brevo, Vercel y, tras consentimiento,
+          Google Analytics. Las entidades contractuales concretas, ubicaciones de tratamiento,
+          posibles transferencias y garantías aplicables no se publican aquí porque aún no han sido
+          verificadas. Tampoco se fija una base jurídica o un plazo de conservación sin la decisión y
+          revisión legal del titular.
+        </>
+      ),
+    },
+    {
+      title: 'Seguridad y derechos',
+      body: (
+        <>
+          Los formularios aplican validación, límites de frecuencia y controles anti-spam; los
+          endpoints internos requieren autenticación y la web usa cabeceras de seguridad. Puedes
+          solicitar información y ejercer los derechos de protección de datos que correspondan a
+          través del email indicado. La autoridad de control, un posible delegado de protección de
+          datos y el procedimiento legal completo quedan pendientes de confirmación y revisión.
+        </>
+      ),
+    },
+  ],
+};
+
+const termsPage: LegalPage = {
+  title: 'Términos de uso',
+  updated: 'Última actualización: 23 de agosto de 2026',
+  intro:
+    'Estos términos regulan el uso de la web y resumen condiciones públicas verificadas. No sustituyen un presupuesto ni el contrato de prestación de servicios.',
+  sections: [
+    {
+      title: 'Web, solicitudes y contratación',
+      body: (
+        <>
+          El contenido de la web es informativo. Enviar <code>/audit</code> o <code>/contact</code> no
+          garantiza disponibilidad, aceptación, alcance, precio ni fecha de entrega, y no crea por sí
+          solo una relación contractual. Cada proyecto se confirma por escrito y el contrato o
+          presupuesto aceptado prevalece si existe alguna diferencia.
+        </>
+      ),
+    },
+    {
+      title: 'Precios e IVA',
+      body: (
+        <>
+          {commercialConditions[1]} Los servicios cuyo precio se indica como «desde» y los proyectos
+          sin tarifa cerrada requieren presupuesto según alcance.
+        </>
+      ),
+    },
+    {
+      title: 'Planes mensuales',
+      body: commercialConditions[0],
+    },
+    {
+      title: 'Entregables y archivos de trabajo',
+      body: (
+        <>
+          {rightsPolicy} El alcance concreto, formatos, usos y cualquier excepción deben constar en
+          el presupuesto o contrato aceptado.
+        </>
+      ),
+    },
+    {
+      title: 'Desplazamientos',
+      body: (
+        <>
+          {commercialConditions[2]} Los desplazamientos fuera de esa zona se presupuestan según el
+          proyecto.
+        </>
+      ),
+    },
+    {
+      title: 'Producción e inteligencia artificial',
+      body: (
+        <>
+          {aiPolicy.short} {aiPolicy.disclosure} El encargo escrito determina qué técnicas y
+          entregables forman parte de cada proyecto.
+        </>
+      ),
+    },
+    {
+      title: 'Oferta de lanzamiento',
+      body: launchOffer.active ? (
+        <>
+          Mientras la web muestre la oferta como activa, se publican {launchOffer.slots} plazas del
+          plan Crecimiento a {launchOffer.priceLabel} en lugar de {launchOffer.listPriceLabel},{' '}
+          {launchOffer.duration}, {launchOffer.consideration}. Enviar un formulario no reserva una
+          plaza: la disponibilidad y las condiciones se confirman por escrito.
+        </>
+      ) : (
+        'No hay una oferta de lanzamiento activa.'
+      ),
+    },
+    {
+      title: 'Uso aceptable y revisión legal',
+      body: (
+        <>
+          No se permite abusar de los formularios, intentar acceder a endpoints internos, interferir
+          con la seguridad o enviar contenido ilícito o engañoso. La identificación jurídica del
+          prestador, ley aplicable, jurisdicción y cláusulas contractuales completas requieren
+          confirmación del titular y revisión legal; no se deducen de esta web.
+        </>
+      ),
+    },
+  ],
+};
+
+const cookiesPage: LegalPage = {
+  title: 'Política de cookies',
+  updated: 'Última actualización: 23 de agosto de 2026',
+  intro:
+    'La web usa almacenamiento local necesario para recordar preferencias y Google Analytics únicamente si aceptas la analítica opcional.',
+  sections: [
+    {
+      title: 'Almacenamiento necesario',
+      body: (
+        <>
+          La aplicación usa <code>localStorage</code>, no una cookie publicitaria, para guardar la
+          elección de analítica en <code>heyde-cookie-consent</code>. El selector de idioma puede
+          guardar la preferencia en <code>heyde-language</code>. Estos valores sirven exclusivamente
+          para recordar esas elecciones en el navegador.
+        </>
+      ),
+    },
+    {
+      title: 'Google Analytics',
+      body: (
+        <>
+          Si aceptas la analítica, la web carga la etiqueta de Google Analytics. Esa etiqueta puede
+          crear <code>_ga</code> para distinguir usuarios y <code>_ga_&lt;id&gt;</code> para conservar el
+          estado de sesión. La configuración contractual, ubicación, conservación efectiva y
+          posibles transferencias requieren confirmación del titular y no se infieren aquí.
+        </>
+      ),
+    },
+    {
+      title: 'Aceptar, rechazar y configurar',
+      body: (
+        <>
+          La primera visita ofrece aceptar, rechazar o configurar. Rechazar mantiene Google Analytics
+          sin cargar. Puedes abrir «Configurar cookies» desde el pie de página en cualquier momento;
+          al retirar el consentimiento, la web deshabilita la medición y elimina las cookies de
+          Google Analytics que puede identificar.
+        </>
+      ),
+    },
+    {
+      title: 'Datos enviados a analítica',
+      body: (
+        <>
+          Los eventos propios contienen únicamente categoría, ruta e idioma. No incluyen valores de
+          formularios ni identificadores de contacto. Consulta la política de privacidad para ver la
+          separación entre auditorías locales y consultas de proyecto.
+        </>
+      ),
+    },
+  ],
+};
+
+const legalPages: Record<LegalPageType, LegalPage> = {
+  privacy: privacyPage,
+  terms: termsPage,
+  cookies: cookiesPage,
+};
+
+export function LegalPageContent({ type }: { type: LegalPageType }) {
+  const page = legalPages[type];
 
   return (
     <main className="bg-white">
@@ -176,7 +277,9 @@ export function LegalPageContent({ type }: { type: 'privacy' | 'terms' | 'cookie
           {page.sections.map((section) => (
             <section key={section.title} className="border-b border-gray-200 pb-10 last:border-0">
               <h2 className="mb-3 text-2xl font-bold text-gray-950">{section.title}</h2>
-              <p className="leading-relaxed text-gray-700">{section.body}</p>
+              <div className="leading-relaxed text-gray-700 [&_a]:font-bold [&_a]:text-magenta [&_a]:underline [&_a]:underline-offset-2 [&_code]:rounded [&_code]:bg-gray-100 [&_code]:px-1 [&_code]:py-0.5 [&_code]:text-sm">
+                {section.body}
+              </div>
             </section>
           ))}
         </div>

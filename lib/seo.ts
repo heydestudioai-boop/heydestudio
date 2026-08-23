@@ -131,15 +131,24 @@ export const pageSeo = {
     keywords: ['auditoría gratuita Toledo', 'Google Business Toledo', 'redes sociales negocios Toledo'],
   }),
   privacy: createMetadata({
-    title: 'Privacy Policy | HEYDE Studio',
+    title: 'Política de privacidad | HEYDE Studio',
     description:
-      'Privacy policy for HEYDE Studio, including how contact, analytics, and integration data are handled.',
+      'Tratamiento actual de solicitudes de auditoría y proyecto, proveedores técnicos, analítica opcional y derechos de privacidad en HEYDE Studio.',
     path: '/privacy',
+    alternateLocale: [],
   }),
   terms: createMetadata({
-    title: 'Terms | HEYDE Studio',
+    title: 'Términos de uso | HEYDE Studio',
     description:
-      'Terms of use for the HEYDE Studio website, its forms, and service enquiries.',
+      'Condiciones de uso de la web, solicitudes, precios, planes, entregables, desplazamientos, IA y oferta de lanzamiento de HEYDE Studio.',
     path: '/terms',
+    alternateLocale: [],
+  }),
+  cookies: createMetadata({
+    title: 'Política de cookies | HEYDE Studio',
+    description:
+      'Almacenamiento local necesario, consentimiento de Google Analytics y revocación de cookies en HEYDE Studio.',
+    path: '/cookies',
+    alternateLocale: [],
   }),
 };

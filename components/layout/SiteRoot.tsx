@@ -81,11 +81,6 @@ export function SiteRoot({
                   email: 'contact@heydestudio.com',
                   priceRange: '€€',
                   areaServed: ['Toledo', 'Castilla-La Mancha', 'Madrid', 'Costa Blanca'],
-                  address: {
-                    '@type': 'PostalAddress',
-                    addressLocality: 'Toledo',
-                    addressCountry: 'ES',
-                  },
                   sameAs: [
                     'https://instagram.com/heyde.studio',
                     'https://www.linkedin.com/company/heyde-studio',
@@ -139,7 +134,7 @@ export function SiteRoot({
         />
         <LanguageProvider>
           <Header />
-          <main className="pt-16">{children}</main>
+          <div className="pt-16">{children}</div>
           <Footer />
           <ScrollToTopButton />
           <CookieConsentManager gaId={gaId} />

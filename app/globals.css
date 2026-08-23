@@ -37,6 +37,11 @@ body {
   overflow-x: hidden;
 }
 
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
 p,
 li {
   word-spacing: 0.08em;
@@ -203,6 +208,21 @@ h2 {
 
 .animate-fade-in {
   animation: fadeIn 0.8s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 .bg-black {
