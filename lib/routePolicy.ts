@@ -14,6 +14,9 @@ export const FINAL_INDEXABLE_ROUTES = [
   '/privacy',
   '/terms',
   '/cookies',
+  '/en/privacy',
+  '/en/terms',
+  '/en/cookies',
 ] as const;
 
 export const LEGACY_REDIRECTS = [

@@ -18,19 +18,34 @@ async function source(path) {
   return readFile(join(root, path), 'utf8');
 }
 
-test('legal routes are Spanish server content with their own canonicals', async () => {
+test('legal routes are static server content in Spanish and English with reciprocal SEO', async () => {
   const legal = await source('components/pages/LegalPageContent.tsx');
   const seo = await source('lib/seo.ts');
   const cookiesPage = await source('app/(es)/cookies/page.tsx');
+  const englishPages = await Promise.all([
+    source('app/(en)/en/privacy/page.tsx'),
+    source('app/(en)/en/terms/page.tsx'),
+    source('app/(en)/en/cookies/page.tsx'),
+  ]);
 
   assert.doesNotMatch(legal, /'use client'|useLanguage/);
   assert.match(legal, /Política de privacidad/);
   assert.match(legal, /Términos de uso/);
   assert.match(legal, /Política de cookies/);
+  assert.match(legal, /Privacy policy/);
+  assert.match(legal, /Terms of use/);
+  assert.match(legal, /Cookie policy/);
   assert.match(seo, /path: '\/privacy'/);
   assert.match(seo, /path: '\/terms'/);
   assert.match(cookiesPage, /pageSeo\.cookies/);
   assert.match(seo, /path: '\/cookies'/);
+  assert.match(seo, /path: '\/en\/privacy'/);
+  assert.match(seo, /path: '\/en\/terms'/);
+  assert.match(seo, /path: '\/en\/cookies'/);
+  assert.match(seo, /'x-default': '\/privacy'/);
+  assert.match(seo, /'x-default': '\/terms'/);
+  assert.match(seo, /'x-default': '\/cookies'/);
+  for (const page of englishPages) assert.match(page, /locale="en"/);
 });
 
 test('structured data does not turn a service area into an unverified legal address', async () => {
@@ -78,12 +93,47 @@ test('privacy text separates the two current funnels and names only active servi
     assert.match(legal, new RegExp(expected.replace('/', '\\/')));
   }
 
-  assert.match(legal, /No se convierte automáticamente en una auditoría local ni\s+crea un Deal/);
-  assert.match(legal, /no se envían como parámetros de esos\s+eventos/);
-  assert.doesNotMatch(
-    legal,
-    /Calendly|questionnaire|Visual System Audit|resource|template|follow-up/i
-  );
+  assert.match(legal, /Ninguno crea automáticamente un Deal/);
+  assert.match(legal, /no contienen valores de formulario ni PII/);
+  assert.doesNotMatch(legal, /Calendly/i);
+  assert.doesNotMatch(legal, /questionnaire|Visual System Audit|resource|template|follow-up/i);
+});
+
+test('owner decisions define legal bases, marketing boundaries and retention in both languages', async () => {
+  const legal = await source('components/pages/LegalPageContent.tsx');
+
+  for (const expected of [
+    'medidas precontractuales',
+    'ejecución del contrato',
+    'cumplimiento de obligaciones legales',
+    'interés legítimo',
+    'consentimiento separado y explícito',
+    'máximo 12 meses',
+    '6 años',
+    'pre-contractual steps',
+    'performance of a contract',
+    'compliance with legal obligations',
+    'legitimate interest',
+    'no more than 12 months',
+    '6 years',
+  ]) {
+    assert.match(legal, new RegExp(expected.replaceAll(' ', '\\s+')));
+  }
+
+  assert.match(legal, /no te incorpora a una newsletter/);
+  assert.match(legal, /does not subscribe you to a newsletter/);
+  assert.doesNotMatch(legal, /<LEGAL_NAME>|<NIF>|<LEGAL_ADDRESS>/);
+});
+
+test('provider roles and transfer limits are evidence-based rather than account assumptions', async () => {
+  const legal = await source('components/pages/LegalPageContent.tsx');
+
+  assert.match(legal, /Vercel.*encargado/s);
+  assert.match(legal, /HubSpot.*SCC/s);
+  assert.match(legal, /Brevo.*Francia, Alemania y Bélgica/s);
+  assert.match(legal, /Google Analytics 4.*ajustes de compartición/s);
+  assert.match(legal, /región real de la cuenta HEYDE no está verificada/);
+  assert.match(legal, /contractual settings must be checked before Production/);
 });
 
 test('terms remain subordinate to the contract and consume canonical conditions', async () => {
@@ -104,6 +154,10 @@ test('terms remain subordinate to the contract and consume canonical conditions'
   assert.equal(rightsPolicy.includes('brutos y proyectos editables'), true);
   assert.equal(aiPolicy.disclosure.includes('inducir a error'), true);
   assert.equal(launchOffer.active, true);
+  assert.match(legal, /Se aplica la legislación española/);
+  assert.match(legal, /Spanish law applies/);
+  assert.match(legal, /sin imponer con\s+carácter universal los tribunales de Toledo/);
+  assert.match(legal, /does not impose Toledo courts universally/);
 });
 
 test('analytics consent gates GA loading and revocation disables and clears identifiers', async () => {
@@ -116,7 +170,27 @@ test('analytics consent gates GA loading and revocation disables and clears iden
   assert.match(consent, /heyde-open-cookie-settings/);
   assert.match(consent, /choose\(false\)/);
   assert.match(consent, /choose\(true\)/);
+  assert.match(consent, /language === 'EN' \? '\/en\/cookies' : '\/cookies'/);
   assert.doesNotMatch(consent, /Calendly|iframe/i);
+});
+
+test('English layouts, footer and form link to English legal information', async () => {
+  const language = await source('lib/language.tsx');
+  const footer = await source('components/layout/Footer.tsx');
+  const brandForm = await source('components/pages/BrandInquiryPageContent.tsx');
+  const auditForm = await source('components/pages/AuditPageContent.tsx');
+  const routes = await source('lib/routePolicy.ts');
+
+  assert.match(language, /pathname\.startsWith\('\/en\/'\)/);
+  for (const route of ['/en/privacy', '/en/terms', '/en/cookies']) {
+    const pattern = new RegExp(route.replaceAll('/', '\\/'));
+    assert.match(footer, pattern);
+    assert.match(routes, pattern);
+  }
+  assert.match(brandForm, /href="\/en\/privacy"/);
+  assert.match(brandForm, /I request that HEYDE Studio use these details/);
+  assert.match(auditForm, /href="\/privacy"/);
+  assert.match(auditForm, /Solicito que HEYDE Studio tramite estos datos/);
 });
 
 test('first-party funnel analytics payloads are fixed and contain no PII', () => {

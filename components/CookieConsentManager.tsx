@@ -184,7 +184,7 @@ export function CookieConsentManager({ gaId }: { gaId?: string }) {
                 <h2 className="text-lg font-bold">{text.title}</h2>
                 <p className="mt-2 text-sm leading-relaxed text-white/70">{text.body}</p>
                 <Link
-                  href="/cookies"
+                  href={language === 'EN' ? '/en/cookies' : '/cookies'}
                   className="mt-3 inline-block text-xs font-bold uppercase tracking-wider text-white/60 underline-offset-4 transition hover:text-white hover:underline"
                 >
                   {text.policy}

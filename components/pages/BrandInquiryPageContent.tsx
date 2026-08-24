@@ -293,9 +293,9 @@ export function BrandInquiryPageContent() {
                     className="mt-1 h-4 w-4 accent-[#D946A6]"
                   />
                   <span>
-                    I agree that HEYDE Studio may use these details to review and
-                    respond to this inquiry. Read the{' '}
-                    <Link href="/privacy" className="font-bold underline">
+                    I request that HEYDE Studio use these details to review and
+                    respond to this inquiry. I have read the{' '}
+                    <Link href="/en/privacy" className="font-bold underline">
                       privacy policy
                     </Link>
                     .

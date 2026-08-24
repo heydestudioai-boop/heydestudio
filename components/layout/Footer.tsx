@@ -96,7 +96,7 @@ const englishServiceZones = [
 export function Footer() {
   const { language } = useLanguage();
   const pathname = usePathname();
-  const isEnglishLocalRoute = pathname === '/en/real-estate';
+  const isEnglishLocalRoute = pathname.startsWith('/en/');
   const isBrandRoute = brandRoutes.has(pathname);
   const footerLinks = isEnglishLocalRoute
     ? englishLocalFooterLinks
@@ -108,12 +108,14 @@ export function Footer() {
   const legalLinks =
     language === 'EN'
       ? [
-          { label: 'Privacy', href: '/privacy' },
-          { label: 'Terms', href: '/terms' },
+          { label: 'Privacy', href: '/en/privacy' },
+          { label: 'Terms', href: '/en/terms' },
+          { label: 'Cookies', href: '/en/cookies' },
         ]
       : [
           { label: 'Privacidad', href: '/privacy' },
           { label: 'Términos', href: '/terms' },
+          { label: 'Cookies', href: '/cookies' },
         ];
 
   return (
@@ -259,7 +261,7 @@ export function Footer() {
                 </a>
               ))}
             </div>
-            <div className="flex justify-center gap-6 md:justify-end">
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 md:justify-end">
               {legalLinks.map((link) => (
                 <Link
                   key={link.href}

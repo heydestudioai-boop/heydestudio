@@ -135,20 +135,74 @@ export const pageSeo = {
     description:
       'Tratamiento actual de solicitudes de auditoría y proyecto, proveedores técnicos, analítica opcional y derechos de privacidad en HEYDE Studio.',
     path: '/privacy',
-    alternateLocale: [],
+    alternateLocale: ['en_GB'],
+    languages: {
+      'es-ES': '/privacy',
+      en: '/en/privacy',
+      'x-default': '/privacy',
+    },
   }),
   terms: createMetadata({
     title: 'Términos de uso | HEYDE Studio',
     description:
       'Condiciones de uso de la web, solicitudes, precios, planes, entregables, desplazamientos, IA y oferta de lanzamiento de HEYDE Studio.',
     path: '/terms',
-    alternateLocale: [],
+    alternateLocale: ['en_GB'],
+    languages: {
+      'es-ES': '/terms',
+      en: '/en/terms',
+      'x-default': '/terms',
+    },
   }),
   cookies: createMetadata({
     title: 'Política de cookies | HEYDE Studio',
     description:
       'Almacenamiento local necesario, consentimiento de Google Analytics y revocación de cookies en HEYDE Studio.',
     path: '/cookies',
-    alternateLocale: [],
+    alternateLocale: ['en_GB'],
+    languages: {
+      'es-ES': '/cookies',
+      en: '/en/cookies',
+      'x-default': '/cookies',
+    },
+  }),
+  privacyEn: createMetadata({
+    title: 'Privacy policy | HEYDE Studio',
+    description:
+      'How HEYDE Studio handles local audit and brand inquiries, legal bases, retention, providers, analytics and privacy rights.',
+    path: '/en/privacy',
+    locale: 'en_GB',
+    alternateLocale: ['es_ES'],
+    languages: {
+      'es-ES': '/privacy',
+      en: '/en/privacy',
+      'x-default': '/privacy',
+    },
+  }),
+  termsEn: createMetadata({
+    title: 'Terms of use | HEYDE Studio',
+    description:
+      'Website use, inquiries, prices, VAT, deliverables, travel, AI, launch offer and applicable law for HEYDE Studio.',
+    path: '/en/terms',
+    locale: 'en_GB',
+    alternateLocale: ['es_ES'],
+    languages: {
+      'es-ES': '/terms',
+      en: '/en/terms',
+      'x-default': '/terms',
+    },
+  }),
+  cookiesEn: createMetadata({
+    title: 'Cookie policy | HEYDE Studio',
+    description:
+      'Necessary local storage, Google Analytics consent, cookie lifetimes and withdrawal controls on the HEYDE Studio website.',
+    path: '/en/cookies',
+    locale: 'en_GB',
+    alternateLocale: ['es_ES'],
+    languages: {
+      'es-ES': '/cookies',
+      en: '/en/cookies',
+      'x-default': '/cookies',
+    },
   }),
 };

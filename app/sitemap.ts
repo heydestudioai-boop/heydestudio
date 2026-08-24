@@ -3,6 +3,15 @@ import { labProjects } from '@/lib/canonical';
 import { FINAL_INDEXABLE_ROUTES } from '@/lib/routePolicy';
 import { siteUrl } from '@/lib/seo';
 
+const legalAlternates: Record<string, { es: string; en: string }> = {
+  '/privacy': { es: '/privacy', en: '/en/privacy' },
+  '/en/privacy': { es: '/privacy', en: '/en/privacy' },
+  '/terms': { es: '/terms', en: '/en/terms' },
+  '/en/terms': { es: '/terms', en: '/en/terms' },
+  '/cookies': { es: '/cookies', en: '/en/cookies' },
+  '/en/cookies': { es: '/cookies', en: '/en/cookies' },
+};
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
@@ -16,13 +25,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
           },
         }
       : undefined;
+    const legalPair = legalAlternates[route];
+    const legalLanguageAlternates = legalPair
+      ? {
+          languages: {
+            'es-ES': new URL(legalPair.es, siteUrl).toString(),
+            en: new URL(legalPair.en, siteUrl).toString(),
+            'x-default': new URL(legalPair.es, siteUrl).toString(),
+          },
+        }
+      : undefined;
 
     return {
       url: new URL(route, siteUrl).toString(),
       lastModified: now,
       changeFrequency: route === '' || route === '/planes' || route === '/audit' ? 'weekly' : 'monthly',
       priority: route === '' ? 1 : ['/planes', '/audit', '/casos', '/estudio'].includes(route) ? 0.85 : 0.7,
-      alternates: realEstateAlternates,
+      alternates: realEstateAlternates ?? legalLanguageAlternates,
     };
   }) satisfies MetadataRoute.Sitemap;
 

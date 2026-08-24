@@ -1,6 +1,6 @@
 # HEYDE Studio — final migration release candidate
 
-Fecha: 23 de agosto de 2026  
+Fecha: 24 de agosto de 2026
 Branch: `codex/lote-7-release-candidate`  
 Baseline: `219d6cc1ba412263995b20d673ced508995d742d`  
 Estado: **PREVIEW RELEASE CANDIDATE — BLOCKED FOR PRODUCTION**
@@ -11,7 +11,7 @@ Este documento cierra técnicamente los Lotes 4, 5/5A, 6 y 7 en una única branc
 
 - Next.js 16 App Router con root layouts estáticos separados mediante route groups `(es)` y `(en)`; los grupos no cambian las URLs públicas.
 - Shell compartida para fuentes, CSS global, providers, consentimiento, analytics, Header/Footer y JSON-LD.
-- `<html lang="es">` para la experiencia española y `<html lang="en">` para `/marcas`, `/contact` y `/en/real-estate`.
+- `<html lang="es">` para la experiencia española y `<html lang="en">` para `/marcas`, `/contact`, `/en/real-estate` y las tres rutas legales `/en/*`.
 - Modelo empresarial único en `lib/canonical.ts`; rutas sectoriales, precios, packs, condiciones, IA, derechos, oferta y HEYDE Lab consumen ese canon.
 - Cinco endpoints activos: los dos submits, dos health checks y la creación interna y explícita de propuesta. Los endpoints legacy están retirados.
 
@@ -20,7 +20,7 @@ Este documento cierra técnicamente los Lotes 4, 5/5A, 6 y 7 en una única branc
 Indexables:
 
 - ES: `/`, `/planes`, `/audit`, `/casos`, `/estudio`, `/hosteleria`, `/inmobiliaria`, `/bodegas`, `/faq`, `/privacy`, `/terms`, `/cookies`.
-- EN: `/marcas`, `/contact`, `/en/real-estate`.
+- EN: `/marcas`, `/contact`, `/en/real-estate`, `/en/privacy`, `/en/terms`, `/en/cookies`.
 - HEYDE Lab: `/case-studies/solea`, `/case-studies/eden`, `/case-studies/motion`.
 
 `/blog` se mantiene como página informativa `noindex`; no entra en sitemap. Cada ruta pública final se comprobó en 1440×1000 y 390×844.
@@ -65,12 +65,13 @@ El runtime ya no contiene questionnaire/Visual System Audit, Calendly obligatori
 - Metadata, título, description, OpenGraph, un único `h1`, un único landmark `main` y alt de imágenes comprobados.
 - JSON-LD del estudio no inventa rating, review, premio ni domicilio legal; se retiró `PostalAddress` no verificado.
 - `/inmobiliaria` y `/en/real-estate` conservan `es-ES`, `en` y `x-default → /inmobiliaria` recíprocos.
+- Privacy, Terms y Cookies tienen canonical propio y hreflang recíproco `es-ES`/`en`; `x-default` apunta a la versión española.
 
 ## 8. Idiomas
 
 ES se renderiza server-side con `lang=es`; EN con `lang=en`. `/marcas` y `/contact` siguen en inglés aunque no estén bajo `/en`. La navegación ES ↔ EN de inmobiliaria y la navegación hacia/desde `/marcas` se validaron sin regresión visible.
 
-Las páginas legales son ES porque no existe todavía una traducción jurídica EN aprobada. Decidir y revisar esas versiones es input del owner.
+Las páginas legales se renderizan server-side en ES y EN con el mismo contenido sustantivo. Footer, formulario EN y panel de cookies enlazan a `/en/privacy`, `/en/terms` y `/en/cookies`; el español se identifica como versión original de referencia sin reducir derechos EN.
 
 ## 9. HEYDE Lab
 
@@ -84,19 +85,19 @@ Los dos archivos maestros externos indicados por `AGENTS.md` no estaban disponib
 
 ## 11. Estado legal
 
-**OWNER INPUT REQUIRED.** Privacy, Terms y Cookies ya describen solo el sistema técnico real y separan `/audit` de `/contact`, pero un release legal completo necesita información que no puede inferirse. No se inventaron identidad, NIF, domicilio, base jurídica, retención, DPO, transferencias, jurisdicción ni contrato.
+**OWNER INPUT REQUIRED — IDENTIFICACIÓN LSSI.** Quedan resueltos e incorporados bases jurídicas, conservación, marketing, ley española, jurisdicción no exclusiva, proveedores activos y versiones EN. Los valores recibidos para nombre legal, NIF y domicilio siguen siendo placeholders (`<LEGAL_NAME>`, `<NIF>`, `<LEGAL_ADDRESS>`), por lo que no pueden publicarse ni considerarse confirmados.
 
 ## 12. Inputs del owner pendientes
 
-El inventario completo está en `LEGAL_OWNER_INPUTS_REQUIRED.md`. Bloquean Production:
+El inventario completo está en `LEGAL_OWNER_INPUTS_REQUIRED.md` y distingue `RESOLVED`, `LEGAL_REVIEW_RECOMMENDED` y `UNRESOLVED`.
 
-- identidad y datos legales exactos del responsable/prestador;
-- bases de licitud y conservación por finalidad;
-- entidades contractuales, DPA, ubicaciones, subencargados y transferencias de HubSpot, Brevo, Vercel y Google;
-- proceso de derechos, autoridad, DPO si aplica y gobernanza;
-- configuración/retención/publicidad real de GA4 y vigencia del consentimiento;
-- ley, jurisdicción, contratación, pago, cancelación, impago, licencias y revisión de condiciones/oferta;
-- decisión y revisión jurídica de páginas legales EN.
+Único owner input legal obligatorio aún sin valor publicable:
+
+- nombre legal completo;
+- NIF;
+- domicilio profesional/legal.
+
+Se recomienda además revisar contratos/settings de proveedores, región HubSpot, cobertura DPA Vercel, subencargados Brevo, configuración GA4, DPO si aplica, consumidores/B2B y el calendario interno de bloqueo/borrado. Estos puntos se documentan como revisión recomendada, no se rellenan mediante inferencia.
 
 ## 13. External cleanup pendiente
 
@@ -106,16 +107,18 @@ El blocker de configuración versionada queda resuelto por autorización especí
 
 ## 14. QA
 
-- Pre-check `.playwright-cli`: cero archivos trackeados; el directorio está excluido por `.gitignore`; todos los artefactos de esta QA se guardaron fuera del repositorio.
-- 38 renderizados: 19 rutas × desktop 1440×1000 y mobile 390×844.
+- Pre-check `.playwright-cli`: cero archivos trackeados; el directorio está excluido por `.gitignore` y todos los artefactos efímeros permanecen fuera del versionado.
+- 44 renderizados acumulados: las 19 rutas del RC anterior más las tres rutas legales EN, en desktop 1440×1000 y mobile 390×844.
 - Todos: HTTP 200, idioma/canonical/OG esperados, 1 `h1`, 1 `main`, sin overflow, imágenes rotas, alt ausente, consola o responses 4xx/5xx.
+- Privacy, Terms y Cookies ES/EN: composición visual correcta en ambos viewports, `lang` server-side, canonical propio, hreflang recíproco y `x-default` español.
+- Footer, `/audit`, `/contact`, `/marcas` y `/en/real-estate`: enlaces legales del idioma correcto; no se envió ningún formulario.
 - Navegación completa, Header/Footer, CTA, formularios rellenables sin submit, assets y cinco vídeos `200 video/mp4`.
 - Teclado/focus visible de 3 px; mobile menu abre/cierra; `prefers-reduced-motion` reduce animación y usa scroll no animado.
-- Consentimiento: cero GA antes de decidir; rechazar persiste `false`; configuración reabre; revocar elimina `_ga`, `_gid` y `_gat`. La Preview también entregó cero scripts GA en el HTML inicial. La secuencia aceptar/revocar se probó localmente para no generar analítica artificial en Preview.
+- Consentimiento: cero GA antes de decidir; rechazo, reapertura, aceptación y revocación funcionales; al reabrir tras revocar, la opción analítica aparece desmarcada. El gate y la eliminación de `_ga`, `_gid` y `_gat` están cubiertos por test. La secuencia se probó localmente para no generar analítica artificial en Preview.
 - Redirects, 410, 404, sitemap, robots, security headers y hreflang comprobados por HTTP.
 - `/audit` permaneció cerrado localmente por el flag seguro de Preview; no se generó tráfico artificial.
 
-La verificación remota confirmó 19/19 rutas en `200`, 16/16 redirects en `308`, el único `410` con `noindex, nofollow`, 13/13 endpoints retirados en `404`, `/audit` cerrado y cero errores runtime registrados durante la QA.
+La verificación remota del RC anterior confirmó 19/19 rutas en `200`, 16/16 redirects en `308`, el único `410` con `noindex, nofollow`, 13/13 endpoints retirados en `404`, `/audit` cerrado y cero errores runtime. La verificación remota de las tres rutas legales EN se actualiza con la Preview de este bloque legal.
 
 ## 15. Checks
 
@@ -125,12 +128,14 @@ La verificación remota confirmó 19/19 rutas en `200`, 16/16 redirects en `308`
 | `npm run check:canon` | PASS — 19 comprobaciones |
 | `npm run typecheck` | PASS |
 | `npm run lint` | PASS |
-| `npm run build` | PASS — Next 16.3.1, 30 páginas, sin warnings |
+| `npm run build` | PASS — Next 16.3.1, 33 páginas, sin warnings |
 | `npm audit --omit=dev` | PASS — 0 vulnerabilidades de producción |
 | `npm run test:audit` | PASS — 16/16 |
 | `npm run test:brand` | PASS — 12/12 |
 | `npm run test:legacy` | PASS — 8/8, incluida la ausencia de crons legacy en `vercel.json` |
-| `npm run test:legal` | PASS — 8/8 |
+| `npm run test:legal` | PASS — 11/11 |
+
+`npm run prelaunch` ejecutó correctamente canon, typecheck, lint y build. El pre-check informativo señaló que `NEXT_PUBLIC_SITE_URL`, `INTERNAL_API_TOKEN` y `NEXT_PUBLIC_GA_ID` no están presentes en el entorno local; no se modificaron variables y el build mantuvo el comportamiento seguro.
 
 `npm audit` sin omitir dev reporta 3 transitivas de tooling (1 low en `@babel/core`; 2 high en `brace-expansion` y `js-yaml`), todas con fix disponible. No afectan al árbol de producción y no se aplicó `npm audit fix`.
 
@@ -147,7 +152,7 @@ La verificación remota confirmó 19/19 rutas en `200`, 16/16 redirects en `308`
 ## 17. Plan de deployment Production
 
 1. Mantener STOP hasta checkpoint 48 h `GREEN`.
-2. Recibir/incorporar inputs legales y revisión jurídica; cambiar estado a `COMPLETE`.
+2. Recibir e incorporar nombre legal, NIF y domicilio sin placeholders; validar ES/EN y cambiar el estado legal a `COMPLETE`.
 3. Cerrar cualquier advisory o decisión técnica adicional aceptada por el owner.
 4. Actualizar branch desde su artefacto aprobado, ejecutar nuevamente el set completo de checks y verificar Preview exacta.
 5. Tomar snapshot read-only de Production y confirmar variables/flags sin mostrar secretos.
@@ -155,4 +160,4 @@ La verificación remota confirmó 19/19 rutas en `200`, 16/16 redirects en `308`
 7. Verificar rutas, `/audit`, `/contact`, Brevo health, HubSpot health, canonical/robots/sitemap, logs, cron count `0` y ausencia de side effects legacy, sin crear tráfico salvo un test oscuro expresamente autorizado.
 8. Ejecutar observación post-deploy y solo después la limpieza externa como una operación separada.
 
-Recomendación actual: **BLOCKED** por checkpoint 48 h e inputs legales. El blocker de configuración de crons está resuelto. Production permanece intacta.
+Recomendación actual: **BLOCKED** por checkpoint 48 h y los tres valores de identificación LSSI sin redactar. Bases, retención, idiomas y crons están resueltos. Production permanece intacta.

@@ -318,8 +318,8 @@ export function AuditPageContent({ formEnabled }: AuditPageContentProps) {
                   className="mt-1 h-4 w-4 shrink-0 accent-magenta"
                 />
                 <span>
-                  Acepto que HEYDE Studio trate estos datos para preparar y entregar la auditoría. He
-                  leído la{' '}
+                  Solicito que HEYDE Studio tramite estos datos para preparar y entregar la
+                  auditoría. He leído la{' '}
                   <Link href="/privacy" className="font-bold text-magenta underline underline-offset-2">
                     política de privacidad
                   </Link>
