@@ -31,6 +31,39 @@ const officialProviderLinks = {
   aepd: 'https://www.aepd.es/derechos-y-deberes/ejerce-tus-derechos',
 } as const;
 
+const legalOwner = {
+  name: 'Oliver Heyde Arias',
+  taxId: '03958826C',
+  address: 'Calle Tempranillo 9, Toledo',
+  email: 'contact@heydestudio.com',
+} as const;
+
+function LegalOwnerIdentity({ locale }: { locale: LegalLocale }) {
+  if (locale === 'en') {
+    return (
+      <>
+        The controller and service provider is <strong>{legalOwner.name}</strong>, Spanish tax ID{' '}
+        <strong>{legalOwner.taxId}</strong>, with legal and tax address at{' '}
+        <strong>{legalOwner.address}</strong>. He is a self-employed individual established in Spain
+        operating under the HEYDE Studio brand, and services are directly contracted with and
+        provided by him. Legal and privacy contact:{' '}
+        <a href={`mailto:${legalOwner.email}`}>{legalOwner.email}</a>.
+      </>
+    );
+  }
+
+  return (
+    <>
+      El responsable y prestador de los servicios es <strong>{legalOwner.name}</strong>, con NIF{' '}
+      <strong>{legalOwner.taxId}</strong> y domicilio legal y fiscal en{' '}
+      <strong>{legalOwner.address}</strong>. Es una persona física autónoma establecida en España que
+      opera bajo la marca HEYDE Studio, y los servicios se contratan y prestan directamente por él.
+      Contacto legal y de privacidad:{' '}
+      <a href={`mailto:${legalOwner.email}`}>{legalOwner.email}</a>.
+    </>
+  );
+}
+
 const privacyEs: LegalPage = {
   title: 'Política de privacidad',
   updated: 'Última actualización: 24 de agosto de 2026',
@@ -40,16 +73,7 @@ const privacyEs: LegalPage = {
   sections: [
     {
       title: 'Responsable e identificación',
-      body: (
-        <>
-          HEYDE Studio es la marca bajo la que una persona física autónoma establecida en España
-          contrata y presta directamente los servicios. Puedes contactar para asuntos legales o de
-          privacidad en <a href="mailto:contact@heydestudio.com">contact@heydestudio.com</a>. El
-          nombre legal, NIF y domicilio profesional exactos deben incorporarse desde los datos
-          públicos sin redactar facilitados por el titular antes de publicar esta versión en
-          Production.
-        </>
-      ),
+      body: <LegalOwnerIdentity locale="es" />,
     },
     {
       title: 'Auditoría local y consulta de proyecto',
@@ -207,15 +231,7 @@ const privacyEn: LegalPage = {
   sections: [
     {
       title: 'Controller and identification',
-      body: (
-        <>
-          HEYDE Studio is the brand under which a self-employed individual established in Spain
-          directly contracts and provides the services. For legal or privacy matters, contact{' '}
-          <a href="mailto:contact@heydestudio.com">contact@heydestudio.com</a>. The exact legal name,
-          tax identifier and professional address must be inserted from the owner’s unredacted
-          public legal details before this version is published to Production.
-        </>
-      ),
+      body: <LegalOwnerIdentity locale="en" />,
     },
     {
       title: 'Local audit and project inquiry',
@@ -366,12 +382,8 @@ const termsEs: LegalPage = {
       title: 'Identificación del prestador',
       body: (
         <>
-          Los servicios se contratan y prestan directamente por una persona física autónoma
-          establecida en España que opera bajo la marca HEYDE Studio. Contacto:{' '}
-          <a href="mailto:contact@heydestudio.com">contact@heydestudio.com</a>. El nombre legal, NIF
-          y domicilio profesional exactos deben incorporarse desde los valores públicos sin redactar
-          del titular antes de Production. No se atribuyen inscripción mercantil, colegio profesional
-          ni profesión regulada no confirmados.
+          <LegalOwnerIdentity locale="es" /> No se atribuyen inscripción mercantil, colegio
+          profesional ni profesión regulada no confirmados.
         </>
       ),
     },
@@ -470,12 +482,8 @@ const termsEn: LegalPage = {
       title: 'Service-provider identification',
       body: (
         <>
-          Services are directly contracted with and provided by a self-employed individual
-          established in Spain operating under the HEYDE Studio brand. Contact:{' '}
-          <a href="mailto:contact@heydestudio.com">contact@heydestudio.com</a>. The exact legal name,
-          tax identifier and professional address must be inserted from the owner’s unredacted
-          public values before Production. No unconfirmed commercial-register, professional-body or
-          regulated-profession information is stated.
+          <LegalOwnerIdentity locale="en" /> No unconfirmed commercial-register, professional-body
+          or regulated-profession information is stated.
         </>
       ),
     },
@@ -576,6 +584,10 @@ const cookiesEs: LegalPage = {
   alternate: { href: '/en/cookies', label: 'Read in English' },
   sections: [
     {
+      title: 'Responsable',
+      body: <LegalOwnerIdentity locale="es" />,
+    },
+    {
       title: 'Almacenamiento necesario',
       body: (
         <>
@@ -639,6 +651,10 @@ const cookiesEn: LegalPage = {
     'The website uses necessary local storage to remember preferences and Google Analytics 4 only when you accept optional analytics.',
   alternate: { href: '/cookies', label: 'Versión original en español' },
   sections: [
+    {
+      title: 'Controller',
+      body: <LegalOwnerIdentity locale="en" />,
+    },
     {
       title: 'Necessary storage',
       body: (

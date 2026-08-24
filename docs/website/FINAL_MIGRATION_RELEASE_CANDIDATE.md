@@ -85,19 +85,13 @@ Los dos archivos maestros externos indicados por `AGENTS.md` no estaban disponib
 
 ## 11. Estado legal
 
-**OWNER INPUT REQUIRED — IDENTIFICACIÓN LSSI.** Quedan resueltos e incorporados bases jurídicas, conservación, marketing, ley española, jurisdicción no exclusiva, proveedores activos y versiones EN. Los valores recibidos para nombre legal, NIF y domicilio siguen siendo placeholders (`<LEGAL_NAME>`, `<NIF>`, `<LEGAL_ADDRESS>`), por lo que no pueden publicarse ni considerarse confirmados.
+**COMPLETE — OWNER INPUTS RESOLVED.** Nombre legal, NIF y domicilio legal/fiscal fueron confirmados por el owner e incorporados exclusivamente a Privacy, Terms y Cookies ES/EN. También quedan resueltos bases jurídicas, conservación, marketing, ley española, jurisdicción no exclusiva, proveedores activos y versiones EN.
 
 ## 12. Inputs del owner pendientes
 
-El inventario completo está en `LEGAL_OWNER_INPUTS_REQUIRED.md` y distingue `RESOLVED`, `LEGAL_REVIEW_RECOMMENDED` y `UNRESOLVED`.
+El inventario completo está en `LEGAL_OWNER_INPUTS_REQUIRED.md` y distingue `RESOLVED`, `LEGAL_REVIEW_RECOMMENDED` y `UNRESOLVED`. No queda ningún owner input obligatorio pendiente.
 
-Único owner input legal obligatorio aún sin valor publicable:
-
-- nombre legal completo;
-- NIF;
-- domicilio profesional/legal.
-
-Se recomienda además revisar contratos/settings de proveedores, región HubSpot, cobertura DPA Vercel, subencargados Brevo, configuración GA4, DPO si aplica, consumidores/B2B y el calendario interno de bloqueo/borrado. Estos puntos se documentan como revisión recomendada, no se rellenan mediante inferencia.
+Se recomienda revisar contratos/settings de proveedores, región HubSpot, cobertura DPA Vercel, subencargados Brevo, configuración GA4, DPO si aplica, consumidores/B2B y el calendario interno de bloqueo/borrado. Estos puntos son recomendaciones posteriores, no blockers técnicos de deployment.
 
 ## 13. External cleanup pendiente
 
@@ -109,9 +103,10 @@ El blocker de configuración versionada queda resuelto por autorización especí
 
 - Pre-check `.playwright-cli`: cero archivos trackeados; el directorio está excluido por `.gitignore` y todos los artefactos efímeros permanecen fuera del versionado.
 - El Browser runtime integrado no pudo inicializar sus assets (`failed to write kernel assets: path not found`); la QA real se completó con el fallback Playwright CLI documentado.
-- 44 renderizados acumulados: las 19 rutas del RC anterior más las tres rutas legales EN, en desktop 1440×1000 y mobile 390×844.
+- 56 renderizados acumulados: las 19 rutas del RC anterior, las tres rutas legales EN y un pase final de las seis rutas legales con la identidad confirmada, en desktop 1440×1000 y mobile 390×844.
 - Todos: HTTP 200, idioma/canonical/OG esperados, 1 `h1`, 1 `main`, sin overflow, imágenes rotas, alt ausente, consola o responses 4xx/5xx.
-- Privacy, Terms y Cookies ES/EN: composición visual correcta en ambos viewports, `lang` server-side, canonical propio, hreflang recíproco y `x-default` español.
+- Privacy, Terms y Cookies ES/EN: composición visual correcta en ambos viewports, identidad y contacto legales completos y legibles, `lang` server-side, canonical propio, hreflang recíproco y `x-default` español; cero placeholders y cero datos de identidad en `head` o JSON-LD.
+- El pase final de privacidad verificó además que nombre, NIF y domicilio no aparecen en `/`, `/audit`, `/contact`, `/marcas` ni `/en/real-estate`; el test automatizado cubre todo `app`, `components` y `lib` fuera del componente legal.
 - Footer, `/audit`, `/contact`, `/marcas` y `/en/real-estate`: enlaces legales del idioma correcto; no se envió ningún formulario.
 - Navegación completa, Header/Footer, CTA, formularios rellenables sin submit, assets y cinco vídeos `200 video/mp4`.
 - Teclado/focus visible de 3 px; mobile menu abre/cierra; `prefers-reduced-motion` reduce animación y usa scroll no animado.
@@ -134,7 +129,9 @@ La verificación remota del RC anterior confirmó 19/19 rutas en `200`, 16/16 re
 | `npm run test:audit` | PASS — 16/16 |
 | `npm run test:brand` | PASS — 12/12 |
 | `npm run test:legacy` | PASS — 8/8, incluida la ausencia de crons legacy en `vercel.json` |
-| `npm run test:legal` | PASS — 11/11 |
+| `npm run test:legal` | PASS — 12/12, incluida la exclusión de identidad en runtime no legal |
+
+Resultado agregado de suites: **48/48 tests PASS**.
 
 `npm run prelaunch` ejecutó correctamente canon, typecheck, lint y build. El pre-check informativo señaló que `NEXT_PUBLIC_SITE_URL`, `INTERNAL_API_TOKEN` y `NEXT_PUBLIC_GA_ID` no están presentes en el entorno local; no se modificaron variables y el build mantuvo el comportamiento seguro.
 
@@ -153,7 +150,7 @@ La verificación remota del RC anterior confirmó 19/19 rutas en `200`, 16/16 re
 ## 17. Plan de deployment Production
 
 1. Mantener STOP hasta checkpoint 48 h `GREEN`.
-2. Recibir e incorporar nombre legal, NIF y domicilio sin placeholders; validar ES/EN y cambiar el estado legal a `COMPLETE`.
+2. Mantener la identidad legal confirmada limitada a las seis páginas legales ES/EN y verificar que no se propaga a otras superficies.
 3. Cerrar cualquier advisory o decisión técnica adicional aceptada por el owner.
 4. Actualizar branch desde su artefacto aprobado, ejecutar nuevamente el set completo de checks y verificar Preview exacta.
 5. Tomar snapshot read-only de Production y confirmar variables/flags sin mostrar secretos.
@@ -161,4 +158,4 @@ La verificación remota del RC anterior confirmó 19/19 rutas en `200`, 16/16 re
 7. Verificar rutas, `/audit`, `/contact`, Brevo health, HubSpot health, canonical/robots/sitemap, logs, cron count `0` y ausencia de side effects legacy, sin crear tráfico salvo un test oscuro expresamente autorizado.
 8. Ejecutar observación post-deploy y solo después la limpieza externa como una operación separada.
 
-Recomendación actual: **BLOCKED** por checkpoint 48 h y los tres valores de identificación LSSI sin redactar. Bases, retención, idiomas y crons están resueltos. Production permanece intacta.
+Recomendación actual: **READY FOR PRODUCTION AFTER 48H GREEN**. Identidad, bases, retención, idiomas y crons están resueltos; las revisiones jurídicas recomendadas no constituyen blockers técnicos. Production permanece intacta.

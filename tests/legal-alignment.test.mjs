@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
@@ -16,6 +16,18 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 async function source(path) {
   return readFile(join(root, path), 'utf8');
+}
+
+async function sourceFilesUnder(relativeDirectory) {
+  const entries = await readdir(join(root, relativeDirectory), { withFileTypes: true });
+  const files = await Promise.all(
+    entries.map(async (entry) => {
+      const relativePath = join(relativeDirectory, entry.name);
+      if (entry.isDirectory()) return sourceFilesUnder(relativePath);
+      return /\.[cm]?[jt]sx?$/.test(entry.name) ? [relativePath] : [];
+    })
+  );
+  return files.flat();
 }
 
 test('legal routes are static server content in Spanish and English with reciprocal SEO', async () => {
@@ -122,7 +134,37 @@ test('owner decisions define legal bases, marketing boundaries and retention in 
 
   assert.match(legal, /no te incorpora a una newsletter/);
   assert.match(legal, /does not subscribe you to a newsletter/);
-  assert.doesNotMatch(legal, /<LEGAL_NAME>|<NIF>|<LEGAL_ADDRESS>/);
+  for (const field of ['LEGAL_NAME', 'NIF', 'LEGAL_ADDRESS']) {
+    assert.equal(legal.includes(`<${field}>`), false);
+  }
+});
+
+test('legal identity is complete in six legal pages and isolated from non-legal runtime', async () => {
+  const legalPath = 'components/pages/LegalPageContent.tsx';
+  const legal = await source(legalPath);
+  const identity = legal.match(
+    /const legalOwner = \{\s*name: '([^']+)',\s*taxId: '([^']+)',\s*address: '([^']+)',\s*email: '([^']+)'/s
+  );
+
+  assert.ok(identity, 'legal owner data must be defined only in the legal component');
+  const [, name, taxId, address, email] = identity;
+  assert.ok(name.length > 0);
+  assert.ok(taxId.length > 0);
+  assert.ok(address.length > 0);
+  assert.equal(email, 'contact@heydestudio.com');
+  assert.equal((legal.match(/<LegalOwnerIdentity locale="es" \/>/g) ?? []).length, 3);
+  assert.equal((legal.match(/<LegalOwnerIdentity locale="en" \/>/g) ?? []).length, 3);
+
+  const runtimePaths = (
+    await Promise.all(['app', 'components', 'lib'].map(sourceFilesUnder))
+  ).flat();
+  const nonLegalSources = await Promise.all(
+    runtimePaths.filter((path) => path.replaceAll('\\', '/') !== legalPath).map(source)
+  );
+
+  for (const value of [name, taxId, address]) {
+    for (const runtimeSource of nonLegalSources) assert.equal(runtimeSource.includes(value), false);
+  }
 });
 
 test('provider roles and transfer limits are evidence-based rather than account assumptions', async () => {

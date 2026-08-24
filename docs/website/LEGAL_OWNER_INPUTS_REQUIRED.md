@@ -1,7 +1,7 @@
 # Lote 7 — estado de inputs legales del owner
 
 Fecha de actualización: 24 de agosto de 2026
-Estado legal: **OWNER INPUT REQUIRED — IDENTIFICACIÓN LSSI SIN VALORES PUBLICABLES**
+Estado legal: **COMPLETE — OWNER INPUTS RESOLVED**
 Ámbito: branch/Preview. Production y proveedores externos permanecen sin cambios.
 
 ## Clasificación actual
@@ -15,6 +15,7 @@ Estado legal: **OWNER INPUT REQUIRED — IDENTIFICACIÓN LSSI SIN VALORES PUBLIC
 | Elemento | Decisión incorporada |
 |---|---|
 | Naturaleza del prestador | Persona física autónoma establecida en España; HEYDE Studio es la marca y los servicios se contratan/prestan directamente por ella. |
+| Identificación LSSI | Nombre legal, NIF y domicilio legal/fiscal exactos confirmados por el owner e incorporados únicamente a las páginas legales ES/EN. |
 | Contacto legal/privacidad | `contact@heydestudio.com`. |
 | `/audit` | `lead_type=local_audit`; finalidad de registrar, preparar y entregar la auditoría; medidas precontractuales solicitadas por la persona interesada cuando corresponda. |
 | `/contact` | `lead_type=brand_inquiry`; finalidad separada de revisar/responder un proyecto; misma base precontractual cuando corresponda. |
@@ -60,27 +61,19 @@ Estos puntos no se presentan como hechos cerrados cuando dependen de contratos o
 
 ## UNRESOLVED
 
-Los tres campos recibidos aparecen literalmente como placeholders y no son publicables:
-
-| Dato obligatorio | Valor recibido | Estado |
-|---|---|---|
-| Nombre legal completo | `<LEGAL_NAME>` | `UNRESOLVED` |
-| NIF | `<NIF>` | `UNRESOLVED` |
-| Domicilio profesional/legal | `<LEGAL_ADDRESS>` | `UNRESOLVED` |
-
-Se necesitan los valores exactos sin redactar para incorporarlos únicamente a la información legal pública donde sean exigibles. No se guardarán en analytics, formularios ni documentación de QA. Hasta entonces, las páginas Preview describen la condición de autónomo y el contacto, pero señalan que la identificación exacta debe completarse antes de Production.
+Ninguno. No quedan inputs legales obligatorios pendientes del owner.
 
 ## Cambios implementados
 
 - Privacy ES/EN: finalidades, bases, marketing, conservación, proveedores, transferencias, WhatsApp, derechos y AEPD.
-- Terms ES/EN: identificación pendiente, condiciones canónicas, ley española y tribunales competentes conforme a ley.
-- Cookies ES/EN: `localStorage`, GA4, dos años de duración predeterminada para `_ga`/`_ga_<id>`, consentimiento y revocación.
+- Terms ES/EN: identificación completa, condiciones canónicas, ley española y tribunales competentes conforme a ley.
+- Cookies ES/EN: identificación del responsable, `localStorage`, GA4, dos años de duración predeterminada para `_ga`/`_ga_<id>`, consentimiento y revocación.
 - Footer, formulario EN y consentimiento enlazan a la versión jurídica de su idioma.
 - Canonical, hreflang `es-ES`/`en` y `x-default` español para cada par legal.
 
 ## Criterio de cierre
 
-El estado puede cambiar a `COMPLETE` cuando el owner facilite el nombre legal, NIF y domicilio sin placeholders, se incorporen a ES/EN y la QA final confirme que solo aparecen en información legal pública. La revisión contractual/profesional recomendada puede registrarse como riesgo aceptado o cerrarse con asesoría, pero no se sustituye con inferencias técnicas.
+El estado es `COMPLETE`: la identidad se ha incorporado a las seis páginas legales y la QA confirma su ausencia en metadata, OpenGraph, JSON-LD, analytics, logs, formularios y páginas comerciales. La revisión contractual/profesional recomendada puede registrarse como riesgo aceptado o cerrarse con asesoría, pero no constituye un input técnico pendiente ni se sustituye con inferencias.
 
 ## Fuentes oficiales consultadas
 
