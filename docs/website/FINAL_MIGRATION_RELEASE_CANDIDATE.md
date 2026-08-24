@@ -114,7 +114,7 @@ El blocker de configuración versionada queda resuelto por autorización especí
 - Redirects, 410, 404, sitemap, robots, security headers y hreflang comprobados por HTTP.
 - `/audit` permaneció cerrado localmente por el flag seguro de Preview; no se generó tráfico artificial.
 
-La verificación remota del RC anterior confirmó 19/19 rutas en `200`, 16/16 redirects en `308`, el único `410` con `noindex, nofollow`, 13/13 endpoints retirados en `404`, `/audit` cerrado y cero errores runtime. En la nueva Preview, las seis rutas legales y `/audit`, `/contact`, `/marcas`, `/en/real-estate` devuelven `200`, idioma/canonical/enlace legal correcto y cero tags de Google Tag Manager en el HTML inicial.
+La verificación remota del RC anterior confirmó 19/19 rutas en `200`, 16/16 redirects en `308`, el único `410` con `noindex, nofollow`, 13/13 endpoints retirados en `404`, `/audit` cerrado y cero errores runtime. En la Preview legal final, las seis rutas legales devuelven `200`, contienen la identidad y contacto exactos, mantienen idioma/canonical correctos y no incluyen placeholders ni identidad en `head` o JSON-LD. `/`, `/audit`, `/contact`, `/marcas` y `/en/real-estate` devuelven `200` sin exponer nombre, NIF o domicilio.
 
 ## 15. Checks
 
@@ -141,9 +141,9 @@ Resultado agregado de suites: **48/48 tests PASS**.
 
 - Branch: `codex/lote-7-release-candidate`.
 - Ancestry verificada: Lote 4 `25c7d6e`, Lote 5/5A `94847ea`, Lote 6 `244b95e` y cierre Preview Lote 6 `219d6cc` son ancestros.
-- Commit funcional del bloque legal usado para el deploy: `2b875be`.
-- Preview: `https://heydestudio-rm38j6o41-heydestudioai-8944s-projects.vercel.app`.
-- Deployment: `dpl_BXnLpVCWhNeKccoxtEvazJxDHnqb`, `target=preview`, `READY`.
+- Commit funcional del cierre de identidad legal usado para el deploy: `e3a50b9`.
+- Preview: `https://heydestudio-8fye66n7t-heydestudioai-8944s-projects.vercel.app`.
+- Deployment: `dpl_BWpTvYEYv55QxRzrLY4LNWdRfZKQ`, `target=preview`, `READY`.
 - El commit documental posterior solo registra estos identificadores; su hash se entrega en el handoff.
 - Corrección de crons autorizada y versionada posteriormente: el manifiesto ya no contiene schedules legacy. El commit final exacto se entrega en el handoff de esta corrección.
 
