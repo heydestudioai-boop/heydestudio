@@ -146,3 +146,15 @@ Estado: **IMPLEMENTED AND VALIDATED IN BRANCH**.
 - `npm run build`: PASS — Next.js `16.3.1`, `33` páginas, sin warnings.
 - `npm audit --omit=dev`: PASS — `0` vulnerabilidades.
 - Tests audit `16/16`, brand inquiry `12/12`, legacy `8/8`, legal/final `12/12` y commercial CRO `6/6`: **54/54 PASS**.
+
+## 10. Preview de revisión
+
+- Commit funcional: `1814506`.
+- Deployment: `dpl_48PKr1ZoQNUJqxSv9egvXCRyadYD`.
+- Target: `preview`.
+- Estado: `READY`.
+- URL: `https://heydestudio-9a1drgx7s-heydestudioai-8944s-projects.vercel.app`.
+- Build remoto: Next.js `16.3.1`, `33` páginas; las diez landings auditadas siguen prerenderizadas como contenido estático.
+- Reconciliación remota: `10/10` rutas accesibles mediante Vercel Deployment Protection, un H1 por ruta, `lang` y canonical correctos, y CTA/hallazgo implementado presente.
+- `/audit`: el formulario permanece cerrado en este entorno por la configuración Preview preexistente (`AUDIT_FORM_ENABLED=false`). No se modificaron variables; su UI abierta y responsive se validó localmente sin efectuar ningún envío.
+- Production: sin cambios.
