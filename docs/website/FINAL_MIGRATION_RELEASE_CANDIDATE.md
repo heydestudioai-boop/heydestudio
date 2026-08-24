@@ -108,6 +108,7 @@ El blocker de configuración versionada queda resuelto por autorización especí
 ## 14. QA
 
 - Pre-check `.playwright-cli`: cero archivos trackeados; el directorio está excluido por `.gitignore` y todos los artefactos efímeros permanecen fuera del versionado.
+- El Browser runtime integrado no pudo inicializar sus assets (`failed to write kernel assets: path not found`); la QA real se completó con el fallback Playwright CLI documentado.
 - 44 renderizados acumulados: las 19 rutas del RC anterior más las tres rutas legales EN, en desktop 1440×1000 y mobile 390×844.
 - Todos: HTTP 200, idioma/canonical/OG esperados, 1 `h1`, 1 `main`, sin overflow, imágenes rotas, alt ausente, consola o responses 4xx/5xx.
 - Privacy, Terms y Cookies ES/EN: composición visual correcta en ambos viewports, `lang` server-side, canonical propio, hreflang recíproco y `x-default` español.
@@ -118,7 +119,7 @@ El blocker de configuración versionada queda resuelto por autorización especí
 - Redirects, 410, 404, sitemap, robots, security headers y hreflang comprobados por HTTP.
 - `/audit` permaneció cerrado localmente por el flag seguro de Preview; no se generó tráfico artificial.
 
-La verificación remota del RC anterior confirmó 19/19 rutas en `200`, 16/16 redirects en `308`, el único `410` con `noindex, nofollow`, 13/13 endpoints retirados en `404`, `/audit` cerrado y cero errores runtime. La verificación remota de las tres rutas legales EN se actualiza con la Preview de este bloque legal.
+La verificación remota del RC anterior confirmó 19/19 rutas en `200`, 16/16 redirects en `308`, el único `410` con `noindex, nofollow`, 13/13 endpoints retirados en `404`, `/audit` cerrado y cero errores runtime. En la nueva Preview, las seis rutas legales y `/audit`, `/contact`, `/marcas`, `/en/real-estate` devuelven `200`, idioma/canonical/enlace legal correcto y cero tags de Google Tag Manager en el HTML inicial.
 
 ## 15. Checks
 
@@ -143,9 +144,9 @@ La verificación remota del RC anterior confirmó 19/19 rutas en `200`, 16/16 re
 
 - Branch: `codex/lote-7-release-candidate`.
 - Ancestry verificada: Lote 4 `25c7d6e`, Lote 5/5A `94847ea`, Lote 6 `244b95e` y cierre Preview Lote 6 `219d6cc` son ancestros.
-- Commit funcional y `HEAD` usado para el deploy: `50c7f54f1ebd90e78c1d2bc423c2928c01e519d5`.
-- Preview: `https://heydestudio-5gncljvnj-heydestudioai-8944s-projects.vercel.app`.
-- Deployment: `dpl_J4KsJ62qRa1s937H98saggjrmKo7`, `target=preview`, `READY`.
+- Commit funcional del bloque legal usado para el deploy: `2b875be`.
+- Preview: `https://heydestudio-rm38j6o41-heydestudioai-8944s-projects.vercel.app`.
+- Deployment: `dpl_BXnLpVCWhNeKccoxtEvazJxDHnqb`, `target=preview`, `READY`.
 - El commit documental posterior solo registra estos identificadores; su hash se entrega en el handoff.
 - Corrección de crons autorizada y versionada posteriormente: el manifiesto ya no contiene schedules legacy. El commit final exacto se entrega en el handoff de esta corrección.
 
