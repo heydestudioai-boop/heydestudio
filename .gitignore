@@ -14,6 +14,8 @@
 /coverage
 /output/
 /.playwright-cli/
+/heyde-cro-baseline-qa/
+/heyde-cro-final-qa/
 
 # next.js
 /.next/
