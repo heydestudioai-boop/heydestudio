@@ -12,6 +12,7 @@
     "test:brand": "node --no-warnings --test tests/brand-inquiry.test.mjs",
     "test:legacy": "node --no-warnings --test tests/legacy-cleanup.test.mjs",
     "test:legal": "node --no-warnings --test tests/legal-alignment.test.mjs",
+    "test:commercial": "node --no-warnings --test tests/commercial-cro.test.mjs",
     "lint": "eslint",
     "prelaunch": "node scripts/prelaunch-check.mjs && npm run check:canon && npm run typecheck && npm run lint && npm run build"
   },

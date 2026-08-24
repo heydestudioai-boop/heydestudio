@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { Button } from '@/components/Button';
 import {
   EditorialBody,
   EditorialKicker,
@@ -103,6 +104,9 @@ export function BrandInquiryPageContent() {
               Share the project, the context and the production challenge. HEYDE
               will review the brief and respond with a considered next step.
             </EditorialBody>
+            <div className="mt-9">
+              <Button href="#project-inquiry" label="Start the project brief" />
+            </div>
           </div>
           <div className="border-t border-white/18 pt-6 text-sm leading-relaxed text-white/64">
             <p className="mb-3 font-bold text-white">Looking for local business support?</p>
@@ -116,7 +120,7 @@ export function BrandInquiryPageContent() {
         </div>
       </section>
 
-      <section className="px-6 py-14 sm:px-8 md:px-12 md:py-20">
+      <section id="project-inquiry" className="scroll-mt-24 px-6 py-14 sm:px-8 md:px-12 md:py-20">
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.36fr_0.64fr]">
           <aside>
             <EditorialKicker>Project context</EditorialKicker>

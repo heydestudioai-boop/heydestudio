@@ -98,14 +98,6 @@ export function LocalVerticalPage({ model }: VerticalPageProps) {
               <EditorialTitle text={model.title} />
             </h1>
             <p className="max-w-2xl text-lg leading-[1.65] text-white/74">{model.intro}</p>
-            <div className="mt-8 grid gap-px overflow-hidden rounded-sm border border-white/14 bg-white/14 sm:grid-cols-3">
-              {quickFacts.map(([label, value]) => (
-                <div key={label} className="bg-black/70 p-4">
-                  <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-white/42">{label}</p>
-                  <p className="text-sm font-bold leading-relaxed text-white">{value}</p>
-                </div>
-              ))}
-            </div>
             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
               <Button
                 href={primaryCta.href}
@@ -118,6 +110,14 @@ export function LocalVerticalPage({ model }: VerticalPageProps) {
               ) : (
                 <Button href="/planes" label={labels.plans} variant="secondary" />
               )}
+            </div>
+            <div className="mt-8 grid gap-px overflow-hidden rounded-sm border border-white/14 bg-white/14 sm:grid-cols-3">
+              {quickFacts.map(([label, value]) => (
+                <div key={label} className="bg-black/70 p-4">
+                  <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-white/42">{label}</p>
+                  <p className="text-sm font-bold leading-relaxed text-white">{value}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -212,13 +212,22 @@ export function LocalVerticalPage({ model }: VerticalPageProps) {
             <h2 className="mb-6 text-3xl font-bold leading-[1.05] md:text-5xl">{model.area}</h2>
             <EditorialBody>{labels.areaBody}</EditorialBody>
           </div>
-          <div className="md:text-right">
+          <div className="flex flex-col gap-4 sm:flex-row md:justify-end">
             <Button
-              href={primaryCta.external ? primaryCta.href : 'https://wa.me/34671141135'}
-              label={primaryCta.external ? primaryCta.label : labels.whatsapp}
-              target="_blank"
-              rel="noreferrer"
+              href={primaryCta.href}
+              label={primaryCta.label}
+              target={primaryCta.external ? '_blank' : undefined}
+              rel={primaryCta.external ? 'noreferrer' : undefined}
             />
+            {model.locale === 'es' ? (
+              <Button
+                href="https://wa.me/34671141135"
+                label={labels.whatsapp}
+                variant="secondary"
+                target="_blank"
+                rel="noreferrer"
+              />
+            ) : null}
           </div>
         </div>
       </section>

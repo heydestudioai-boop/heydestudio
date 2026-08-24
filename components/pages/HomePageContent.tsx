@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/Button';
+import { DeferredAutoplayVideo } from '@/components/DeferredAutoplayVideo';
 import { EditorialBody, EditorialKicker, EditorialTitle } from '@/components/EditorialText';
 import {
   aiPolicy,
@@ -39,23 +40,22 @@ const aiBenefits = [
   'Transparencia cuando una pieza pueda confundirse con una representación real',
 ] as const;
 
-const homeFaqs = localFaqSections.flatMap((section) => section.items).slice(0, 6);
+const homeFaqs = localFaqSections.flatMap((section) => section.items).slice(0, 4);
 
 export function HomePageContent() {
   return (
     <main className="bg-white">
       <section className="relative flex min-h-[calc(100vh-4rem)] items-end overflow-hidden bg-black px-6 py-14 text-white sm:px-8 md:px-12 md:py-24">
-        <video
-          className="absolute inset-0 h-full w-full object-cover opacity-80"
-          autoPlay
-          muted
-          loop
-          playsInline
+        <DeferredAutoplayVideo
+          src="/videos/hero.mp4"
+          className="absolute inset-0 h-full w-full opacity-80"
           poster="/images/hero-fallback-cover.jpg"
-          aria-hidden="true"
-        >
-          <source src="/videos/hero.mp4" type="video/mp4" />
-        </video>
+          posterPriority
+          posterSizes="100vw"
+          desktopOnly
+          absoluteFill
+          decorative
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/10" aria-hidden="true" />
 
         <div className="relative mx-auto flex w-full max-w-7xl flex-col items-start">
@@ -211,22 +211,18 @@ export function HomePageContent() {
               <Link key={project.slug} href={project.href} className="group">
                 <div className="overflow-hidden rounded-sm bg-[#212121]">
                   {project.media.type === 'video' ? (
-                    <video
-                      className="h-[25rem] w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      aria-label={project.media.alt}
-                    >
-                      <source src={project.media.src} type="video/mp4" />
-                    </video>
+                    <DeferredAutoplayVideo
+                      src={project.media.src}
+                      ariaLabel={project.media.alt}
+                      className="h-[25rem] w-full opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
+                    />
                   ) : (
                     <Image
                       src={project.media.src}
                       alt={project.media.alt}
                       width={1000}
                       height={900}
+                      sizes="(min-width: 768px) 33vw, 100vw"
                       className="h-[25rem] w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
                     />
                   )}
@@ -253,6 +249,7 @@ export function HomePageContent() {
               alt="Oliver Heyde, fundador de HEYDE Studio"
               width={900}
               height={1100}
+              sizes="(min-width: 768px) 42vw, 100vw"
               className="h-[34rem] w-full object-cover"
             />
           </div>
@@ -313,6 +310,9 @@ export function HomePageContent() {
             ))}
           </div>
           <p className="mt-6 text-sm text-gray-700">{rightsPolicy}</p>
+          <div className="mt-8">
+            <Button href="/faq" label="Ver todas las preguntas" variant="secondary" />
+          </div>
         </div>
       </section>
 

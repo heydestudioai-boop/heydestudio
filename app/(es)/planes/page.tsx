@@ -25,6 +25,10 @@ export default function PlanesPage() {
           <EditorialBody dark className="max-w-2xl">
             Fotografía, vídeo y redes para negocios locales. Sabes qué entra, cuánto cuesta y cuál es el siguiente paso antes de contratar.
           </EditorialBody>
+          <div className="mt-9 flex flex-col gap-4 sm:flex-row">
+            <Button href="/audit" label="Pedir auditoría gratuita" />
+            <Button href="#planes-mensuales" label="Comparar planes" variant="secondary" />
+          </div>
         </div>
       </section>
 
@@ -61,7 +65,7 @@ export default function PlanesPage() {
         </section>
       )}
 
-      <section className="bg-gray-50 px-6 py-16 sm:px-8 md:px-12 md:py-24">
+      <section id="planes-mensuales" className="scroll-mt-24 bg-gray-50 px-6 py-16 sm:px-8 md:px-12 md:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-px overflow-hidden rounded-sm border border-gray-200 bg-gray-200 md:grid-cols-3">
             {monthlyPlans.map((plan) => (

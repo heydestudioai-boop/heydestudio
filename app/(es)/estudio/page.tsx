@@ -33,6 +33,9 @@ export default function EstudioPage() {
             <EditorialBody dark className="max-w-2xl">
               HEYDE es {canonicalBrand.definition.toLowerCase()} Oliver Heyde dirige cada cuenta y combina producción audiovisual, estrategia, publicación y comunidad.
             </EditorialBody>
+            <div className="mt-9">
+              <Button href="/audit" label="Pedir auditoría gratuita" />
+            </div>
           </div>
           <div className="overflow-hidden rounded-sm bg-white/10">
             <Image
@@ -40,6 +43,7 @@ export default function EstudioPage() {
               alt="Oliver Heyde, fundador de HEYDE Studio"
               width={900}
               height={1100}
+              sizes="(min-width: 768px) 40vw, 100vw"
               className="h-[32rem] w-full object-cover"
               priority
             />

@@ -75,7 +75,7 @@ export function createMetadata({
 
 export const pageSeo = {
   home: createMetadata({
-    title: 'Contenido que hace crecer negocios locales | HEYDE Studio',
+    title: 'Fotografía, vídeo y redes sociales en Toledo | HEYDE Studio',
     description:
       'Fotografía, vídeo y gestión de redes para negocios locales. Una persona responsable, planes con precio visible y auditoría gratuita sin reunión previa.',
     keywords: ['fotografía Toledo', 'vídeo para negocios', 'redes sociales Toledo', 'contenido para hostelería'],
@@ -88,11 +88,11 @@ export const pageSeo = {
     keywords: ['planes contenido Toledo', 'fotografía comercial Toledo', 'redes sociales negocios Toledo'],
   }),
   casos: createMetadata({
-    title: 'Trabajo con negocios y HEYDE Lab | HEYDE Studio',
+    title: 'Proceso de producción audiovisual y HEYDE Lab | HEYDE Studio',
     description:
-      'Método de contenido para negocios locales y proyectos autoiniciados de HEYDE Lab, separados y etiquetados sin atribuir clientes ni resultados.',
+      'Conoce el proceso de fotografía, vídeo y contenido de HEYDE Studio y los proyectos autoiniciados de HEYDE Lab, siempre separados del trabajo de cliente.',
     path: '/casos',
-    keywords: ['fotografía para negocios Toledo', 'vídeo comercial Toledo', 'HEYDE Lab'],
+    keywords: ['proceso producción audiovisual', 'portfolio creativo Toledo', 'HEYDE Lab'],
   }),
   estudio: createMetadata({
     title: 'Estudio local en Toledo | HEYDE Studio',

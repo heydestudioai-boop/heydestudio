@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/Button';
+import { DeferredAutoplayVideo } from '@/components/DeferredAutoplayVideo';
 import { EditorialBody, EditorialKicker, EditorialTitle } from '@/components/EditorialText';
 import { labProjects } from '@/lib/canonical';
 import { pageSeo } from '@/lib/seo';
@@ -33,11 +34,15 @@ export default function CasosPage() {
         <div className="mx-auto max-w-7xl">
           <EditorialKicker muted>Trabajo con negocios + HEYDE Lab</EditorialKicker>
           <h1 className="mb-7 max-w-5xl text-4xl font-bold leading-none md:text-6xl lg:text-7xl">
-            <EditorialTitle text="Método comercial y exploración creativa, sin mezclarlos." />
+            <EditorialTitle text="Cómo trabajo con negocios. Qué exploro en HEYDE Lab." />
           </h1>
           <EditorialBody dark className="max-w-2xl">
-            El trabajo con negocios se presenta desde el proceso y la capacidad verificable. HEYDE Lab reúne proyectos autoiniciados: demuestran dirección creativa, pero no son clientes ni prueban resultados comerciales.
+            Dos bloques distintos: un método verificable para fotografía, vídeo y contenido de negocios; y proyectos autoiniciados que muestran capacidad creativa. HEYDE Lab no representa clientes ni resultados comerciales.
           </EditorialBody>
+          <div className="mt-9 flex flex-col gap-4 sm:flex-row">
+            <Button href="/audit" label="Pedir auditoría" />
+            <Button href="#heyde-lab" label="Ver HEYDE Lab" variant="secondary" />
+          </div>
         </div>
       </section>
 
@@ -49,7 +54,7 @@ export default function CasosPage() {
               <h2 className="text-3xl font-bold leading-[1.05] md:text-5xl">Proceso visible. Casos solo con permiso.</h2>
             </div>
             <EditorialBody>
-              Hasta disponer de material real autorizado y evidencia publicable, no mostramos nombres, resultados ni una cuadrícula que pueda parecer trabajo de cliente. Esta es la forma de trabajar con fotografía, vídeo y contenido para negocios locales.
+              Cuando exista material real autorizado, se publicará como caso. Hasta entonces, mostramos el proceso sin atribuir nombres, resultados ni métricas.
             </EditorialBody>
           </div>
 
@@ -86,22 +91,18 @@ export default function CasosPage() {
               <Link key={project.slug} href={project.href} className="group border-t border-gray-200 pt-5">
                 <div className="relative mb-5 overflow-hidden rounded-sm bg-[#212121]">
                   {project.media.type === 'video' ? (
-                    <video
-                      className="h-[28rem] w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      aria-label={project.media.alt}
-                    >
-                      <source src={project.media.src} type="video/mp4" />
-                    </video>
+                    <DeferredAutoplayVideo
+                      src={project.media.src}
+                      ariaLabel={project.media.alt}
+                      className="h-[28rem] w-full opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
+                    />
                   ) : (
                     <Image
                       src={project.media.src}
                       alt={project.media.alt}
                       width={1100}
                       height={1200}
+                      sizes="(min-width: 768px) 33vw, 100vw"
                       className="h-[28rem] w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
                     />
                   )}

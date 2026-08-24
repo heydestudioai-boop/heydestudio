@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/Button';
+import { DeferredAutoplayVideo } from '@/components/DeferredAutoplayVideo';
 import {
   EditorialBody,
   EditorialKicker,
@@ -165,16 +166,11 @@ export default function MarcasPage() {
               <Link key={project.slug} href={project.href} className="group">
                 <div className="overflow-hidden bg-[#202020]">
                   {project.media.type === 'video' ? (
-                    <video
-                      className="h-[25rem] w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      aria-label={project.media.altEn}
-                    >
-                      <source src={project.media.src} type="video/mp4" />
-                    </video>
+                    <DeferredAutoplayVideo
+                      src={project.media.src}
+                      ariaLabel={project.media.altEn}
+                      className="h-[25rem] w-full opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
+                    />
                   ) : (
                     <Image
                       src={project.media.src}
