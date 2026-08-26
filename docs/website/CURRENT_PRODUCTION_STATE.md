@@ -1,0 +1,116 @@
+# HEYDE Studio — estado vigente de Production
+
+Actualizado: 2026-08-26 19:15 Europe/Madrid
+
+Ámbito: operaciones activas. La auditoría y el historial de migración permanecen en los documentos de cutover y release candidate.
+
+## Plataforma y despliegue
+
+- Aplicación Next.js 16.3.1 con App Router, alojada en Vercel.
+- Dominio canónico: `https://www.heydestudio.com`.
+- Deployment Production observado: `dpl_H8N8CRSpSvthwiZmiZkuNNgYua3L`, commit `bd63977b13b4dbc9180669c90c524e9678e39b21`, estado `READY`.
+- Los deployments históricos se conservan como audit trail y posibles referencias de rollback.
+- `vercel.json` no declara crons; el count de Production es `0`.
+
+## Rutas públicas
+
+Experiencia local ES:
+
+- `/`, `/planes`, `/audit`, `/casos`, `/estudio`, `/hosteleria`, `/inmobiliaria`, `/bodegas`, `/faq`.
+- Legales: `/privacy`, `/terms`, `/cookies`.
+
+Experiencia EN:
+
+- `/marcas`, `/contact`, `/en/real-estate`.
+- Legales: `/en/privacy`, `/en/terms`, `/en/cookies`.
+
+El sitemap se genera desde `lib/routePolicy.ts` y los proyectos HEYDE Lab canónicos. Los redirects legacy también están centralizados en `lib/routePolicy.ts`; la antigua entrada fabricada del blog responde `410`.
+
+## Funnels activos
+
+### Auditoría local
+
+- UI: `/audit`; submit: `POST /api/audit/requests`.
+- Persiste una solicitud durable en un Contact de HubSpot con `lead_type=local_audit`.
+- Envía una confirmación transaccional mediante Brevo después de persistir CRM.
+- La idempotencia evita duplicar Contact y email.
+- No crea Deals automáticamente y no depende de Calendly, questionnaire o follow-ups.
+- La creación de una propuesta es una acción interna explícita y separada en `/api/internal/audit/create-proposal-deal`.
+
+### Proyecto de marca
+
+- UI: `/contact`; submit: `POST /api/contact/submit`.
+- Persiste/upsertea un Contact de HubSpot con `lead_type=brand_inquiry`.
+- Envía una confirmación transaccional mediante Brevo después de persistir CRM.
+- No crea Deals, no comparte el estado de auditoría y no depende de Calendly.
+
+No usar formularios de Production como prueba. Las pruebas E2E externas se realizan en Preview con una dirección expresamente allowlisted.
+
+## Integraciones activas
+
+- **HubSpot:** system of record durable para solicitudes; Contacts para ambos funnels y Deal solo mediante acción comercial explícita.
+- **Brevo:** confirmaciones transaccionales de auditoría y contacto.
+- **Google Analytics:** carga condicionada por consentimiento; eventos first-party allowlisted sin datos del formulario.
+- **Vercel:** hosting, Functions, variables y observabilidad. No hay Cron Jobs activos.
+
+Calendly no forma parte del runtime vigente. El evento externo legacy `/20min` sigue pendiente de cierre manual y sus credenciales se mantienen temporalmente hasta completar ese cierre.
+
+## Variables operativas por nombre
+
+Requeridas o activas según el scope correspondiente:
+
+- `NEXT_PUBLIC_SITE_URL`
+- `NEXT_PUBLIC_APP_URL`
+- `NEXT_PUBLIC_GA_ID`
+- `INTERNAL_API_TOKEN`
+- `AUDIT_FORM_ENABLED`
+- `AUDIT_DARK_MODE`
+- `AUDIT_TEST_EMAIL_ALLOWLIST` — Preview/QA únicamente
+- `BREVO_API_KEY`
+- `BREVO_SENDER_EMAIL`
+- `HUBSPOT_API_KEY` o `HUBSPOT_ACCESS_TOKEN`
+- `HUBSPOT_DEAL_PIPELINE`
+
+Opcionales con fallback controlado:
+
+- `AUDIT_IDEMPOTENCY_SECRET`
+- `HUBSPOT_PROPOSAL_SENT_STAGE`
+- `BREVO_NOTIFICATION_EMAIL`
+
+Pendientes legacy, no consumidores del runtime actual:
+
+- `CALENDLY_ACCESS_TOKEN`
+- `CALENDLY_WEBHOOK_TOKEN`
+
+No registrar valores, fingerprints reversibles ni tokens en documentación o logs. Los cambios de variables requieren inventario por scope, redeploy controlado cuando corresponda y health checks sin enviar formularios o emails.
+
+## Oferta de lanzamiento
+
+El único interruptor público está en `lib/canonical.ts`, objeto `launchOffer`, propiedad `active`. Cualquier cambio debe respetar el canon y pasar los checks antes de desplegar.
+
+## Checks operativos
+
+```text
+npm run check:canon
+npm run typecheck
+npm run lint
+npm run build
+npm audit --omit=dev
+npm run test:audit
+npm run test:brand
+npm run test:legacy
+npm run test:legal
+npm run test:commercial
+```
+
+Antes y después de un deployment Production: comprobar estado `READY`, `/audit`, `/contact`, health de HubSpot/Brevo, redirects, sitemap, errores runtime y cron count `0`. No reactivar endpoints, crons o automatizaciones legacy como rollback.
+
+## Historial de migración
+
+El historial permanece separado y sin duplicarse en:
+
+- `FINAL_PRODUCTION_MIGRATION_RESULT.md`
+- `FINAL_MIGRATION_RELEASE_CANDIDATE.md`
+- `PRODUCTION_CUTOVER_RESULT.md`
+- `POST_CUTOVER_MONITORING.md`
+- `CUTOVER_RUNBOOK.md`
