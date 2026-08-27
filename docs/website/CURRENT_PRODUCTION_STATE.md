@@ -1,6 +1,6 @@
 # HEYDE Studio — estado vigente de Production
 
-Actualizado: 2026-08-26 19:15 Europe/Madrid
+Actualizado: 2026-08-27 11:30 Europe/Madrid
 
 Ámbito: operaciones activas. La auditoría y el historial de migración permanecen en los documentos de cutover y release candidate.
 
@@ -44,7 +44,7 @@ El sitemap se genera desde `lib/routePolicy.ts` y los proyectos HEYDE Lab canón
 - Envía una confirmación transaccional mediante Brevo después de persistir CRM.
 - No crea Deals, no comparte el estado de auditoría y no depende de Calendly.
 
-No usar formularios de Production como prueba. Las pruebas E2E externas se realizan en Preview con una dirección expresamente allowlisted.
+No usar formularios de Production como prueba. Cualquier futuro E2E externo en Preview requiere autorización, una dirección expresamente allowlisted y credenciales aisladas provisionadas para esa prueba. Preview no conserva una key Brevo tras el housekeeping.
 
 ## Integraciones activas
 
@@ -53,7 +53,7 @@ No usar formularios de Production como prueba. Las pruebas E2E externas se reali
 - **Google Analytics:** carga condicionada por consentimiento; eventos first-party allowlisted sin datos del formulario.
 - **Vercel:** hosting, Functions, variables y observabilidad. No hay Cron Jobs activos.
 
-Calendly no forma parte del runtime vigente. El evento externo legacy `/20min` sigue pendiente de cierre manual y sus credenciales se mantienen temporalmente hasta completar ese cierre.
+Calendly no forma parte del runtime vigente. El owner confirmó el 2026-08-27 la desactivación de `/20min` y la revocación de los cuatro PAT legacy. Se retiraron todas las variables `CALENDLY_*` de Vercel Production/Preview; los endpoints legacy siguen respondiendo 404 y no hay consumidores en `/audit` o `/contact`.
 
 ## Variables operativas por nombre
 
@@ -66,7 +66,7 @@ Requeridas o activas según el scope correspondiente:
 - `AUDIT_FORM_ENABLED`
 - `AUDIT_DARK_MODE`
 - `AUDIT_TEST_EMAIL_ALLOWLIST` — Preview/QA únicamente
-- `BREVO_API_KEY`
+- `BREVO_API_KEY` — únicamente Production
 - `BREVO_SENDER_EMAIL`
 - `HUBSPOT_API_KEY` o `HUBSPOT_ACCESS_TOKEN`
 - `HUBSPOT_DEAL_PIPELINE`
@@ -77,12 +77,25 @@ Opcionales con fallback controlado:
 - `HUBSPOT_PROPOSAL_SENT_STAGE`
 - `BREVO_NOTIFICATION_EMAIL`
 
-Pendientes legacy, no consumidores del runtime actual:
+Configuración legacy/QA retirada:
 
 - `CALENDLY_ACCESS_TOKEN`
 - `CALENDLY_WEBHOOK_TOKEN`
+- `CRON_SECRET`
+- `AUDIT_TEST_EMAIL_ALLOWLIST` de Production
+- override `BREVO_API_KEY` de Preview en `codex/preview-cutover-qa`
+
+La allowlist Preview se conserva porque ambos submits la consumen como protección; no es una credencial ni habilita envíos por sí sola. El owner confirmó la eliminación de la antigua key Brevo en el proveedor. La key activa de Production y las variables necesarias de HubSpot, GA4, internal API y los funnels no se modificaron.
 
 No registrar valores, fingerprints reversibles ni tokens en documentación o logs. Los cambios de variables requieren inventario por scope, redeploy controlado cuando corresponda y health checks sin enviar formularios o emails.
+
+No se hizo redeploy durante la limpieza. La configuración retirada ya no estará disponible para deployments futuros; los artefactos existentes son inmutables. Los PAT Calendly y la key Brevo antigua, además, están revocados/eliminados por el proveedor según confirmación del owner.
+
+## Última comprobación read-only
+
+El 2026-08-27: Production `READY`; `/`, `/audit` y `/contact` HTTP 200; cron count `0`; cero errores runtime en la ventana consultada de 24 h. Las lecturas directas con la credencial activa dieron Brevo account/sender HTTP 200 y HubSpot Contacts/Deals HTTP 200, sin escrituras ni emails.
+
+El health autenticado desde el runtime Production sigue pendiente de certificación en esta sesión: `INTERNAL_API_TOKEN` existe en Vercel, pero no es legible localmente ni mediante `vercel env run`. No se rotó el token ni se confundió la conectividad directa del proveedor con una comprobación del runtime. Para cerrar esa observación, usar el token vigente por un canal seguro o aportar el resultado sanitizado de los GET internos; nunca pegar el secreto en chat.
 
 ## Oferta de lanzamiento
 

@@ -1,12 +1,14 @@
 # HEYDE Studio — resultado de limpieza post-migración
 
-Fecha: 2026-08-26
+Fecha inicial: 2026-08-26. Actualización de cierre: 2026-08-27.
 
 Ventana ejecutada: tarde del 2026-08-26, Europe/Madrid
 
 Clasificación final: **OWNER ACTION REQUIRED**
 
-La limpieza segura quedó completada en HubSpot, Vercel y configuración versionada. Calendly y la eliminación final de credenciales antiguas en paneles externos requieren acción autenticada del owner; no se actuó sobre ningún elemento `UNKNOWN`. No hubo deploy, submit, email ni modificación de código funcional.
+La limpieza de datos y configuración TEST/legacy está completada. El owner cerró las acciones manuales de Calendly y Brevo y se retiraron sus entradas Vercel obsoletas. Solo queda pendiente certificar los health endpoints autenticados desde el runtime Production por falta de acceso al `INTERNAL_API_TOKEN` vigente; las páginas y la conectividad directa de proveedores pasan. No hubo deploy, submit, email ni modificación de código funcional.
+
+Las secciones 1–10 conservan el snapshot histórico del 2026-08-26. La sección 11 describe el estado vigente del cierre.
 
 ## 1. Inventario y clasificación previa
 
@@ -130,7 +132,7 @@ No se borró documentación histórica. Las operaciones vigentes quedan resumida
 - Brevo y HubSpot: conectividad directa HTTP 200; credenciales activas sin cambios.
 - cron count: `0`.
 
-Limitación observacional: los health endpoints internos de Production no se invocaron porque `INTERNAL_API_TOKEN` no está disponible localmente y no se modificó ni extrajo. La evidencia equivalente es el deployment inmutable aprobado, ausencia de errores runtime y las lecturas directas 200 de ambos proveedores.
+Limitación observacional: los health endpoints internos de Production no se invocaron porque `INTERNAL_API_TOKEN` no está disponible localmente y no se modificó ni extrajo. El deployment inmutable aprobado, la ausencia de errores runtime y las lecturas directas 200 de ambos proveedores son evidencia complementaria, no una comprobación equivalente del runtime autenticado.
 
 ## 9. Checks locales
 
@@ -154,8 +156,68 @@ Limitación observacional: los health endpoints internos de Production no se inv
 3. Decidir si la branch `codex/preview-cutover-qa` seguirá existiendo. Si se retira, eliminar su override Brevo; si Preview debe seguir validando emails, provisionar primero una política segura equivalente.
 4. Tras esas acciones, repetir únicamente: inventario de variables, cron count, health read-only y 404 de endpoints legacy. No enviar formularios ni emails.
 
-## Resultado
+## 11. Cierre de housekeeping — 2026-08-27
+
+### Acciones manuales confirmadas por el owner
+
+- Evento `20 Minute Strategy Meeting` (`/20min`) desactivado.
+- PAT Calendly revocados: `HEYDE Studio`, `HEYDE Studio Webhook`, `Codex Temporary Setup` y `HEYDE Studio Sync`.
+- API key antigua de Brevo eliminada; conservada únicamente la nueva credencial activa de Production.
+
+Estas acciones se registran como confirmación explícita del owner. No se volvieron a crear tokens ni eventos. Las suscripciones webhook no se re-inventariaron ni se modificaron en este cierre; sus antiguos receptores están retirados y no existe consumidor en los funnels.
+
+### Verificación de consumidores y limpieza Vercel
+
+- Búsqueda read-only en `app`, `components`, `lib`, `next.config.ts`, `vercel.json` y `.env.example`: cero referencias Calendly/`CALENDLY_*` en runtime o configuración vigente.
+- `/audit` y `/contact` continúan usando exclusivamente sus workflows actuales de HubSpot y Brevo.
+- Eliminada la entrada compartida `CALENDLY_ACCESS_TOKEN` de Production/Preview.
+- Eliminada la entrada compartida `CALENDLY_WEBHOOK_TOKEN` de Production/Preview.
+- Eliminada únicamente la override `BREVO_API_KEY` de Preview para `codex/preview-cutover-qa`; la entrada Production no se modificó.
+- `.env.example` ya estaba libre de Calendly desde la limpieza anterior; no necesitó otro cambio.
+- Inventario final: cero variables `CALENDLY_*`, cero `CRON_SECRET`, cero overrides de branch QA y una única entrada `BREVO_API_KEY`, en Production.
+- `AUDIT_TEST_EMAIL_ALLOWLIST` permanece únicamente en Preview porque `/api/audit/requests` y `/api/contact/submit` la consumen como barrera de seguridad. No se muestra su valor.
+- `AUDIT_FORM_ENABLED` y `AUDIT_DARK_MODE` permanecen sin cambios en ambos scopes.
+- HubSpot, Brevo sender, GA4, site URLs e Internal API permanecen intactos.
+
+La retirada de la override Brevo cierra la capacidad de envío de futuros deployments de la antigua branch QA. Cualquier nuevo E2E externo Preview requerirá credenciales aisladas y autorización; no se copiará automáticamente la key Production. Los deployments existentes conservan su snapshot inmutable: no se hizo redeploy ni se alteró el sitio publicado.
+
+### Verificación final read-only
+
+Lectura realizada el 2026-08-27 a las 09:30 UTC / 11:30 Europe/Madrid:
+
+| Comprobación | Resultado |
+| --- | --- |
+| Production deployment y aliases | Mismo `dpl_H8N8CRSpSvthwiZmiZkuNNgYua3L`, `READY`, commit `bd63977b13b4dbc9180669c90c524e9678e39b21` |
+| `/` | HTTP 200; sin referencias Calendly |
+| `/audit` | HTTP 200; formulario presente; sin referencias Calendly; no enviado |
+| `/contact` | HTTP 200; formulario presente; sin referencias Calendly; no enviado |
+| `/api/calendly/sync` | HTTP 404 |
+| `/api/audit/webhooks/calendly` | HTTP 404 |
+| `/api/followups/run` | HTTP 404 |
+| Brevo `GET /v3/account` con la key activa conocida | HTTP 200; fingerprint esperada `42a5913ff21c2524` |
+| Brevo sender | HTTP 200; sender configurado activo |
+| HubSpot lectura Contacts y Deals | HTTP 200 / 200; ninguna escritura |
+| Runtime errors Vercel, últimas 24 h | 0 clusters; 0 logs error/fatal |
+| Cron Jobs | `0` |
+| Health autenticado desde el runtime Production | `NOT_VERIFIED`: token interno no disponible de forma legible |
+
+Se intentó la inyección oficial `vercel env run -e production` sin persistir valores. Vercel indicó que las variables Secret no pueden recuperarse; las credenciales Brevo/HubSpot disponibles se obtuvieron del entorno local existente. No se envió un token incorrecto al runtime ni se deshabilitó protección. La lectura directa de Brevo/HubSpot no se presenta como lectura del runtime.
+
+### Checks de cierre
+
+La batería completa se reejecutó tras el cierre de variables: canon PASS (19 archivos), typecheck PASS, lint PASS, build PASS (33 páginas; sin warnings), `npm audit --omit=dev` con 0 vulnerabilidades y 54/54 tests PASS (audit 16, brand 12, legacy 8, legal 12, commercial 6). No hay cambios en código funcional, dependencias, copy, SEO, diseño, funnels o arquitectura.
+
+### Única acción pendiente para certificar el cierre
+
+Hacer disponible localmente, mediante un canal seguro y sin rotarlo, el valor vigente de `INTERNAL_API_TOKEN`, o aportar una lectura autenticada sanitizada de:
+
+- `GET https://www.heydestudio.com/api/brevo/health`: HTTP 200 y `accountStatus=200`;
+- `GET https://www.heydestudio.com/api/hubspot/health`: HTTP 200, `contactsRead=true` y `dealsRead=true`.
+
+Ambos usan el header `x-internal-token`. No pegar el secreto en el chat. No se requiere ningún submit, email, deploy, cambio de variable Production o nueva limpieza de CRM.
+
+## Resultado vigente
 
 **OWNER ACTION REQUIRED**
 
-La limpieza automática segura está completa. El sitio y los funnels permanecen operativos; los únicos pendientes son cierres autenticados en Calendly/Brevo y la decisión sobre la credencial de la antigua branch Preview.
+La limpieza TEST/legacy está completa y no queda acción de borrado en Calendly/Brevo/Vercel pendiente en este alcance. La clasificación permanece abierta únicamente por la comprobación autenticada del runtime solicitada; no se ha observado un fallo de Production.
