@@ -1,46 +1,38 @@
 'use client';
 
-import { useLanguage } from '@/lib/language';
-import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { getLanguagePair } from '@/lib/languageRoutes';
 
 export function LanguageToggle() {
-  const { language, setLanguage } = useLanguage();
-  const router = useRouter();
   const pathname = usePathname();
-
-  const languageHref = (option: 'EN' | 'ES') => {
-    if (pathname === '/inmobiliaria' || pathname === '/en/real-estate') {
-      return option === 'EN' ? '/en/real-estate' : '/inmobiliaria';
-    }
-
-    return option === 'EN' ? '/marcas' : '/';
-  };
+  const pair = getLanguagePair(pathname);
+  if (!pair) return null;
 
   return (
     <div
       className="inline-grid grid-cols-2 rounded border border-gray-200 bg-gray-50 p-1"
-      aria-label="Language selector"
+      role="group"
+      aria-label={pathname === pair.en ? 'Language' : 'Idioma'}
     >
       {(['EN', 'ES'] as const).map((option) => {
-        const isActive = language === option;
+        const href = option === 'EN' ? pair.en : pair.es;
+        const isActive = pathname === href;
 
         return (
-          <button
+          <Link
             key={option}
-            type="button"
-            onClick={() => {
-              setLanguage(option);
-              router.push(languageHref(option));
-            }}
-            className={`min-w-10 rounded px-3 py-1.5 text-sm font-bold transition-colors ${
+            href={href}
+            hrefLang={option.toLowerCase()}
+            className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded px-3 text-sm font-bold transition-colors ${
               isActive
                 ? 'bg-black text-white'
                 : 'text-gray-600 hover:bg-white hover:text-black'
             }`}
-            aria-pressed={isActive}
+            aria-current={isActive ? 'page' : undefined}
           >
             {option}
-          </button>
+          </Link>
         );
       })}
     </div>

@@ -87,7 +87,7 @@ export function CaseStudyPageContent({ slug }: { slug: string }) {
 
   if (!caseStudy || !project) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-white px-6 text-center">
+      <main id="main-content" tabIndex={-1} className="flex min-h-screen items-center justify-center bg-white px-6 text-center">
         <div>
           <h1 className="mb-4 text-4xl font-bold">{labels.notFound}</h1>
           <p className="mb-8 text-gray-700">{labels.notFoundBody}</p>
@@ -110,7 +110,7 @@ export function CaseStudyPageContent({ slug }: { slug: string }) {
   ];
 
   return (
-    <main className="bg-white text-black">
+    <main id="main-content" tabIndex={-1} className="bg-white text-black">
       <section className="bg-black px-6 pb-16 pt-10 text-white sm:px-8 md:px-12 md:pb-20 md:pt-14">
         <div className="mx-auto grid w-full max-w-7xl gap-12 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-end">
           <div>

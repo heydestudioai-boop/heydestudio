@@ -68,7 +68,8 @@ test('SEO intent is explicit on Home and Cases without competing local photograp
 
   assert.match(seo, /Fotografía, vídeo y redes sociales en Toledo \| HEYDE Studio/);
   assert.match(seo, /Proceso de producción audiovisual y HEYDE Lab \| HEYDE Studio/);
-  assert.match(seo, /'proceso producción audiovisual', 'portfolio creativo Toledo', 'HEYDE Lab'/);
+  assert.match(seo, /proyectos autoiniciados de HEYDE Lab, siempre separados del trabajo de cliente/);
+  assert.doesNotMatch(seo, /keywords:/);
 });
 
 test('responsive editorial images declare their rendered layout sizes', async () => {

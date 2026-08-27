@@ -42,6 +42,46 @@ body {
   outline-offset: 3px;
 }
 
+/* Patch scope: preserve typography while enlarging audit link hit areas. */
+a[href="/audit"] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  color: white;
+  background: var(--brand-ink);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+main[id="main-content"] {
+  scroll-margin-top: 5rem;
+}
+
+.cookie-banner h2 {
+  font-size: 1rem !important;
+  line-height: 1.4 !important;
+}
+
+/* Move the hero content clear of the initial sheet without changing document layout/CLS. */
+body:has([data-cookie-banner][data-configuring="false"]) .home-hero > div:last-child {
+  transform: translateY(calc(-1 * max(0px, var(--cookie-banner-height, 190px) - 2rem)));
+}
+
+body:has([data-cookie-banner]) [data-floating-whatsapp] {
+  visibility: hidden;
+}
+
 p,
 li {
   word-spacing: 0.08em;

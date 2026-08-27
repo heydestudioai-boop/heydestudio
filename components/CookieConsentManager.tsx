@@ -2,7 +2,7 @@
 
 import Script from 'next/script';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '@/lib/language';
 
 declare global {
@@ -141,6 +141,24 @@ export function CookieConsentManager({ gaId }: { gaId?: string }) {
   const [visible, setVisible] = useState(false);
   const [configuring, setConfiguring] = useState(false);
   const [analytics, setAnalytics] = useState(false);
+  const bannerRef = useRef<HTMLDivElement>(null);
+  const analyticsRef = useRef<HTMLInputElement>(null);
+  const settingsTrigger = useRef<HTMLElement | null>(null);
+
+  // Layout/focus only: consent storage, categories and GA gating stay unchanged.
+  useEffect(() => {
+    const banner = bannerRef.current;
+    if (!visible || !banner) return;
+    const resize = new ResizeObserver(() => {
+      document.documentElement.style.setProperty('--cookie-banner-height', `${banner.offsetHeight}px`);
+    });
+    resize.observe(banner);
+    if (configuring) analyticsRef.current?.focus();
+    return () => {
+      resize.disconnect();
+      document.documentElement.style.removeProperty('--cookie-banner-height');
+    };
+  }, [visible, configuring]);
 
   useEffect(() => {
     queueMicrotask(() => {
@@ -151,6 +169,7 @@ export function CookieConsentManager({ gaId }: { gaId?: string }) {
     });
 
     const openSettings = () => {
+      settingsTrigger.current = document.activeElement as HTMLElement | null;
       const latest = readConsent();
       setConsent(latest);
       setAnalytics(latest?.analytics ?? false);
@@ -171,21 +190,29 @@ export function CookieConsentManager({ gaId }: { gaId?: string }) {
     setAnalytics(nextAnalytics);
     setVisible(false);
     setConfiguring(false);
+    settingsTrigger.current?.focus({ preventScroll: true });
   }
 
   return (
     <>
       <GoogleAnalytics gaId={gaId} enabled={Boolean(consent?.analytics)} />
       {visible && (
-        <div className="fixed inset-x-0 bottom-0 z-[70] px-4 pb-4 sm:px-6 sm:pb-6">
-          <div className="mx-auto max-w-3xl rounded border border-white/10 bg-black p-5 text-white shadow-2xl sm:p-6">
-            <div className="flex flex-col gap-5">
+        <div
+          ref={bannerRef}
+          data-cookie-banner
+          data-configuring={configuring}
+          role="region"
+          aria-labelledby="cookie-settings-title"
+          className="cookie-banner fixed inset-x-0 bottom-0 z-[70] max-h-[75dvh] overflow-y-auto border-t border-white/20 bg-black px-4 py-3 text-white shadow-2xl sm:px-6"
+        >
+          <div className="mx-auto max-w-7xl">
+            <div className={`grid gap-3 ${configuring ? '' : 'md:grid-cols-[1fr_auto] md:items-center md:gap-x-8'}`}>
               <div>
-                <h2 className="text-lg font-bold">{text.title}</h2>
-                <p className="mt-2 text-sm leading-relaxed text-white/70">{text.body}</p>
+                <h2 id="cookie-settings-title" className="text-base font-bold">{text.title}</h2>
+                <p className="mt-1 max-w-3xl text-[13px] leading-[1.4] text-white/70">{text.body}</p>
                 <Link
                   href={language === 'EN' ? '/en/cookies' : '/cookies'}
-                  className="mt-3 inline-block text-xs font-bold uppercase tracking-wider text-white/60 underline-offset-4 transition hover:text-white hover:underline"
+                  className="mt-1 inline-block py-1 text-xs font-bold text-white/70 underline underline-offset-4 transition hover:text-white"
                 >
                   {text.policy}
                 </Link>
@@ -212,6 +239,7 @@ export function CookieConsentManager({ gaId }: { gaId?: string }) {
                       </span>
                     </span>
                     <input
+                      ref={analyticsRef}
                       type="checkbox"
                       checked={analytics}
                       onChange={(event) => setAnalytics(event.target.checked)}
@@ -221,12 +249,12 @@ export function CookieConsentManager({ gaId }: { gaId?: string }) {
                 </div>
               )}
 
-              <div className="grid gap-2 sm:grid-cols-3">
+              <div className="grid grid-cols-3 gap-2">
                 {configuring ? (
                   <button
                     type="button"
                     onClick={() => choose(analytics)}
-                    className="rounded border border-white bg-white px-4 py-2 text-sm font-bold text-black transition hover:opacity-80 sm:col-span-3"
+                    className="col-span-3 min-h-11 rounded border border-white bg-white px-4 py-2 text-sm font-bold text-black transition hover:opacity-80"
                   >
                     {text.save}
                   </button>
@@ -235,21 +263,21 @@ export function CookieConsentManager({ gaId }: { gaId?: string }) {
                     <button
                       type="button"
                       onClick={() => choose(false)}
-                      className="rounded border border-white bg-white px-4 py-2 text-sm font-bold text-black transition hover:opacity-80"
+                      className="min-h-11 rounded border border-white bg-white px-3 py-2 text-sm font-bold text-black transition hover:opacity-80"
                     >
                       {text.reject}
                     </button>
                     <button
                       type="button"
                       onClick={() => setConfiguring(true)}
-                      className="rounded border border-white/25 px-4 py-2 text-sm font-bold text-white transition hover:border-white"
+                      className="min-h-11 rounded border border-white bg-white px-3 py-2 text-sm font-bold text-black transition hover:opacity-80"
                     >
                       {text.configure}
                     </button>
                     <button
                       type="button"
                       onClick={() => choose(true)}
-                      className="rounded border border-white bg-white px-4 py-2 text-sm font-bold text-black transition hover:opacity-80"
+                      className="min-h-11 rounded border border-white bg-white px-3 py-2 text-sm font-bold text-black transition hover:opacity-80"
                     >
                       {text.accept}
                     </button>

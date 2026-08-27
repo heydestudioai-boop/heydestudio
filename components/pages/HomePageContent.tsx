@@ -44,8 +44,8 @@ const homeFaqs = localFaqSections.flatMap((section) => section.items).slice(0, 4
 
 export function HomePageContent() {
   return (
-    <main className="bg-white">
-      <section className="relative flex min-h-[calc(100vh-4rem)] items-end overflow-hidden bg-black px-6 py-14 text-white sm:px-8 md:px-12 md:py-24">
+    <main id="main-content" tabIndex={-1} className="bg-white">
+      <section className="home-hero relative flex min-h-[calc(100vh-4rem)] items-end overflow-hidden bg-black px-6 py-14 text-white sm:px-8 md:px-12 md:py-24">
         <DeferredAutoplayVideo
           src="/videos/hero.mp4"
           className="absolute inset-0 h-full w-full opacity-80"

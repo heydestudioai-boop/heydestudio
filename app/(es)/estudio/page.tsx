@@ -22,7 +22,7 @@ const principles = [
 
 export default function EstudioPage() {
   return (
-    <main className="bg-white">
+    <main id="main-content" tabIndex={-1} className="bg-white">
       <section className="bg-black px-6 pb-12 pt-16 text-white sm:px-8 md:px-12 md:pb-16 md:pt-24">
         <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-[0.95fr_0.65fr] md:items-end">
           <div>

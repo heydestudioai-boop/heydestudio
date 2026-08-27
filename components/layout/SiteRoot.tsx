@@ -4,6 +4,7 @@ import { Footer } from '@/components/layout/Footer';
 import { ScrollToTopButton } from '@/components/ScrollToTopButton';
 import { CookieConsentManager } from '@/components/CookieConsentManager';
 import { FloatingWhatsApp } from '@/components/FloatingWhatsApp';
+import { CommercialTracking } from '@/components/CommercialTracking';
 import { LanguageProvider } from '@/lib/language';
 import { pageSeo, siteName, siteUrl } from '@/lib/seo';
 import '@/app/globals.css';
@@ -55,6 +56,7 @@ export function SiteRoot({
                   '@id': `${siteUrl}/#organization`,
                   name: 'HEYDE Studio',
                   url: siteUrl,
+                  founder: { '@id': `${siteUrl}/#oliver-heyde` },
                   logo: `${siteUrl}/logos/Heydestudio_Logo_Completo_Negro_Transparente.png`,
                   description: 'Fotografía, vídeo y redes para negocios locales, con producción real potenciada por IA.',
                   sameAs: [
@@ -133,11 +135,15 @@ export function SiteRoot({
           }}
         />
         <LanguageProvider>
+          <a href="#main-content" className="skip-link">
+            {lang === 'en' ? 'Skip to content' : 'Saltar al contenido'}
+          </a>
           <Header />
           <div className="pt-16">{children}</div>
           <Footer />
           <ScrollToTopButton />
           <CookieConsentManager gaId={gaId} />
+          <CommercialTracking />
           <FloatingWhatsApp />
         </LanguageProvider>
       </body>

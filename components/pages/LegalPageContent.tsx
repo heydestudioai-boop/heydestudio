@@ -725,7 +725,7 @@ export function LegalPageContent({
   const page = legalPages[locale][type];
 
   return (
-    <main className="bg-white">
+    <main id="main-content" tabIndex={-1} className="bg-white">
       <section className="bg-black px-6 py-20 text-white sm:px-8 md:px-12 md:py-24">
         <div className="mx-auto max-w-3xl">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">

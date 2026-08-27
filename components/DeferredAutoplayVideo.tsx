@@ -86,6 +86,7 @@ export function DeferredAutoplayVideo({
           src={poster}
           alt={decorative ? '' : posterAlt}
           fill
+          loading={posterPriority ? 'eager' : 'lazy'}
           fetchPriority={posterPriority ? 'high' : undefined}
           sizes={posterSizes}
           className="object-cover"

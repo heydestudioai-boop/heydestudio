@@ -89,7 +89,7 @@ export function LocalVerticalPage({ model }: VerticalPageProps) {
   const primaryCta = model.primaryCta ?? { href: '/audit', label: labels.audit };
 
   return (
-    <main className="bg-white">
+    <main id="main-content" tabIndex={-1} className="bg-white">
       <section className="grid min-h-[calc(100vh-4rem)] bg-black text-white lg:grid-cols-[0.58fr_0.42fr]">
         <div className="flex items-end px-6 py-14 sm:px-8 md:px-12 md:py-24">
           <div className="w-full max-w-4xl">

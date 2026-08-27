@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Button } from '@/components/Button';
+import { PlanEquivalence } from '@/components/PlanEquivalence';
 import { EditorialBody, EditorialKicker, EditorialTitle } from '@/components/EditorialText';
 import {
   commercialConditions,
@@ -14,8 +15,9 @@ import { pageSeo } from '@/lib/seo';
 export const metadata: Metadata = pageSeo.planes;
 
 export default function PlanesPage() {
+  const growthPlan = monthlyPlans.find((plan) => plan.id === 'growth')!;
   return (
-    <main className="bg-white">
+    <main id="main-content" tabIndex={-1} className="bg-white">
       <section className="bg-black px-6 pb-12 pt-16 text-white sm:px-8 md:px-12 md:pb-16 md:pt-24">
         <div className="mx-auto max-w-7xl">
           <EditorialKicker>Planes y precios</EditorialKicker>
@@ -84,6 +86,7 @@ export default function PlanesPage() {
               </div>
             ))}
           </div>
+          <PlanEquivalence price={growthPlan.price} priceLabel={growthPlan.priceLabel} />
         </div>
       </section>
 

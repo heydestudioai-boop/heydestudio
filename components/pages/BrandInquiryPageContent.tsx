@@ -92,7 +92,7 @@ export function BrandInquiryPageContent() {
   };
 
   return (
-    <main className="bg-white text-black">
+    <main id="main-content" tabIndex={-1} className="bg-white text-black">
       <section className="bg-black px-6 pb-14 pt-16 text-white sm:px-8 md:px-12 md:pb-20 md:pt-24">
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_0.42fr] lg:items-end">
           <div>

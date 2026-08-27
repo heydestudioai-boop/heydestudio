@@ -5,7 +5,7 @@ import { localFaqSections } from '@/lib/canonical';
 
 export function FAQPageContent() {
   return (
-    <main className="bg-white">
+    <main id="main-content" tabIndex={-1} className="bg-white">
       <section className="bg-black px-6 pb-10 pt-16 text-white sm:px-8 md:px-12 md:pb-12 md:pt-20">
         <div className="mx-auto w-full max-w-7xl">
           <h1 className="mb-7 max-w-5xl text-4xl font-bold leading-none md:text-6xl lg:text-7xl">

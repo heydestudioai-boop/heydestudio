@@ -35,7 +35,6 @@ export async function generateMetadata({
     title: `${project.name} — Proyecto autoiniciado HEYDE Lab | HEYDE Studio`,
     description: project.summary,
     path: project.href,
-    keywords: ['HEYDE Lab', 'proyecto autoiniciado', project.name],
   });
 }
 

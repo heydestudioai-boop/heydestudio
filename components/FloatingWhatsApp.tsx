@@ -28,6 +28,7 @@ export function FloatingWhatsApp() {
       target="_blank"
       rel="noreferrer"
       aria-label="Escribir a HEYDE Studio por WhatsApp"
+      data-floating-whatsapp
       className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/20 transition hover:scale-105 md:bottom-7 md:right-7"
     >
       <MessageCircle className="h-6 w-6" aria-hidden="true" />

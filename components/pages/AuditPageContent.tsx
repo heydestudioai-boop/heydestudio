@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Check, Clock3, Mail, MapPin } from 'lucide-react';
 import { EditorialBody, EditorialKicker, EditorialTitle } from '@/components/EditorialText';
 import { trackAuditEvent } from '@/lib/auditAnalytics';
+import { trackCommercialEvent } from '@/lib/commercialAnalytics';
 
 interface AuditPageContentProps {
   formEnabled: boolean;
@@ -67,10 +68,12 @@ export function AuditPageContent({ formEnabled }: AuditPageContentProps) {
     if (confirmation) confirmationHeading.current?.focus();
   }, [confirmation]);
 
-  function markStarted() {
+  function markStarted(event: React.FocusEvent<HTMLFormElement>) {
+    if (!(event.target instanceof HTMLInputElement) || event.target.name === 'fax') return;
     if (started.current) return;
     started.current = true;
     trackAuditEvent('audit_started', 'es');
+    trackCommercialEvent('form_auditoria_start');
   }
 
   function updateField(event: React.ChangeEvent<HTMLInputElement>) {
@@ -117,6 +120,7 @@ export function AuditPageContent({ formEnabled }: AuditPageContentProps) {
       });
       setForm(INITIAL_FORM);
       trackAuditEvent('audit_submitted', 'es');
+      trackCommercialEvent('form_auditoria_submit');
       trackAuditEvent('audit_confirmation_view', 'es');
     } catch {
       setError(
@@ -129,7 +133,7 @@ export function AuditPageContent({ formEnabled }: AuditPageContentProps) {
   }
 
   return (
-    <main className="bg-white">
+    <main id="main-content" tabIndex={-1} className="bg-white">
       <section className="bg-black px-6 pb-12 pt-16 text-white sm:px-8 md:px-12 md:pb-16 md:pt-20">
         <div className="mx-auto w-full max-w-7xl">
           <EditorialKicker muted>Auditoría gratuita</EditorialKicker>

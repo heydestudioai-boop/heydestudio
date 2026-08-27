@@ -42,8 +42,8 @@ export function Header() {
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50 bg-[#FAFAFA]/88 backdrop-blur-md">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3.5 md:px-8">
-        <Link href={homeHref} className="flex h-8 w-28 items-center" aria-label="HEYDE Studio home">
+      <nav className="mx-auto flex min-h-16 max-w-7xl items-center justify-between px-6 py-2 md:px-8">
+        <Link href={homeHref} className="flex min-h-11 w-28 items-center" aria-label="HEYDE Studio home">
           <Image
             src="/logos/heyde-logo-nav-black.png"
             alt="HEYDE Studio"
@@ -54,12 +54,12 @@ export function Header() {
           />
         </Link>
 
-        <div className="hidden items-center gap-7 md:flex">
+        <div className="hidden items-center gap-3 md:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`text-[13px] font-medium transition-colors ${
+              className={`inline-flex min-h-11 items-center px-2 text-[13px] font-medium transition-colors ${
                 isActive(item.href)
                   ? 'text-magenta'
                   : 'text-[#121212]/68 hover:text-[#121212]'
@@ -74,7 +74,7 @@ export function Header() {
           <LanguageToggle />
           <Link
             href={contactHref}
-            className="rounded-sm bg-magenta px-4 py-2 text-[13px] font-bold text-white transition-colors hover:bg-magenta-dark"
+            className="inline-flex min-h-11 items-center rounded-sm bg-magenta px-4 py-2 text-[13px] font-bold text-white transition-colors hover:bg-magenta-dark"
           >
             {contactLabel}
           </Link>
@@ -82,7 +82,7 @@ export function Header() {
 
         <button
           type="button"
-          className="rounded-sm p-2 text-black md:hidden"
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm p-2 text-black md:hidden"
           onClick={() => setMobileMenuOpen((open) => !open)}
           aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={mobileMenuOpen}
@@ -93,16 +93,16 @@ export function Header() {
 
       {mobileMenuOpen && (
         <div className="border-t border-[#121212]/10 bg-[#FAFAFA]/96 px-6 py-5 backdrop-blur-md md:hidden">
-          <div className="mb-5 flex justify-end">
+          <div className="mb-3 flex justify-end empty:hidden">
             <LanguageToggle />
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-1">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`block text-sm font-medium transition-colors ${
+                className={`flex min-h-11 items-center py-3 text-sm font-medium transition-colors ${
                   isActive(item.href)
                     ? 'text-magenta'
                     : 'text-[#121212]/70 hover:text-[#121212]'
