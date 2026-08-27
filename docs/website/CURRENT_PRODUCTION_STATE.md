@@ -1,6 +1,8 @@
 # HEYDE Studio — estado vigente de Production
 
-Actualizado: 2026-08-27 11:30 Europe/Madrid
+Actualizado: 2026-08-27 11:57 Europe/Madrid
+
+Post-migration housekeeping: **POST-MIGRATION CLEANUP COMPLETE**. Acciones del owner necesarias para el funcionamiento de la web: **0**.
 
 Ámbito: operaciones activas. La auditoría y el historial de migración permanecen en los documentos de cutover y release candidate.
 
@@ -95,7 +97,15 @@ No se hizo redeploy durante la limpieza. La configuración retirada ya no estar�
 
 El 2026-08-27: Production `READY`; `/`, `/audit` y `/contact` HTTP 200; cron count `0`; cero errores runtime en la ventana consultada de 24 h. Las lecturas directas con la credencial activa dieron Brevo account/sender HTTP 200 y HubSpot Contacts/Deals HTTP 200, sin escrituras ni emails.
 
-El health autenticado desde el runtime Production sigue pendiente de certificación en esta sesión: `INTERNAL_API_TOKEN` existe en Vercel, pero no es legible localmente ni mediante `vercel env run`. No se rotó el token ni se confundió la conectividad directa del proveedor con una comprobación del runtime. Para cerrar esa observación, usar el token vigente por un canal seguro o aportar el resultado sanitizado de los GET internos; nunca pegar el secreto en chat.
+`INTERNAL_API_TOKEN` se conserva intacto como secreto Production, con su scope existente sin cambios. Los health endpoints protegidos no fueron invocados autenticadamente durante el cierre por principio de minimización de acceso a secretos. No se recuperó, copió, rotó ni expuso el token para certificarlos. Un HTTP 401 ante una petición sin token es el comportamiento esperado de la protección, no un fallo operativo.
+
+La salud de HubSpot y Brevo se validó directamente contra los proveedores con HTTP 200. El owner acepta esa evidencia junto con Production `READY`, las tres rutas HTTP 200, cero errores runtime, cron count `0`, 54/54 tests PASS y 0 vulnerabilidades. La ausencia de una nueva invocación autenticada desde el runtime no constituye un blocker operativo y no deja ninguna acción pendiente sobre el secreto.
+
+La reconfirmación read-only final mantiene los 8 Deals TEST y 2 Contacts TEST archivados (`archived=true`), Calendly desacoplado de runtime y variables, y la key Brevo antigua eliminada según confirmación del owner. La key activa de Production, HubSpot, GA4, flags y la allowlist Preview se conservan.
+
+## Mantenimiento posterior no bloqueante
+
+Las comprobaciones DPA/revisión legal y cualquier futura retirada de `AUDIT_TEST_EMAIL_ALLOWLIST` de Preview se tratarán como mantenimiento posterior. La allowlist se mantiene mientras proteja QA. Ninguna de estas tareas bloquea el funcionamiento de la web ni el cierre de la migración.
 
 ## Oferta de lanzamiento
 

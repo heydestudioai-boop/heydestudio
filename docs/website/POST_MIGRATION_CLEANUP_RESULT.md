@@ -4,9 +4,9 @@ Fecha inicial: 2026-08-26. Actualización de cierre: 2026-08-27.
 
 Ventana ejecutada: tarde del 2026-08-26, Europe/Madrid
 
-Clasificación final: **OWNER ACTION REQUIRED**
+Clasificación final: **POST-MIGRATION CLEANUP COMPLETE**
 
-La limpieza de datos y configuración TEST/legacy está completada. El owner cerró las acciones manuales de Calendly y Brevo y se retiraron sus entradas Vercel obsoletas. Solo queda pendiente certificar los health endpoints autenticados desde el runtime Production por falta de acceso al `INTERNAL_API_TOKEN` vigente; las páginas y la conectividad directa de proveedores pasan. No hubo deploy, submit, email ni modificación de código funcional.
+La limpieza de datos y configuración TEST/legacy está completada. El owner cerró las acciones manuales de Calendly y Brevo y se retiraron sus entradas Vercel obsoletas. El cierre acepta expresamente la evidencia directa de los proveedores y de Production sin acceder al secreto interno para una certificación adicional. No hay blockers operativos ni acciones del owner necesarias para el funcionamiento de la web. No hubo deploy, submit, email ni modificación de código funcional.
 
 Las secciones 1–10 conservan el snapshot histórico del 2026-08-26. La sección 11 describe el estado vigente del cierre.
 
@@ -199,25 +199,48 @@ Lectura realizada el 2026-08-27 a las 09:30 UTC / 11:30 Europe/Madrid:
 | HubSpot lectura Contacts y Deals | HTTP 200 / 200; ninguna escritura |
 | Runtime errors Vercel, últimas 24 h | 0 clusters; 0 logs error/fatal |
 | Cron Jobs | `0` |
-| Health autenticado desde el runtime Production | `NOT_VERIFIED`: token interno no disponible de forma legible |
+| Health autenticado desde el runtime Production | No invocado autenticadamente por minimización de acceso a secretos; no constituye un blocker operativo |
 
-Se intentó la inyección oficial `vercel env run -e production` sin persistir valores. Vercel indicó que las variables Secret no pueden recuperarse; las credenciales Brevo/HubSpot disponibles se obtuvieron del entorno local existente. No se envió un token incorrecto al runtime ni se deshabilitó protección. La lectura directa de Brevo/HubSpot no se presenta como lectura del runtime.
+Antes de la decisión final del owner se intentó la inyección oficial `vercel env run -e production` sin persistir valores. Vercel indicó que las variables Secret no pueden recuperarse; no se obtuvo `INTERNAL_API_TOKEN` y las credenciales Brevo/HubSpot disponibles se obtuvieron del entorno local existente. No se envió un token incorrecto al runtime ni se deshabilitó protección. En el cierre final no se repitió ningún intento de recuperación. La lectura directa de Brevo/HubSpot no se presenta como lectura del runtime.
 
 ### Checks de cierre
 
 La batería completa se reejecutó tras el cierre de variables: canon PASS (19 archivos), typecheck PASS, lint PASS, build PASS (33 páginas; sin warnings), `npm audit --omit=dev` con 0 vulnerabilidades y 54/54 tests PASS (audit 16, brand 12, legacy 8, legal 12, commercial 6). No hay cambios en código funcional, dependencias, copy, SEO, diseño, funnels o arquitectura.
 
-### Única acción pendiente para certificar el cierre
+### Criterio de cierre aprobado: minimización de acceso a secretos
 
-Hacer disponible localmente, mediante un canal seguro y sin rotarlo, el valor vigente de `INTERNAL_API_TOKEN`, o aportar una lectura autenticada sanitizada de:
+El owner considera suficiente la evidencia disponible y retira expresamente la exigencia de acceder al secreto para invocar los dos health endpoints:
 
-- `GET https://www.heydestudio.com/api/brevo/health`: HTTP 200 y `accountStatus=200`;
-- `GET https://www.heydestudio.com/api/hubspot/health`: HTTP 200, `contactsRead=true` y `dealsRead=true`.
+1. `INTERNAL_API_TOKEN` se conserva intacto como secreto Production. No se recuperó, copió, rotó ni expuso para certificar los endpoints; su scope existente permanece intacto.
+2. Los health endpoints no fueron invocados autenticadamente durante el cierre por principio de minimización de acceso a secretos. El HTTP 401 sin token es comportamiento esperado.
+3. La salud de Brevo y HubSpot fue validada directamente contra los proveedores: HTTP 200.
+4. Esta distinción observacional no constituye un blocker operativo. No se requiere ninguna acción del owner sobre el secreto ni una invocación autenticada adicional para cerrar housekeeping.
 
-Ambos usan el header `x-internal-token`. No pegar el secreto en el chat. No se requiere ningún submit, email, deploy, cambio de variable Production o nueva limpieza de CRM.
+### Reconfirmación final read-only
+
+El 2026-08-27, aproximadamente a las 11:57 Europe/Madrid:
+
+- Production sigue en el mismo deployment `READY` y conserva sus aliases.
+- `/`, `/audit` y `/contact`: HTTP 200.
+- Cero errores runtime en las últimas 24 h consultadas.
+- Cron count `0`.
+- Cero referencias Calendly/`CRON_SECRET` en runtime y configuración vigente; cero variables `CALENDLY_*` en Vercel.
+- Los diez IDs TEST documentados se releen con `archived=true`: 8/8 Deals y 2/2 Contacts. No se escribió en CRM.
+- Antigua key Brevo eliminada según confirmación explícita del owner; una sola entrada `BREVO_API_KEY` en Vercel, Production.
+- Variables HubSpot, Internal API, GA4, flags y allowlist Preview conservadas sin cambios; la allowlist mantiene consumidores de seguridad en ambos submits.
+- Se conserva la evidencia de la batería completa de este cierre: 54/54 tests PASS, canon/typecheck/lint/build PASS y 0 vulnerabilidades.
+
+No se leyó ni intentó recuperar `INTERNAL_API_TOKEN` durante esta reconfirmación. Solo se consultó la presencia de su entrada y su scope, sin valores.
+
+### Mantenimiento posterior no bloqueante
+
+- Comprobaciones DPA y revisión legal.
+- Revisión futura de la allowlist Preview, que se conserva mientras siga siendo protección de QA.
+
+Estas tareas no son blockers del cierre ni acciones necesarias para que la web siga funcionando. Cualquier modificación futura requerirá su alcance y autorización correspondientes.
 
 ## Resultado vigente
 
-**OWNER ACTION REQUIRED**
+**POST-MIGRATION CLEANUP COMPLETE**
 
-La limpieza TEST/legacy está completa y no queda acción de borrado en Calendly/Brevo/Vercel pendiente en este alcance. La clasificación permanece abierta únicamente por la comprobación autenticada del runtime solicitada; no se ha observado un fallo de Production.
+La limpieza TEST/legacy está completa, no se ha observado ninguna anomalía nueva y quedan **0 acciones del owner necesarias para el funcionamiento de la web**. El secreto interno permanece protegido. STOP: no se inician nuevas modificaciones de web.
